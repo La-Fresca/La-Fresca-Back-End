@@ -1,9 +1,15 @@
 package org.lafresca.lafrescabackend.Models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table
+@Document(collection = "User")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @SequenceGenerator(
@@ -103,35 +109,6 @@ public class User {
 
     public void setDeleted(Integer deleted) {
         Deleted = deleted;
-    }
-
-    public User() {
-    }
-
-    public User(Long userId, String firstName, String lastName, String email, String password, String phoneNumber, String address, String role, Long cafeId, Integer deleted) {
-        UserId = userId;
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Password = password;
-        PhoneNumber = phoneNumber;
-        Address = address;
-        Role = role;
-        CafeId = cafeId;
-        Deleted = deleted;
-    }
-
-    public User(Long userId) {
-        UserId = userId;
-    }
-
-    public User(String email, String password) {
-        Email = email;
-        Password = password;
-    }
-
-    public User(String email) {
-        Email = email;
     }
 
     @Override
