@@ -22,4 +22,9 @@ public class FoodController {
     public void registerNewUser(@RequestBody Food food) {
         foodService.addNewFood(food);
     }
+
+    @GetMapping
+    public List<Food> getFoods(){
+        return foodService.getFoods();
+    }
 }
