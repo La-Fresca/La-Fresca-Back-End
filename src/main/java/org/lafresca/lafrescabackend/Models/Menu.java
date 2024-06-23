@@ -5,21 +5,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
-@Document(collection = "Food")
+@Document(collection = "Menu")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Food {
-    private String FoodId;
+public class Menu {
+    private String MenuId;
     private String Name;
     private String Description;
-    private Double Price;
     private String Image;
-    private Integer Available; // 1 for available, 0 for not available
-    private List<CusotmFeature> Features;
     private String CafeId;
+    private Integer Available; // 1 for available, 0 for not available
+    private Double Price;
+    private List<String> FoodIds;
     private Integer Deleted;
+
 }
