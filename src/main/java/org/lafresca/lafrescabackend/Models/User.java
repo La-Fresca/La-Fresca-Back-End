@@ -20,7 +20,7 @@ public class User {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    private Long UserId;
+    private String UserId;
     private String FirstName;
     private String LastName;
     private String Email;
@@ -31,11 +31,11 @@ public class User {
     private Long CafeId;
     private Integer Deleted;
 
-    public Long getUserId() {
+    public String getUserId() {
         return UserId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         UserId = userId;
     }
 
