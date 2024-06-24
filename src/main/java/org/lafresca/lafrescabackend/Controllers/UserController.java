@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Controllers;
 
+import org.lafresca.lafrescabackend.DTO.UserDTO;
 import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<UserDTO> getUsers() {
         return userService.getUsers();
     }
 
