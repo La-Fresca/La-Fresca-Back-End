@@ -41,4 +41,10 @@ public class FoodController {
     public void deleteFood(@PathVariable("id") String id){
         foodService.deleteFood(id);
     }
+
+    // Update food item
+    @PutMapping(path = "{id}")
+    public void updateFood(@PathVariable("id") String id, @RequestBody Food food){
+        foodService.updateFood(id, food);
+    }
 }

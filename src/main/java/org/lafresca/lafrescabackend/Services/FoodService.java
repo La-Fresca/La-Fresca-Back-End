@@ -29,9 +29,9 @@ public class FoodService {
     }
 
     // Update food item
-    public void updateFood(String foodId, Food food) {
-        Food existingFood = foodRepository.findById(foodId)
-                .orElseThrow(() -> new ResourceNotFoundException("Food not found with id " + foodId));
+    public void updateFood(String id, Food food) {
+        Food existingFood = foodRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Food not found with id " + id));
         existingFood.setName(food.getName());
         existingFood.setDescription(food.getDescription());
         existingFood.setPrice(food.getPrice());
