@@ -1,11 +1,13 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Food;
 import org.lafresca.lafrescabackend.Repositories.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FoodService {
@@ -22,5 +24,28 @@ public class FoodService {
 
     public List<Food> getFoods() {
         return foodRepository.findAll();
+    }
+
+    public void updateFood(String foodId, Food food) {
+        Food existingFood = foodRepository.findById(foodId)
+                .orElseThrow(() -> new ResourceNotFoundException("Food not found with id " + foodId));
+        existingFood.setName(food.getName());
+        existingFood.setDescription(food.getDescription());
+        existingFood.setPrice(food.getPrice());
+        existingFood.setImage(food.getImage());
+        existingFood.setAvailable(food.getAvailable());
+        existingFood.setFeatures(food.getFeatures());
+        existingFood.setCafeId(food.getCafeId());
+        existingFood.setDeleted(food.getDeleted());
+        foodRepository.save(existingFood);
+    }
+
+    public String deleteFood(String id) {
+        foodRepository.deleteById(id);
+        return id;
+    }
+
+    public Optional<Food> getFood(String id) {
+        return foodRepository.findById(id);
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Food {
     @Id
-    private String FoodId;
+    private String id;
     private String Name;
     private String Description;
     private Double Price;
@@ -24,12 +24,12 @@ public class Food {
     private String CafeId;
     private Integer Deleted;
 
-    public String getFoodId() {
-        return FoodId;
+    public String getId() {
+        return id;
     }
 
-    public void setFoodId(String foodId) {
-        FoodId = foodId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -99,7 +99,7 @@ public class Food {
     @Override
     public String toString() {
         return "Food{" +
-                "FoodId='" + FoodId + '\'' +
+                "id='" + id + '\'' +
                 ", Name='" + Name + '\'' +
                 ", Description='" + Description + '\'' +
                 ", Price=" + Price +

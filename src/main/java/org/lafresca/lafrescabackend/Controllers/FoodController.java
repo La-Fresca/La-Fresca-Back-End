@@ -1,12 +1,12 @@
 package org.lafresca.lafrescabackend.Controllers;
 
 import org.lafresca.lafrescabackend.Models.Food;
-import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Services.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/lafresca/food")
@@ -26,5 +26,10 @@ public class FoodController {
     @GetMapping
     public List<Food> getFoods(){
         return foodService.getFoods();
+    }
+
+    @GetMapping(path = "{id}")
+    public Optional<Food> getFood(@PathVariable("id") String id){
+        return foodService.getFood(id);
     }
 }
