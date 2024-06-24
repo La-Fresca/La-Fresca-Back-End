@@ -23,6 +23,32 @@ public class UserController {
         return userService.getUsers();
     }
 
+    @GetMapping(value = "/specificuserbyid/{userId}")
+    public UserDTO getUser(@PathVariable("userId") String userId) {
+        return userService.getUserById(userId);
+    }
+
+    @GetMapping(value = "/specificuserbyemail/{email}")
+    public UserDTO getUserByEmail(@PathVariable("email") String email) {
+        return userService.getUserByEmail(email);
+    }
+
+    @GetMapping(value = "/specificuserbycafeid/{cafeId}")
+    public List<UserDTO> getUsersByCafeId(@PathVariable("cafeId") Long cafeId) {
+        return userService.getUsersByCafeId(cafeId);
+    }
+
+    @GetMapping(value = "/specificuserbyrole/{role}")
+    public List<UserDTO> getUsersByRole(@PathVariable("role") String role) {
+        return userService.getUsersByRole(role);
+    }
+
+    //get all users without filtering
+    @GetMapping(value = "/allusers")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
     @PostMapping
     public void registerNewUser(@RequestBody User user) {
         userService.addNewUser(user);

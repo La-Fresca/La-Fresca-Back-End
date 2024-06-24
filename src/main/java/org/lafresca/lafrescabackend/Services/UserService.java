@@ -122,4 +122,74 @@ public class UserService {
 //        }
         userRepository.save(userToUpdate);
     }
+
+    public UserDTO getUserById(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not exist"));
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getUserId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setAddress(user.getAddress());
+        userDTO.setRole(user.getRole());
+        userDTO.setCafeId(user.getCafeId());
+        return userDTO;
+    }
+
+    public UserDTO getUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("User with email " + email + " does not exist"));
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getUserId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setAddress(user.getAddress());
+        userDTO.setRole(user.getRole());
+        userDTO.setCafeId(user.getCafeId());
+        return userDTO;
+    }
+
+    public List<UserDTO> getUsersByCafeId(Long cafeId) {
+        List<User> users = userRepository.findUsersByCafeId(cafeId);
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for (User user: users) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getUserId());
+            userDTO.setFirstName(user.getFirstName());
+            userDTO.setLastName(user.getLastName());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+            userDTO.setAddress(user.getAddress());
+            userDTO.setRole(user.getRole());
+            userDTO.setCafeId(user.getCafeId());
+            userDTOS.add(userDTO);
+        }
+        return userDTOS;
+    }
+
+    public List<UserDTO> getUsersByRole(String role) {
+        List<User> users = userRepository.findUsersByRole(role);
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for (User user: users) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getUserId());
+            userDTO.setFirstName(user.getFirstName());
+            userDTO.setLastName(user.getLastName());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+            userDTO.setAddress(user.getAddress());
+            userDTO.setRole(user.getRole());
+            userDTO.setCafeId(user.getCafeId());
+            userDTOS.add(userDTO);
+        }
+        return userDTOS;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
