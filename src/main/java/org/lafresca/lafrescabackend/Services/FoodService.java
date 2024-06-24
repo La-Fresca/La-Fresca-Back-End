@@ -18,14 +18,17 @@ public class FoodService {
         this.foodRepository = foodRepository;
     }
 
+    // Add new food item
     public void addNewFood(Food food) {
         foodRepository.save(food);
     }
 
+    // Retrieve all food items
     public List<Food> getFoods() {
         return foodRepository.findAll();
     }
 
+    // Update food item
     public void updateFood(String foodId, Food food) {
         Food existingFood = foodRepository.findById(foodId)
                 .orElseThrow(() -> new ResourceNotFoundException("Food not found with id " + foodId));
@@ -40,11 +43,12 @@ public class FoodService {
         foodRepository.save(existingFood);
     }
 
-    public String deleteFood(String id) {
+    // Delete food item by id
+    public void deleteFood(String id) {
         foodRepository.deleteById(id);
-        return id;
     }
 
+    // Search food item
     public Optional<Food> getFood(String id) {
         return foodRepository.findById(id);
     }

@@ -18,18 +18,27 @@ public class FoodController {
         this.foodService = foodService;
     }
 
+    // Add new food item
     @PostMapping
-    public void registerNewUser(@RequestBody Food food) {
+    public void addNewFood(@RequestBody Food food) {
         foodService.addNewFood(food);
     }
 
+    // Retrieve all food items
     @GetMapping
     public List<Food> getFoods(){
         return foodService.getFoods();
     }
 
+    // Search food item
     @GetMapping(path = "{id}")
     public Optional<Food> getFood(@PathVariable("id") String id){
         return foodService.getFood(id);
+    }
+
+    // Delete food item
+    @DeleteMapping(path = "{id}")
+    public void deleteFood(@PathVariable("id") String id){
+        foodService.deleteFood(id);
     }
 }
