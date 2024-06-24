@@ -13,15 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 public class User {
     @Id
-//    @SequenceGenerator(
-//            name = "user_sequence",
-//            sequenceName = "user_sequence",
-//            allocationSize = 1)
-//    @GeneratedValue(
-//            strategy = GenerationType.SEQUENCE,
-//            generator = "user_sequence"
-//    )
-    private String UserId;
+    private String id;
     private String FirstName;
     private String LastName;
     private String Email;
@@ -33,11 +25,11 @@ public class User {
     private Integer Deleted;
 
     public String getUserId() {
-        return UserId;
+        return id;
     }
 
     public void setUserId(String userId) {
-        UserId = userId;
+        id = userId;
     }
 
     public String getFirstName() {
@@ -115,7 +107,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "UserId=" + UserId +
+                "UserId=" + id +
                 ", FirstName='" + FirstName + '\'' +
                 ", LastName='" + LastName + '\'' +
                 ", Email='" + Email + '\'' +

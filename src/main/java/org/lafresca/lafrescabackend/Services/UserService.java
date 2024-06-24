@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.bson.types.ObjectId;
 import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,21 @@ public class UserService {
     }
 
     public void updateUser(User user) {
-        if (userRepository.existsById(user.getUserId())) {
-            if(user.getFirstName() != null && user.getFirstName().length() > 0) {
-                userRepository.save(user);
-            } else {
-                throw new IllegalStateException("User first name cannot be null or empty");
-            }
-        } else {
-            throw new IllegalStateException("User with id " + user.getUserId() + " does not exist");
+        User userToUpdate = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new IllegalStateException("User with id " + user.getUserId() + " does not exist"));
+        if (user.getFirstName() != null && user.getFirstName().length() > 0 && !userToUpdate.getFirstName().equals(user.getFirstName())) {
+            userToUpdate.setFirstName(user.getFirstName());
+
         }
+        userRepository.save(userToUpdate);
+//        if (userRepository.existsById(user.getUserId())) {
+//            if(user.getFirstName() != null && user.getFirstName().length() > 0) {
+//                userRepository.save(user);
+//            } else {
+//                throw new IllegalStateException("User first name cannot be null or empty");
+//            }
+//        } else {
+//            throw new IllegalStateException("User with id " + user.getUserId() + " does not exist");
+//        }
     }
 }
