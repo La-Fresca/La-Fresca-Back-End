@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -19,8 +20,28 @@ public class FoodService {
     }
 
     // Add new food item
-    public void addNewFood(Food food) {
-        foodRepository.save(food);
+    public String addNewFood(Food food) {
+        String error = null;
+        if (Objects.equals(food.getName(), "")){
+            error = "Please enter name";
+        }
+        else if (Objects.equals(food.getDescription(), "")){
+            error = "Please enter description";
+        }
+        else if(food.getPrice() == 0){
+            error = "Please enter price";
+        }
+        else if (Objects.equals(food.getImage(), "")){
+            error = "Please upload image";
+        }
+        else if(Objects.equals(food.getCafeId(), "")){
+            error = "Please enter cafe id";
+        }
+
+        if (error == null){
+            foodRepository.save(food);
+        }
+        return error;
     }
 
     // Retrieve all food items
