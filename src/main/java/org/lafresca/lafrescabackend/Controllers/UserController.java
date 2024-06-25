@@ -59,7 +59,7 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
-    @PutMapping(path = "{userId}")
+    @PutMapping
     public void updateUser(@RequestBody User user) {
         userService.updateUser(user);
     }

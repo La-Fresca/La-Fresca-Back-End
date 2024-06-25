@@ -57,24 +57,27 @@ public class UserService {
             throw new IllegalStateException("User last name cannot be null or empty");
         }
         if(user.getEmail() == null || user.getEmail().isEmpty() || !isValidEmail(user.getEmail()) ) {
-            throw new IllegalStateException("User email cannot be null or empty");
+            throw new IllegalStateException("User email invalid");
         }
         if(user.getPhoneNumber() == null || user.getPhoneNumber().length() != 10) {
-            throw new IllegalStateException("User phone number cannot be null or empty");
+            throw new IllegalStateException("User phone number cannot be null and length should be 10");
         }
         if(user.getRole() == null || user.getRole().isEmpty()) {
             throw new IllegalStateException("User role cannot be null or empty");
         }
-        if(user.getRole()!="ADMIN" && user.getRole()!="CUSOTMER" && user.getRole()!="TOP_LEVEL_MANAGER" && user.getRole()!="CAFE_MANAGER" && user.getRole()!="CASHIER" && user.getRole()!="KITCHEN_MANAGER" && user.getRole()!="WAITER" && user.getRole()!="DELIVERY_PERSON" && user.getRole()!="STOCKKEEPER") {
-            throw new IllegalStateException("User role can only be admin or user");
+        if(!(user.getRole()!="ADMIN" || user.getRole()!="CUSTOMER" || user.getRole()!="TOP_LEVEL_MANAGER" || user.getRole()!="CAFE_MANAGER" || user.getRole()!="CASHIER" || user.getRole()!="KITCHEN_MANAGER" || user.getRole()!="WAITER" || user.getRole()!="DELIVERY_PERSON" || user.getRole()!="STOCKKEEPER")) {
+            throw new IllegalStateException("User role not valid");
         }
         if(user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new IllegalStateException("User password cannot be null or empty");
         }
+        if(user.getPassword().length()<8) {
+            throw new IllegalStateException("User password length should be greater than or equal to 8");
+        }
         if(user.getAddress()==null || user.getAddress().isEmpty()) {
             throw new IllegalStateException("User address cannot be null or empty");
         }
-        if(user.getCafeId()==null || user.getCafeId() != 0) {
+        if(user.getCafeId()==null || user.getCafeId().equals(0)) {
             throw new IllegalStateException("User cafe id cannot be null or empty");
         }
         //need to add
