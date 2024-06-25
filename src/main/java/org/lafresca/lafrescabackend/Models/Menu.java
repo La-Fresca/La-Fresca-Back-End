@@ -22,4 +22,90 @@ public class Menu {
     private List<String> FoodIds;
     private Integer Deleted;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        Image = image;
+    }
+
+    public String getCafeId() {
+        return CafeId;
+    }
+
+    public void setCafeId(String cafeId) {
+        CafeId = cafeId;
+    }
+
+    public Integer getAvailable() {
+        return Available;
+    }
+
+    public void setAvailable(Integer available) {
+        Available = available;
+    }
+
+    public Double getPrice() {
+        return Price;
+    }
+
+    public void setPrice(Double price) {
+        Price = price;
+    }
+
+    public List<String> getFoodIds() {
+        return FoodIds;
+    }
+
+    public void setFoodIds(List<String> foodIds) {
+        FoodIds = foodIds;
+    }
+
+    public Integer getDeleted() {
+        return Deleted;
+    }
+
+    public void setDeleted(Integer deleted) {
+        Deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "id='" + id + '\'' +
+                ", Name='" + Name + '\'' +
+                ", Description='" + Description + '\'' +
+                ", Image='" + Image + '\'' +
+                ", CafeId='" + CafeId + '\'' +
+                ", Available=" + Available +
+                ", Price=" + Price +
+                ", FoodIds=" + FoodIds +
+                ", Deleted=" + Deleted +
+                '}';
+    }
 }
