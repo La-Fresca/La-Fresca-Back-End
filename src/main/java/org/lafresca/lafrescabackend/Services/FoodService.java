@@ -22,27 +22,31 @@ public class FoodService {
     // Add new food item
     public String addNewFood(Food food) {
         String error = null;
-        if (Objects.equals(food.getName(), "")){
+
+        if (food.getName() == null || food.getName().isEmpty()) {
             error = "Please enter name";
-        }
-        else if (Objects.equals(food.getDescription(), "")){
+        } else if (food.getDescription() == null || food.getDescription().isEmpty()) {
             error = "Please enter description";
-        }
-        else if(food.getPrice() == 0){
-            error = "Please enter price";
-        }
-        else if (Objects.equals(food.getImage(), "")){
+        } else if (food.getPrice() <= 0) {
+            error = "Please enter a valid price";
+        } else if (food.getImage() == null || food.getImage().isEmpty()) {
             error = "Please upload image";
-        }
-        else if(Objects.equals(food.getCafeId(), "")){
+        } else if (food.getCafeId() == null || food.getCafeId().isEmpty()) {
             error = "Please enter cafe id";
+        } else if (food.getAvailable() < 0 || food.getAvailable() > 1) {
+            error = "Invalid value for availability";
+        } else if (food.getDeleted() < 0 || food.getDeleted() > 1) {
+            error = "Invalid value for deleted status";
+        } else if (food.getFeatures() == null || food.getFeatures().isEmpty()) {
+            error = "Please enter at least one feature";
         }
 
-        if (error == null){
+        if (error == null) {
             foodRepository.save(food);
         }
         return error;
     }
+
 
     // Retrieve all food items
     public List<Food> getFoods() {
@@ -53,14 +57,25 @@ public class FoodService {
     public void updateFood(String id, Food food) {
         Food existingFood = foodRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Food not found with id " + id));
-        existingFood.setName(food.getName());
-        existingFood.setDescription(food.getDescription());
-        existingFood.setPrice(food.getPrice());
-        existingFood.setImage(food.getImage());
-        existingFood.setAvailable(food.getAvailable());
+
+        if (food.getName() != null && !food.getName().isEmpty()) {
+            existingFood.setName(food.getName());
+        } else if (food.getDescription() != null && !food.getDescription().isEmpty()) {
+            existingFood.setDescription(food.getDescription());
+        } else if (food.getPrice() != null && food.getPrice() >= 0) {
+            existingFood.setPrice(food.getPrice());
+        } else if (food.getImage() != null && !food.getImage().isEmpty()) {
+            existingFood.setImage(food.getImage());
+        } else if (food.getCafeId() != null && !food.getCafeId().isEmpty()) {
+            existingFood.setCafeId(food.getCafeId());
+        } else if (food.getAvailable() == 0 || food.getAvailable() == 1) {
+            existingFood.setAvailable(food.getAvailable());
+        } else if (food.getDeleted() == 0 || food.getDeleted() == 1) {
+            existingFood.setDeleted(food.getDeleted());
+        }
+
         existingFood.setFeatures(food.getFeatures());
-        existingFood.setCafeId(food.getCafeId());
-        existingFood.setDeleted(food.getDeleted());
+
         foodRepository.save(existingFood);
     }
 
