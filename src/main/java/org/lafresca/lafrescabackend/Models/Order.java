@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
-    private String OrderId;
+    private String id;
     private String CustomerId;
 
 }
