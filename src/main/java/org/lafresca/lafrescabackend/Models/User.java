@@ -21,7 +21,7 @@ public class User {
     private String Address;
     private String Role;
     private Long CafeId;
-    private Integer Deleted;
+    private Integer Deleted = 0;
 
     public String getUserId() {
         return id;
@@ -30,6 +30,7 @@ public class User {
     public void setUserId(String userId) {
         id = userId;
     }
+
 
     @Override
     public String toString() {

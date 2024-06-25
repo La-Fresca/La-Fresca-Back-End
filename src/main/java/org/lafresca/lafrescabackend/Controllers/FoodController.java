@@ -20,8 +20,8 @@ public class FoodController {
 
     // Add new food item
     @PostMapping
-    public void addNewFood(@RequestBody Food food) {
-        foodService.addNewFood(food);
+    public String addNewFood(@RequestBody Food food) {
+        return foodService.addNewFood(food);
     }
 
     // Retrieve all food items

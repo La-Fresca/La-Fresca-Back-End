@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Menu {
-    private String MenuId;
+    private String id;
     private String Name;
     private String Description;
     private String Image;
