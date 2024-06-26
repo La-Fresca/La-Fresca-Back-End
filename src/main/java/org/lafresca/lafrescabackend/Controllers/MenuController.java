@@ -19,10 +19,10 @@ public class MenuController {
     }
 
     // Add new menu item
-//    @PostMapping
-//    public String addNewMenu(@RequestBody Menu menu) {
-//        return menuService.addNewMenu(menu);
-//    }
+    @PostMapping
+    public String addNewMenu(@RequestBody Menu menu) {
+        return menuService.addNewMenu(menu);
+    }
 
     // Retrieve all menu items
     @GetMapping
@@ -43,8 +43,8 @@ public class MenuController {
     }
 
     // Update menu item
-//    @PutMapping(path = "{id}")
-//    public void updateMenu(@PathVariable("id") String id, @RequestBody Menu menu){
-//        menuService.updateMenu(id, menu);
-//    }
+    @PutMapping(path = "{id}")
+    public void updateMenu(@PathVariable("id") String id, @RequestBody Menu menu){
+        menuService.updateMenu(id, menu);
+    }
 }
