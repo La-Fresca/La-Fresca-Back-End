@@ -13,17 +13,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
-    private String OrderId;
+    private String id;
     private OrderType OrderType;
-    private String CustomerId;
     private Float TotalAmount;
     private OrderStatus OrderStatus;
     private String CafeId;
-    private Date CreatedAt;
-    private Date UpdatedAt;
-    private List<Food> OrderItems;
+    private String CreatedAt;
+    private String UpdatedAt;
+    private List<OrderFood> OrderItems;
 
     //for online orders
+    private String CustomerId;
     private String location;
     private String contactNo;
     private String deliveryPersonId;
