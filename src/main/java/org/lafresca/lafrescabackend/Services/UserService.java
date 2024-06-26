@@ -1,6 +1,5 @@
 package org.lafresca.lafrescabackend.Services;
 
-import org.bson.types.ObjectId;
 import org.lafresca.lafrescabackend.DTO.UserDTO;
 import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.lafresca.lafrescabackend.Validations.EmailValidation.isValidEmail;
+import static org.lafresca.lafrescabackend.Validations.UserValidation.isValidEmail;
 
 @Service
 public class UserService {

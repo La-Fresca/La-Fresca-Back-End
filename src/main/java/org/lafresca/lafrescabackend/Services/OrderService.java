@@ -2,13 +2,18 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Models.OrderStatus;
+import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.OrderRepository;
+import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.lafresca.lafrescabackend.Validations.FoodAmountValidation;
+import org.lafresca.lafrescabackend.Validations.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -17,6 +22,8 @@ public class OrderService {
     public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
+
+
     public void addOrder(Order order) {
         System.out.println("Adding order");
         if(order == null) {
@@ -30,7 +37,31 @@ public class OrderService {
         }
         //Handling online orders
         else if(order.getOrderType().equals("ONLINE")) {
-
+            //validate customer id
+            if(order.getCustomerId() == null || order.getCustomerId().isEmpty()) {
+                throw new IllegalStateException("CustomerId cannot be null or empty");
+            }
+            if(!UserValidation.isValidCustomerId(order.getCustomerId())) {
+                throw new IllegalStateException("Invalid customer id");
+            }
+//            Optional<User> user = userRepository.findById(order.getCustomerId());
+            //validate location
+            if(order.getLocation() == null || order.getLocation().isEmpty()) {
+                throw new IllegalStateException("Location cannot be null or empty");
+            }
+            //validate contact number
+            if(order.getContactNo() == null || order.getContactNo().isEmpty()) {
+                throw new IllegalStateException("Contact number cannot be null or empty");
+            } else if (order.getContactNo().length() != 10){
+                throw new IllegalStateException("Invalid contact number");
+            }
+            //validate delivery person id
+            if(order.getDeliveryPersonId() == null || order.getDeliveryPersonId().isEmpty()) {
+                throw new IllegalStateException("Delivery person id cannot be null or empty");
+            }
+            if(!UserValidation.isValidDeliveryPersonId(order.getDeliveryPersonId())) {
+                throw new IllegalStateException("Invalid delivery person id");
+            }
         }
         //invalid order type
         else {
