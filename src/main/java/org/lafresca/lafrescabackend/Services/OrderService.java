@@ -161,4 +161,37 @@ public class OrderService {
 
         orderRepository.save(orderToUpdate);
     }
+
+    public Order getOrderById(String orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalStateException("Order with id " + orderId + " does not exist"));
+    }
+
+    public List<Order> getOrdersByCustomerId(String userId) {
+        return orderRepository.findByCustomerId(userId);
+    }
+
+    public List<Order> getOrdersByWaiterId(String userId) {
+        return orderRepository.findByWaiterId(userId);
+    }
+
+    public List<Order> getOrdersByCashierId(String userId) {
+        return orderRepository.findByCashierId(userId);
+    }
+
+    public List<Order> getOrdersByCafeId(Long cafeId) {
+        return orderRepository.findByCafeId(cafeId);
+    }
+
+    public List<Order> getOrdersByDeliveryPersonId(String userId) {
+        return orderRepository.findByDeliveryPersonId(userId);
+    }
+
+    public List<Order> getPendingOrdersbywaiterId(String userId) {
+        return orderRepository.findByWaiterIdAndOrderStatus(userId, OrderStatus.READY);
+    }
+
+    public List<Order> getPendingOrdersbydeliveryPersonId(String userId) {
+        return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.READY);
+    }
 }
