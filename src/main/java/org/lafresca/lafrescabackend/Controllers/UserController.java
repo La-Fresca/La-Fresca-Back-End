@@ -1,5 +1,11 @@
 package org.lafresca.lafrescabackend.Controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.lafresca.lafrescabackend.DTO.UserDTO;
 import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Services.UserService;
@@ -10,13 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/lafresca/user")
+@Tag(name="User Controller")
+@AllArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public List<UserDTO> getUsers() {
@@ -34,6 +37,18 @@ public class UserController {
     }
 
     @GetMapping(value = "/specificuserbycafeid/{cafeId}")
+    @Operation(
+            description = "Get user list by cafeId",
+            summary = "Get user by specific id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
     public List<UserDTO> getUsersByCafeId(@PathVariable("cafeId") Long cafeId) {
         return userService.getUsersByCafeId(cafeId);
     }

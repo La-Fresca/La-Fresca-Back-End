@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.lafresca.lafrescabackend.Validations.UserValidation.isValidEmail;
 
+
 @Service
 @Data
 @AllArgsConstructor
