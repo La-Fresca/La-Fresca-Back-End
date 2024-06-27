@@ -22,7 +22,6 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @Hidden
     public List<UserDTO> getUsers() {
         return userService.getUsers();
     }
@@ -33,7 +32,6 @@ public class UserController {
     }
 
     @GetMapping(value = "/specificuserbyemail/{email}")
-    @Hidden
     public UserDTO getUserByEmail(@PathVariable("email") String email) {
         return userService.getUserByEmail(email);
     }
