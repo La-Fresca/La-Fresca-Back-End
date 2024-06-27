@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.lafresca.lafrescabackend.DTO.UserDTO;
 import org.lafresca.lafrescabackend.Models.User;
@@ -14,13 +16,14 @@ import java.util.Optional;
 import static org.lafresca.lafrescabackend.Validations.EmailValidation.isValidEmail;
 
 @Service
+@AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+//    @Autowired
+//    public UserService(UserRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
 
     public List<UserDTO> getUsers() {
         System.out.println("Getting all users");
