@@ -36,13 +36,15 @@ public class UserValidation {
         if (customerId == null || customerId.isEmpty()){
             return false;
         }
+
+//        UserService userService = new UserService(null);
         UserDTO userById = userService.getUserById(customerId);
         if (userById == null) {
             return false;
         }
         return userById.getRole().equals("CUSTOMER");
     }
-
+//    @Override
     public static boolean isValidCashierId(String cashierId) {
         if (cashierId == null || cashierId.isEmpty()){
             return false;

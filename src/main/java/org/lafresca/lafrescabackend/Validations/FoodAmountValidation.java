@@ -24,7 +24,10 @@ public class FoodAmountValidation {
             total += orderFood.getPrice() * orderFood.getQuantity() + AdditionalFeatureValidation(orderFood.getAddedFeatures());
         }
 
-        if(total != TotalAmount){
+//        System.out.println("Total: " + total);
+//        System.out.println("TotalAmount: " + TotalAmount);
+
+        if(!total.equals(TotalAmount)){
             return false;
         }
         return true;

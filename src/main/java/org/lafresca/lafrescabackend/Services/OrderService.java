@@ -26,13 +26,23 @@ public class OrderService {
 
     public void addOrder(Order order) {
         System.out.println("Adding order");
+        System.out.println(order);
         if(order == null) {
             throw new IllegalStateException("Order cannot be null");
         }
         //handling offline orders
         if(order.getOrderType().equals("OFFLINE")) {
-
-
+            //validate cashier id
+            if(order.getCashierId() == null || order.getCashierId().isEmpty()) {
+                throw new IllegalStateException("CashierId cannot be null or empty");
+            }
+//            if(!UserValidation.isValidCashierId(order.getCashierId())) {
+//                throw new IllegalStateException("Invalid cashier id");
+//            }
+            //validate waiter id
+            if(!(order.getWaiterId() == null || order.getWaiterId().isEmpty())) {
+                order.setWaiterId(null);
+            }
 
         }
         //Handling online orders
@@ -41,9 +51,9 @@ public class OrderService {
             if(order.getCustomerId() == null || order.getCustomerId().isEmpty()) {
                 throw new IllegalStateException("CustomerId cannot be null or empty");
             }
-            if(!UserValidation.isValidCustomerId(order.getCustomerId())) {
-                throw new IllegalStateException("Invalid customer id");
-            }
+//            if(!UserValidation.isValidCustomerId(order.getCustomerId())) {
+//                throw new IllegalStateException("Invalid customer id");
+//            }
 //            Optional<User> user = userRepository.findById(order.getCustomerId());
             //validate location
             if(order.getLocation() == null || order.getLocation().isEmpty()) {
@@ -56,11 +66,12 @@ public class OrderService {
                 throw new IllegalStateException("Invalid contact number");
             }
             //validate delivery person id
-            if(order.getDeliveryPersonId() == null || order.getDeliveryPersonId().isEmpty()) {
-                throw new IllegalStateException("Delivery person id cannot be null or empty");
-            }
-            if(!UserValidation.isValidDeliveryPersonId(order.getDeliveryPersonId())) {
-                throw new IllegalStateException("Invalid delivery person id");
+            if(!(order.getDeliveryPersonId() == null || order.getDeliveryPersonId().isEmpty())) {
+                order.setDeliveryPersonId(null);
+
+//                if(!UserValidation.isValidDeliveryPersonId(order.getDeliveryPersonId())) {
+//                    throw new IllegalStateException("Invalid delivery person id");
+//                }
             }
         }
         //invalid order type

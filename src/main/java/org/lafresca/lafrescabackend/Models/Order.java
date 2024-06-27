@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Order {
     private String id;
-    private OrderType OrderType;
+    private String OrderType;
     private Float TotalAmount;
     private OrderStatus OrderStatus;
     private String CafeId;
