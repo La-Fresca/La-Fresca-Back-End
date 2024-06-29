@@ -71,4 +71,21 @@ public class BranchController {
 
     public Optional<Branch> getBranch(@PathVariable("id") String id) { return branchService.getBranch(id); }
 
+    // Delete branch
+    @DeleteMapping(path = "{id}")
+    @Operation(
+            description = "Delete branch",
+            summary = "Delete branch by using id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public void deleteBranch(@PathVariable("id") String id) { branchService.deleteBranch(id); }
 }

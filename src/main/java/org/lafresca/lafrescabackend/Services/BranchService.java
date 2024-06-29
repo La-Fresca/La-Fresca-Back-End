@@ -47,4 +47,6 @@ public class BranchService {
     }
 
     public Optional<Branch> getBranch(String id) { return branchRepository.findById(id); }
+
+    public void deleteBranch(String id) { branchRepository.deleteById(id); }
 }
