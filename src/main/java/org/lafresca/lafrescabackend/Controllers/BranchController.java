@@ -9,6 +9,7 @@ import org.lafresca.lafrescabackend.Services.BranchService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/lafresca/branch")
@@ -51,4 +52,23 @@ public class BranchController {
             })
 
     public List<Branch> getBranches() { return branchService.getBranches(); }
+
+    // Search branch
+    @GetMapping(path = "{id}")
+    @Operation(
+            description = "Search branch by id",
+            summary = "Retrieve branches by using id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public Optional<Branch> getBranch(@PathVariable("id") String id) { return branchService.getBranch(id); }
+
 }

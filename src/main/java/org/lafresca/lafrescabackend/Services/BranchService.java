@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BranchService {
@@ -18,10 +19,7 @@ public class BranchService {
     public String addNewBranch(Branch branch) {
         String error = null;
 
-        if (branch.getCafeID() == null || branch.getCafeID().isEmpty()) {
-            error = "Cafe ID cannot be empty";
-        }
-        else if (branch.getAddress() == null || branch.getAddress().isEmpty()) {
+        if (branch.getAddress() == null || branch.getAddress().isEmpty()) {
             error = "Address cannot be empty";
         }
         else if (branch.getContactNo() == null || branch.getContactNo().isEmpty()) {
@@ -48,5 +46,5 @@ public class BranchService {
         return branchRepository.findAll();
     }
 
-
+    public Optional<Branch> getBranch(String id) { return branchRepository.findById(id); }
 }

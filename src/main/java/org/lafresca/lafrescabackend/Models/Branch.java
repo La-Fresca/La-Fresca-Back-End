@@ -2,25 +2,27 @@ package org.lafresca.lafrescabackend.Models;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Branch")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Branch {
-    private String CafeID;
+    @Id
+    private String id;
     private String Address;
     private String ContactNo;
     private Double Longitude;
     private Double Latitude;
     private String BranchManager;
 
-    public String getCafeID() {
-        return CafeID;
+    public String getId() {
+        return id;
     }
 
-    public void setCafeID(String cafeID) {
-        CafeID = cafeID;
+    public void setId(String CafeID) {
+        this.id = CafeID;
     }
 
     public String getAddress() {
@@ -66,7 +68,7 @@ public class Branch {
     @Override
     public String toString() {
         return "Branch{" +
-                "CafeID='" + CafeID + '\'' +
+                "id='" + id + '\'' +
                 ", Address='" + Address + '\'' +
                 ", ContactNo='" + ContactNo + '\'' +
                 ", Longitude=" + Longitude +
