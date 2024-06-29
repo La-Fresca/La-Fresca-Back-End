@@ -5,6 +5,8 @@ import org.lafresca.lafrescabackend.Repositories.BranchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BranchService {
     private final BranchRepository branchRepository;
@@ -41,4 +43,10 @@ public class BranchService {
 
         return error;
     }
+
+    public List<Branch> getBranches() {
+        return branchRepository.findAll();
+    }
+
+
 }
