@@ -88,4 +88,22 @@ public class BranchController {
             })
 
     public void deleteBranch(@PathVariable("id") String id) { branchService.deleteBranch(id); }
+
+    // Update Branch
+    @PutMapping(path = "{id}")
+    @Operation(
+            description = "Update branch",
+            summary = "Update branch by using id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public void updateBranch(@PathVariable("id") String id, @RequestBody Branch branch) { branchService.updateBranch(id, branch); }
 }
