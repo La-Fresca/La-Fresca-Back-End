@@ -23,6 +23,7 @@ public class Food {
     private List<CustomFeature> Features;
     private String CafeId;
     private Integer Deleted;
+    private String Category;
 
     public String getId() {
         return id;
@@ -96,6 +97,14 @@ public class Food {
         Deleted = deleted;
     }
 
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
+    }
+
     @Override
     public String toString() {
         return "Food{" +
@@ -108,6 +117,7 @@ public class Food {
                 ", Features=" + Features +
                 ", CafeId='" + CafeId + '\'' +
                 ", Deleted=" + Deleted +
+                ", Category='" + Category + '\'' +
                 '}';
     }
 }
