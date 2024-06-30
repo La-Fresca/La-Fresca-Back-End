@@ -60,17 +60,23 @@ public class MenuService {
 
         if (menu.getName() != null && !menu.getName().isEmpty()) {
             existingMenu.setName(menu.getName());
-        } else if (menu.getDescription() != null && !menu.getDescription().isEmpty()) {
+        }
+        if (menu.getDescription() != null && !menu.getDescription().isEmpty()) {
             existingMenu.setDescription(menu.getDescription());
-        } else if (menu.getPrice() > 0) {
+        }
+        if (menu.getPrice() > 0) {
             existingMenu.setPrice(menu.getPrice());
-        } else if (menu.getImage() != null & !menu.getImage().isEmpty()) {
+        }
+        if (menu.getImage() != null & !menu.getImage().isEmpty()) {
             existingMenu.setImage(menu.getImage());
-        } else if (menu.getCafeId() != null && !menu.getCafeId().isEmpty()) {
+        }
+        if (menu.getCafeId() != null && !menu.getCafeId().isEmpty()) {
             existingMenu.setCafeId(menu.getCafeId());
-        } else if (menu.getAvailable() != 0 && menu.getAvailable() != 1) {
+        }
+        if (menu.getAvailable() != 0 && menu.getAvailable() != 1) {
             existingMenu.setAvailable(menu.getAvailable());
-        } else if (menu.getDeleted() != 0 && menu.getDeleted() != 1) {
+        }
+        if (menu.getDeleted() != 0 && menu.getDeleted() != 1) {
             existingMenu.setDeleted(menu.getDeleted());
         }
 
