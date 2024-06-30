@@ -3,8 +3,8 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.lafresca.lafrescabackend.Models.Menu;
-import org.lafresca.lafrescabackend.Services.MenuService;
+import org.lafresca.lafrescabackend.Models.FoodCombo;
+import org.lafresca.lafrescabackend.Services.FoodComboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,21 +12,21 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/lafresca/menu")
-@Tag(name="Menu Controller")
-public class MenuController {
-    private final MenuService menuService;
+@RequestMapping(path = "api/lafresca/foodCombo")
+@Tag(name="Food Combo Controller")
+public class FoodComboController {
+    private final FoodComboService foodComboService;
 
     @Autowired
-    public MenuController(MenuService menuService) {
-        this.menuService = menuService;
+    public FoodComboController(FoodComboService foodComboService) {
+        this.foodComboService = foodComboService;
     }
 
-    // Add new menu item
+    // Add new food combo
     @PostMapping
     @Operation(
-            description = "Add new menu",
-            summary = "Add new menu to the branch",
+            description = "Add new food combo",
+            summary = "Add new food combo to the branch",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -36,15 +36,15 @@ public class MenuController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public String addNewMenu(@RequestBody Menu menu) {
-        return menuService.addNewMenu(menu);
+    public String addNewMenu(@RequestBody FoodCombo foodCombo) {
+        return foodComboService.addNewMenu(foodCombo);
     }
 
-    // Retrieve all menu items
+    // Retrieve all food combos
     @GetMapping
     @Operation(
-            description = "Get all menus",
-            summary = "Retrieve all menus in the branch",
+            description = "Get all food combos",
+            summary = "Retrieve all food combos in the branch",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -54,15 +54,15 @@ public class MenuController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<Menu> getMenus(){
-        return menuService.getMenus();
+    public List<FoodCombo> getMenus(){
+        return foodComboService.getMenus();
     }
 
-    // Search menu item
+    // Search food combo
     @GetMapping(path = "{id}")
     @Operation(
-            description = "Search menu by id",
-            summary = "Retrieve menus by using the id",
+            description = "Search food combo by id",
+            summary = "Retrieve food combos by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -72,15 +72,15 @@ public class MenuController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public Optional<Menu> getMenu(@PathVariable("id") String id){
-        return menuService.getMenu(id);
+    public Optional<FoodCombo> getMenu(@PathVariable("id") String id){
+        return foodComboService.getMenu(id);
     }
 
-    // Delete menu item
+    // Delete food combo
     @DeleteMapping(path = "{id}")
     @Operation(
-            description = "Delete menu by id",
-            summary = "Delete menus by using the id",
+            description = "Delete food combo by id",
+            summary = "Delete food combos by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -91,14 +91,14 @@ public class MenuController {
                             responseCode = "403")
             })
     public void deleteMenu(@PathVariable("id") String id){
-        menuService.deleteMenu(id);
+        foodComboService.deleteMenu(id);
     }
 
-    // Update menu item
+    // Update food combo
     @PutMapping(path = "{id}")
     @Operation(
-            description = "Update menu by id",
-            summary = "Update menus by using the id",
+            description = "Update food combo by id",
+            summary = "Update food combos by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -108,7 +108,7 @@ public class MenuController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void updateMenu(@PathVariable("id") String id, @RequestBody Menu menu){
-        menuService.updateMenu(id, menu);
+    public void updateMenu(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
+        foodComboService.updateMenu(id, foodCombo);
     }
 }
