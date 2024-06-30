@@ -84,11 +84,13 @@ public class FoodComboService {
 
     // Delete food combo item by id
     public void deleteMenu(String id) {
+        foodComboRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Menu not found with id " + id));
         foodComboRepository.deleteById(id);
     }
 
     // Search food combo
     public Optional<FoodCombo> getMenu(String id) {
+        foodComboRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Menu not found with id " + id));
         return foodComboRepository.findById(id);
     }
 }

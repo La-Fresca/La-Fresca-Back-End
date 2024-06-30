@@ -86,11 +86,13 @@ public class FoodItemService {
 
     // Delete food item by id
     public void deleteFood(String id) {
+        foodItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
         foodItemRepository.deleteById(id);
     }
 
     // Search food item
     public Optional<FoodItem> getFood(String id) {
+        foodItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
         return foodItemRepository.findById(id);
     }
 }
