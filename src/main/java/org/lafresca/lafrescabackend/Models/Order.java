@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
 import java.util.List;
 
 @Document(collection = "Order")
@@ -24,13 +23,13 @@ public class Order {
 
     //for online orders
     private String CustomerId;
-    private String location;
-    private String contactNo;
-    private String deliveryPersonId;
+    private String Location;
+    private String ContactNo;
+    private String DeliveryPersonId;
 
     //for offline orders
-    private String cashierId;
-    private String waiterId;
+    private String CashierId;
+    private String WaiterId;
 
 
 }

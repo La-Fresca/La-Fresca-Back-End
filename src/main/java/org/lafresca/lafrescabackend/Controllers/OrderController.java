@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/lafresca/order")
+@Tag(name = "Order Controller")
 public class OrderController {
     private final OrderService orderService;
 

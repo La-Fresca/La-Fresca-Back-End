@@ -49,10 +49,16 @@ public class BranchService {
     }
 
     // Search branch by id
-    public Optional<Branch> getBranch(String id) { return branchRepository.findById(id); }
+    public Optional<Branch> getBranch(String id) {
+        branchRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found with id " + id));
+        return branchRepository.findById(id);
+    }
 
     // Delete branch by id
-    public void deleteBranch(String id) { branchRepository.deleteById(id); }
+    public void deleteBranch(String id) {
+        branchRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Branch not found with id " + id));
+        branchRepository.deleteById(id);
+    }
 
     // Update branch by id
     public void updateBranch(String id, Branch branch) {
@@ -61,16 +67,16 @@ public class BranchService {
         if (branch.getAddress() != null && !branch.getAddress().isEmpty()) {
             existingBranch.setAddress(branch.getAddress());
         }
-        else if (branch.getContactNo() != null && !branch.getContactNo().isEmpty()) {
+        if (branch.getContactNo() != null && !branch.getContactNo().isEmpty()) {
             existingBranch.setContactNo(branch.getContactNo());
         }
-        else if (branch.getLongitude() <= 180 && branch.getLongitude() >= -180) {
+        if (branch.getLongitude() <= 180 && branch.getLongitude() >= -180) {
             existingBranch.setLongitude(branch.getLongitude());
         }
-        else if (branch.getLatitude() <= 90 && branch.getLatitude() >= -90) {
+        if (branch.getLatitude() <= 90 && branch.getLatitude() >= -90) {
             existingBranch.setLatitude(branch.getLatitude());
         }
-        else if (branch.getBranchManager() != null && !branch.getBranchManager().isEmpty()) {
+        if (branch.getBranchManager() != null && !branch.getBranchManager().isEmpty()) {
             existingBranch.setBranchManager(branch.getBranchManager());
         }
 
