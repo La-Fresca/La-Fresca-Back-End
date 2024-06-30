@@ -20,7 +20,7 @@ public class User {
     private String PhoneNumber;
     private String Address;
     private String Role;
-    private Long CafeId;
+    private String CafeId;
     private Integer Deleted = 0;
 
     public String getUserId() {

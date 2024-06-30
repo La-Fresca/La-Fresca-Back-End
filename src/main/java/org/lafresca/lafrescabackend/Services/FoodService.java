@@ -60,17 +60,23 @@ public class FoodService {
 
         if (food.getName() != null && !food.getName().isEmpty()) {
             existingFood.setName(food.getName());
-        } else if (food.getDescription() != null && !food.getDescription().isEmpty()) {
+        }
+        if (food.getDescription() != null && !food.getDescription().isEmpty()) {
             existingFood.setDescription(food.getDescription());
-        } else if (food.getPrice() != null && food.getPrice() >= 0) {
+        }
+        if (food.getPrice() != null && food.getPrice() >= 0) {
             existingFood.setPrice(food.getPrice());
-        } else if (food.getImage() != null && !food.getImage().isEmpty()) {
+        }
+        if (food.getImage() != null && !food.getImage().isEmpty()) {
             existingFood.setImage(food.getImage());
-        } else if (food.getCafeId() != null && !food.getCafeId().isEmpty()) {
+        }
+        if (food.getCafeId() != null && !food.getCafeId().isEmpty()) {
             existingFood.setCafeId(food.getCafeId());
-        } else if (food.getAvailable() == 0 || food.getAvailable() == 1) {
+        }
+        if (food.getAvailable() == 0 || food.getAvailable() == 1) {
             existingFood.setAvailable(food.getAvailable());
-        } else if (food.getDeleted() == 0 || food.getDeleted() == 1) {
+        }
+        if (food.getDeleted() == 0 || food.getDeleted() == 1) {
             existingFood.setDeleted(food.getDeleted());
         }
 
