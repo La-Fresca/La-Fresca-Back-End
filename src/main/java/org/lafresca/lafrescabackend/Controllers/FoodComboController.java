@@ -3,9 +3,8 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
-import org.lafresca.lafrescabackend.Models.Food;
-import org.lafresca.lafrescabackend.Services.FoodService;
+import org.lafresca.lafrescabackend.Models.FoodCombo;
+import org.lafresca.lafrescabackend.Services.FoodComboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,17 +12,21 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/lafresca/food")
-@AllArgsConstructor
-@Tag(name="Food Controller")
-public class FoodController {
-    private final FoodService foodService;
+@RequestMapping(path = "api/lafresca/foodCombo")
+@Tag(name="Food Combo Controller")
+public class FoodComboController {
+    private final FoodComboService foodComboService;
 
-    // Add new food item
+    @Autowired
+    public FoodComboController(FoodComboService foodComboService) {
+        this.foodComboService = foodComboService;
+    }
+
+    // Add new food combo
     @PostMapping
     @Operation(
-            description = "Add new food item",
-            summary = "Add new food item to the branch",
+            description = "Add new food combo",
+            summary = "Add new food combo to the branch",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -33,15 +36,15 @@ public class FoodController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public String addNewFood(@RequestBody Food food) {
-        return foodService.addNewFood(food);
+    public String addNewMenu(@RequestBody FoodCombo foodCombo) {
+        return foodComboService.addNewMenu(foodCombo);
     }
 
-    // Retrieve all food items
+    // Retrieve all food combos
     @GetMapping
     @Operation(
-            description = "Get all food items",
-            summary = "Retrieve all food items in the branch",
+            description = "Get all food combos",
+            summary = "Retrieve all food combos in the branch",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -51,15 +54,15 @@ public class FoodController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<Food> getFoods(){
-        return foodService.getFoods();
+    public List<FoodCombo> getMenus(){
+        return foodComboService.getMenus();
     }
 
-    // Search food item
+    // Search food combo
     @GetMapping(path = "{id}")
     @Operation(
-            description = "Search food item by id",
-            summary = "Retrieve food items by using the id",
+            description = "Search food combo by id",
+            summary = "Retrieve food combos by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -69,15 +72,15 @@ public class FoodController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public Optional<Food> getFood(@PathVariable("id") String id){
-        return foodService.getFood(id);
+    public Optional<FoodCombo> getMenu(@PathVariable("id") String id){
+        return foodComboService.getMenu(id);
     }
 
-    // Delete food item
+    // Delete food combo
     @DeleteMapping(path = "{id}")
     @Operation(
-            description = "Delete food item by id",
-            summary = "Delete food items by using the id",
+            description = "Delete food combo by id",
+            summary = "Delete food combos by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -87,15 +90,15 @@ public class FoodController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void deleteFood(@PathVariable("id") String id){
-        foodService.deleteFood(id);
+    public void deleteMenu(@PathVariable("id") String id){
+        foodComboService.deleteMenu(id);
     }
 
-    // Update food item
+    // Update food combo
     @PutMapping(path = "{id}")
     @Operation(
-            description = "Update food item by id",
-            summary = "Update food items by using the id",
+            description = "Update food combo by id",
+            summary = "Update food combos by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -105,7 +108,7 @@ public class FoodController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void updateFood(@PathVariable("id") String id, @RequestBody Food food){
-        foodService.updateFood(id, food);
+    public void updateMenu(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
+        foodComboService.updateMenu(id, foodCombo);
     }
 }
