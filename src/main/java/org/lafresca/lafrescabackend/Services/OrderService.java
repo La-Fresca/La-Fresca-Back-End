@@ -2,19 +2,14 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Models.OrderStatus;
-import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.OrderRepository;
-import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.lafresca.lafrescabackend.Validations.FoodAmountValidation;
-import org.lafresca.lafrescabackend.Validations.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderService {
