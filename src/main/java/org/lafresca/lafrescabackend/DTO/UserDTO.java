@@ -16,5 +16,5 @@ public class UserDTO {
     private String PhoneNumber;
     private String Address;
     private String Role;
-    private Long CafeId;
+    private String CafeId;
 }
