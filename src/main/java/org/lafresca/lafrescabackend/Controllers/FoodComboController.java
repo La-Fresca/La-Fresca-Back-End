@@ -36,8 +36,8 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public String addNewMenu(@RequestBody FoodCombo foodCombo) {
-        return foodComboService.addNewMenu(foodCombo);
+    public String addNewFoodCombo(@RequestBody FoodCombo foodCombo) {
+        return foodComboService.addNewFoodCombo(foodCombo);
     }
 
     // Retrieve all food combos
@@ -54,8 +54,8 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodCombo> getMenus(){
-        return foodComboService.getMenus();
+    public List<FoodCombo> getFoodCombos(){
+        return foodComboService.getFoodCombos();
     }
 
     // Search food combo
@@ -72,8 +72,8 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public Optional<FoodCombo> getMenu(@PathVariable("id") String id){
-        return foodComboService.getMenu(id);
+    public Optional<FoodCombo> getFoodCombo(@PathVariable("id") String id){
+        return foodComboService.getFoodCombo(id);
     }
 
     // Delete food combo
@@ -90,8 +90,8 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void deleteMenu(@PathVariable("id") String id){
-        foodComboService.deleteMenu(id);
+    public void deleteFoodCombo(@PathVariable("id") String id){
+        foodComboService.deleteFoodCombo(id);
     }
 
     // Update food combo
@@ -108,7 +108,7 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void updateMenu(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
-        foodComboService.updateMenu(id, foodCombo);
+    public void updateFoodCombo(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
+        foodComboService.updateFoodCombo(id, foodCombo);
     }
 }
