@@ -32,8 +32,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public String addNewFood(@RequestBody FoodItem foodItem) {
-        return foodItemService.addNewFood(foodItem);
+    public String addNewFoodItem(@RequestBody FoodItem foodItem) {
+        return foodItemService.addNewFoodItem(foodItem);
     }
 
     // Retrieve all food items
@@ -50,8 +50,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodItem> getFoods(){
-        return foodItemService.getFoods();
+    public List<FoodItem> getFoodItems(){
+        return foodItemService.getFoodItems();
     }
 
     // Search food item
@@ -68,8 +68,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public Optional<FoodItem> getFood(@PathVariable("id") String id){
-        return foodItemService.getFood(id);
+    public Optional<FoodItem> getFoodItem(@PathVariable("id") String id){
+        return foodItemService.getFoodItem(id);
     }
 
     // Delete food item
@@ -86,8 +86,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void deleteFood(@PathVariable("id") String id){
-        foodItemService.deleteFood(id);
+    public void deleteFoodItem(@PathVariable("id") String id){
+        foodItemService.deleteFoodItem(id);
     }
 
     // Update food item
@@ -104,7 +104,7 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void updateFood(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
-        foodItemService.updateFood(id, foodItem);
+    public void updateFoodItem(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
+        foodItemService.updateFoodItem(id, foodItem);
     }
 }

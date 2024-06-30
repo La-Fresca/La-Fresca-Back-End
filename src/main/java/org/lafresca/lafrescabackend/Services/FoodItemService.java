@@ -19,7 +19,7 @@ public class FoodItemService {
     }
 
     // Add new food item
-    public String addNewFood(FoodItem foodItem) {
+    public String addNewFoodItem(FoodItem foodItem) {
         String error = null;
 
         if (foodItem.getName() == null || foodItem.getName().isEmpty()) {
@@ -48,12 +48,12 @@ public class FoodItemService {
 
 
     // Retrieve all food items
-    public List<FoodItem> getFoods() {
+    public List<FoodItem> getFoodItems() {
         return foodItemRepository.findAll();
     }
 
     // Update food item
-    public void updateFood(String id, FoodItem foodItem) {
+    public void updateFoodItem(String id, FoodItem foodItem) {
         FoodItem existingFoodItem = foodItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
 
@@ -85,12 +85,14 @@ public class FoodItemService {
     }
 
     // Delete food item by id
-    public void deleteFood(String id) {
+    public void deleteFoodItem(String id) {
+        foodItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
         foodItemRepository.deleteById(id);
     }
 
     // Search food item
-    public Optional<FoodItem> getFood(String id) {
+    public Optional<FoodItem> getFoodItem(String id) {
+        foodItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
         return foodItemRepository.findById(id);
     }
 }
