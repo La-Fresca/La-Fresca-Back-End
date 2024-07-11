@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.FoodItemDTO;
+import org.lafresca.lafrescabackend.DTO.FoodItemDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
@@ -8,14 +10,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FoodItemService {
     private final FoodItemRepository foodItemRepository;
+    private final FoodItemDTOMapper foodItemDTOMapper;
 
     @Autowired
-    public FoodItemService(FoodItemRepository foodItemRepository) {
+    public FoodItemService(FoodItemRepository foodItemRepository, FoodItemDTOMapper foodItemDTOMapper) {
         this.foodItemRepository = foodItemRepository;
+        this.foodItemDTOMapper = foodItemDTOMapper;
     }
 
     // Add new food item
@@ -48,8 +53,11 @@ public class FoodItemService {
 
 
     // Retrieve all food items
-    public List<FoodItem> getFoodItems() {
-        return foodItemRepository.findAll();
+    public List<FoodItemDTO> getFoodItems() {
+        return foodItemRepository.findAll()
+                .stream()
+                .map(foodItemDTOMapper)
+                .collect(Collectors.toList());
     }
 
     // Update food item
