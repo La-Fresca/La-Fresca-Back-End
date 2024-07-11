@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.FoodItemDTO;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Services.FoodItemService;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/food")
 @AllArgsConstructor
 @Tag(name="Food Item Controller")
@@ -50,7 +52,7 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodItem> getFoodItems(){
+    public List<FoodItemDTO> getFoodItems(){
         return foodItemService.getFoodItems();
     }
 
