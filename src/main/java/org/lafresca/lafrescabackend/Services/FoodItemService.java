@@ -87,6 +87,10 @@ public class FoodItemService {
             existingFoodItem.setDeleted(foodItem.getDeleted());
         }
 
+        if (foodItem.getRating() != 0 && foodItem.getRating() != null){
+            existingFoodItem.setRating(foodItem.getRating());
+        }
+
         existingFoodItem.setFeatures(foodItem.getFeatures());
 
         foodItemRepository.save(existingFoodItem);

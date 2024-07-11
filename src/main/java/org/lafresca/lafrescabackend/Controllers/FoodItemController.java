@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/food")
 @AllArgsConstructor
 @Tag(name="Food Item Controller")

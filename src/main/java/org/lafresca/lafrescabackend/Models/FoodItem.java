@@ -24,4 +24,5 @@ public class FoodItem {
     private String CafeId;
     private Integer Deleted;
     private String Category;
+    private Double Rating;
 }
