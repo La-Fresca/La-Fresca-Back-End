@@ -71,4 +71,22 @@ public class DiscountController {
             })
 
     public Optional<Discount> getDiscount(@PathVariable("id") String id) { return discountService.getDiscount(id);}
+
+    // Delete discount
+    @DeleteMapping(path = "{id}")
+    @Operation(
+            description = "Delete discount by id",
+            summary = "Delete discount by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public void deleteDiscount(@PathVariable("id") String id) { discountService.deleteDiscount(id); }
 }

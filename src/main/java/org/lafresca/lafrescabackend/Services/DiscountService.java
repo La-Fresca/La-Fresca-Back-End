@@ -69,8 +69,15 @@ public class DiscountService {
     // Retrieve all discounts
     public List<Discount> getDiscounts() { return discountRepository.findAll(); }
 
-    // Search discount
+    // Search discount by id
     public Optional<Discount> getDiscount(String id) {
-        discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id "+ id));
-        return discountRepository.findById(id);}
+        discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id " + id));
+        return discountRepository.findById(id);
+    }
+
+    // Delete discount by id
+    public void deleteDiscount(String id) {
+        discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id " + id));
+        discountRepository.deleteById(id);
+    }
 }
