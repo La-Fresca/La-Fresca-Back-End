@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class DiscountService {
@@ -63,5 +64,5 @@ public class DiscountService {
         return error;
     }
 
-
+    public List<Discount> getDiscounts() { return discountRepository.findAll(); }
 }

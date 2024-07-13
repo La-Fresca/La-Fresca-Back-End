@@ -8,6 +8,8 @@ import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Services.DiscountService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "api/lafresca/discount")
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class DiscountController {
     @PostMapping
     @Operation(
             description = "Add new discount",
-            summary = "Add new discount to menu item",
+            summary = "Add new discount to branch",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -33,4 +35,21 @@ public class DiscountController {
 
     public String addDiscount(@RequestBody Discount discount) { return discountService.addDiscount(discount); }
 
+    // Retrieve all discounts
+    @GetMapping
+    @Operation(
+            description = "Get all discounts",
+            summary = "Retrieve all discounts in the branch",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public List<Discount> getDiscounts() { return discountService.getDiscounts(); }
 }
