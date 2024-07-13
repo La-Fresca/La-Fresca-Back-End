@@ -30,7 +30,8 @@ public class BranchController {
                     ),
                     @ApiResponse(
                             description = "Unauthorized / Invalid Token",
-                            responseCode = "403")
+                            responseCode = "403"
+                    )
             })
 
     public String addBranch(@RequestBody Branch branch) { return branchService.addNewBranch(branch); }

@@ -14,11 +14,11 @@ public class Discount {
     private String Name;
     private String Description;
     private String DiscountType;
-    private String DiscountAmount;
+    private Integer DiscountAmount;
     private Date StartDate;
     private Date EndDate;
     private String CafeId;
-    private Integer IsActive;
+    private Integer IsActive; // When Discount is active 1 else 0
     private String MenuItemType;
     private String MenuItemId;
     private String OfferDetails;
