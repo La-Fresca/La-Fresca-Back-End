@@ -89,4 +89,22 @@ public class DiscountController {
             })
 
     public void deleteDiscount(@PathVariable("id") String id) { discountService.deleteDiscount(id); }
+
+    // Update discount
+    @PutMapping(path = "{id}")
+    @Operation(
+            description = "Update discount by id",
+            summary = "Update discount by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public void updateDiscount(@PathVariable("id") String id, @RequestBody Discount discount) { discountService.updateDiscount(id, discount); }
 }

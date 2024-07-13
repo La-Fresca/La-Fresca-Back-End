@@ -17,6 +17,7 @@ public class DiscountService {
     @Autowired
     public DiscountService(DiscountRepository discountRepository) { this.discountRepository = discountRepository; }
 
+    // Add new discount
     public String addDiscount(Discount discount) {
         String error = null;
 
@@ -79,5 +80,46 @@ public class DiscountService {
     public void deleteDiscount(String id) {
         discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id " + id));
         discountRepository.deleteById(id);
+    }
+
+    // Update Discount by id
+    public void updateDiscount(String id, Discount discount) {
+        Discount existingDiscount = discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id " + id));
+
+        if (existingDiscount.getName() != null && !existingDiscount.getName().isEmpty()) {
+            existingDiscount.setName(existingDiscount.getName());
+        }
+        if (existingDiscount.getDescription() != null && !existingDiscount.getDescription().isEmpty()) {
+            existingDiscount.setDescription(existingDiscount.getDescription());
+        }
+        if (existingDiscount.getDiscountType().equals("Price Offer") || existingDiscount.getDiscountType().equals("Promotional Offer")) {
+            existingDiscount.setDiscountType(existingDiscount.getDiscountType());
+        }
+        if (existingDiscount.getDiscountAmount() > 0) {
+            existingDiscount.setDiscountAmount(existingDiscount.getDiscountAmount());
+        }
+        if (existingDiscount.getCafeId() != null && !existingDiscount.getCafeId().isEmpty()) {
+            existingDiscount.setCafeId(existingDiscount.getCafeId());
+        }
+        if (existingDiscount.getIsActive() == 0 || existingDiscount.getIsActive() == 1) {
+            existingDiscount.setIsActive(existingDiscount.getIsActive());
+        }
+        if (existingDiscount.getMenuItemId() != null && !existingDiscount.getMenuItemId().isEmpty()) {
+            existingDiscount.setMenuItemId(existingDiscount.getMenuItemId());
+        }
+        if (existingDiscount.getMenuItemType().equals("Food Item") || existingDiscount.getMenuItemType().equals("Food Combo")) {
+            existingDiscount.setMenuItemType(existingDiscount.getMenuItemType());
+        }
+        if (existingDiscount.getOfferDetails() != null && !existingDiscount.getOfferDetails().isEmpty()) {
+            existingDiscount.setOfferDetails(existingDiscount.getOfferDetails());
+        }
+//        else if (!LocalDateTime.toInstant().isBefore(discount.getStartDate().toInstant())) {
+//            error = "Start date not valid";
+//        }
+//        else if (!discount.getEndDate().toInstant().isAfter(discount.getStartDate().toInstant())) {
+//            error = "End date not valid";
+//        }
+
+        discountRepository.save(existingDiscount);
     }
 }
