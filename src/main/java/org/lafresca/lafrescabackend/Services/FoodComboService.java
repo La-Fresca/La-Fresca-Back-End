@@ -19,7 +19,7 @@ public class FoodComboService {
     }
 
     // Add new food combo
-    public String addNewMenu(FoodCombo foodCombo) {
+    public String addNewFoodCombo(FoodCombo foodCombo) {
         String error = null;
 
         if (foodCombo.getName() == null || foodCombo.getName().isEmpty()) {
@@ -48,12 +48,12 @@ public class FoodComboService {
 
 
     // Retrieve all food combos
-    public List<FoodCombo> getMenus() {
+    public List<FoodCombo> getFoodCombos() {
         return foodComboRepository.findAll();
     }
 
     // Update food combo
-    public void updateMenu(String id, FoodCombo foodCombo) {
+    public void updateFoodCombo(String id, FoodCombo foodCombo) {
         FoodCombo existingFoodCombo = foodComboRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Menu not found with id " + id));
 
@@ -83,12 +83,14 @@ public class FoodComboService {
     }
 
     // Delete food combo item by id
-    public void deleteMenu(String id) {
+    public void deleteFoodCombo(String id) {
+        foodComboRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Menu not found with id " + id));
         foodComboRepository.deleteById(id);
     }
 
     // Search food combo
-    public Optional<FoodCombo> getMenu(String id) {
+    public Optional<FoodCombo> getFoodCombo(String id) {
+        foodComboRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Menu not found with id " + id));
         return foodComboRepository.findById(id);
     }
 }

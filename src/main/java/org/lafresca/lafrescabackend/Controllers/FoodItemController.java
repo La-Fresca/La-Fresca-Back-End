@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.FoodItemDTO;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Services.FoodItemService;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/food")
 @AllArgsConstructor
 @Tag(name="Food Item Controller")
@@ -32,8 +34,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public String addNewFood(@RequestBody FoodItem foodItem) {
-        return foodItemService.addNewFood(foodItem);
+    public String addNewFoodItem(@RequestBody FoodItem foodItem) {
+        return foodItemService.addNewFoodItem(foodItem);
     }
 
     // Retrieve all food items
@@ -50,8 +52,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodItem> getFoods(){
-        return foodItemService.getFoods();
+    public List<FoodItemDTO> getFoodItems(){
+        return foodItemService.getFoodItems();
     }
 
     // Search food item
@@ -68,8 +70,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public Optional<FoodItem> getFood(@PathVariable("id") String id){
-        return foodItemService.getFood(id);
+    public Optional<FoodItem> getFoodItem(@PathVariable("id") String id){
+        return foodItemService.getFoodItem(id);
     }
 
     // Delete food item
@@ -86,8 +88,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void deleteFood(@PathVariable("id") String id){
-        foodItemService.deleteFood(id);
+    public void deleteFoodItem(@PathVariable("id") String id){
+        foodItemService.deleteFoodItem(id);
     }
 
     // Update food item
@@ -104,7 +106,7 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void updateFood(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
-        foodItemService.updateFood(id, foodItem);
+    public void updateFoodItem(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
+        foodItemService.updateFoodItem(id, foodItem);
     }
 }

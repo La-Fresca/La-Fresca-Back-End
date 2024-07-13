@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.FoodItemDTO;
+import org.lafresca.lafrescabackend.DTO.FoodItemDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
@@ -8,18 +10,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FoodItemService {
     private final FoodItemRepository foodItemRepository;
+    private final FoodItemDTOMapper foodItemDTOMapper;
 
     @Autowired
-    public FoodItemService(FoodItemRepository foodItemRepository) {
+    public FoodItemService(FoodItemRepository foodItemRepository, FoodItemDTOMapper foodItemDTOMapper) {
         this.foodItemRepository = foodItemRepository;
+        this.foodItemDTOMapper = foodItemDTOMapper;
     }
 
     // Add new food item
-    public String addNewFood(FoodItem foodItem) {
+    public String addNewFoodItem(FoodItem foodItem) {
         String error = null;
 
         if (foodItem.getName() == null || foodItem.getName().isEmpty()) {
@@ -48,12 +53,15 @@ public class FoodItemService {
 
 
     // Retrieve all food items
-    public List<FoodItem> getFoods() {
-        return foodItemRepository.findAll();
+    public List<FoodItemDTO> getFoodItems() {
+        return foodItemRepository.findAll()
+                .stream()
+                .map(foodItemDTOMapper)
+                .collect(Collectors.toList());
     }
 
     // Update food item
-    public void updateFood(String id, FoodItem foodItem) {
+    public void updateFoodItem(String id, FoodItem foodItem) {
         FoodItem existingFoodItem = foodItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
 
@@ -79,18 +87,24 @@ public class FoodItemService {
             existingFoodItem.setDeleted(foodItem.getDeleted());
         }
 
+        if (foodItem.getRating() != 0 && foodItem.getRating() != null){
+            existingFoodItem.setRating(foodItem.getRating());
+        }
+
         existingFoodItem.setFeatures(foodItem.getFeatures());
 
         foodItemRepository.save(existingFoodItem);
     }
 
     // Delete food item by id
-    public void deleteFood(String id) {
+    public void deleteFoodItem(String id) {
+        foodItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
         foodItemRepository.deleteById(id);
     }
 
     // Search food item
-    public Optional<FoodItem> getFood(String id) {
+    public Optional<FoodItem> getFoodItem(String id) {
+        foodItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
         return foodItemRepository.findById(id);
     }
 }
