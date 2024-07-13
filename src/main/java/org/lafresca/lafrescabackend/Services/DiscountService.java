@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Repositories.DiscountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiscountService {
@@ -64,5 +66,11 @@ public class DiscountService {
         return error;
     }
 
+    // Retrieve all discounts
     public List<Discount> getDiscounts() { return discountRepository.findAll(); }
+
+    // Search discount
+    public Optional<Discount> getDiscount(String id) {
+        discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id "+ id));
+        return discountRepository.findById(id);}
 }

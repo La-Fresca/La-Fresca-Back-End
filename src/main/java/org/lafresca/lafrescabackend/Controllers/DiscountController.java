@@ -9,6 +9,7 @@ import org.lafresca.lafrescabackend.Services.DiscountService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/lafresca/discount")
@@ -52,4 +53,22 @@ public class DiscountController {
             })
 
     public List<Discount> getDiscounts() { return discountService.getDiscounts(); }
+
+    // Search discount
+    @GetMapping(path = "{id}")
+    @Operation(
+            description = "Search discount by id",
+            summary = "Retrieve discount by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public Optional<Discount> getDiscount(@PathVariable("id") String id) { return discountService.getDiscount(id);}
 }
