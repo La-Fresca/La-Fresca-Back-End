@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Document(collection = "Discount")
 @Data
@@ -15,8 +15,8 @@ public class Discount {
     private String Description;
     private String DiscountType;
     private Integer DiscountAmount;
-    private Date StartDate;
-    private Date EndDate;
+    private LocalDateTime StartDate;
+    private LocalDateTime EndDate;
     private String CafeId;
     private Integer IsActive; // When Discount is active 1 else 0
     private String MenuItemType;
