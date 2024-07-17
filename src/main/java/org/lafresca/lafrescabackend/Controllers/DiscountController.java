@@ -4,25 +4,25 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.lafresca.lafrescabackend.Models.Branch;
-import org.lafresca.lafrescabackend.Services.BranchService;
+import org.lafresca.lafrescabackend.Models.Discount;
+import org.lafresca.lafrescabackend.Services.DiscountService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/lafresca/branch")
+@RequestMapping(path = "api/lafresca/discount")
 @AllArgsConstructor
-@Tag(name = "Branch Controller")
-public class BranchController {
-    private final BranchService branchService;
+@Tag(name = "Discount Controller")
+public class DiscountController {
+    private final DiscountService discountService;
 
-    // Add new branch
+    // Add new discount
     @PostMapping
     @Operation(
-            description = "Add new branch",
-            summary = "Add new branch to the chain",
+            description = "Add new discount",
+            summary = "Add new discount to branch",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -34,13 +34,13 @@ public class BranchController {
                     )
             })
 
-    public String addBranch(@RequestBody Branch branch) { return branchService.addNewBranch(branch); }
+    public String addDiscount(@RequestBody Discount discount) { return discountService.addDiscount(discount); }
 
-    // Get all branches
+    // Retrieve all discounts
     @GetMapping
     @Operation(
-            description = "Get all branches",
-            summary = "Retrieve all branches in the chain",
+            description = "Get all discounts",
+            summary = "Retrieve all discounts in the branch",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -52,13 +52,13 @@ public class BranchController {
                     )
             })
 
-    public List<Branch> getBranches() { return branchService.getBranches(); }
+    public List<Discount> getDiscounts() { return discountService.getDiscounts(); }
 
-    // Search branch
+    // Search discount
     @GetMapping(path = "{id}")
     @Operation(
-            description = "Search branch by id",
-            summary = "Retrieve branches by using id",
+            description = "Search discount by id",
+            summary = "Retrieve discount by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -70,13 +70,13 @@ public class BranchController {
                     )
             })
 
-    public Optional<Branch> getBranch(@PathVariable("id") String id) { return branchService.getBranch(id); }
+    public Optional<Discount> getDiscount(@PathVariable("id") String id) { return discountService.getDiscount(id);}
 
-    // Delete branch
+    // Delete discount
     @DeleteMapping(path = "{id}")
     @Operation(
-            description = "Delete branch",
-            summary = "Delete branch by using id",
+            description = "Delete discount by id",
+            summary = "Delete discount by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -88,13 +88,13 @@ public class BranchController {
                     )
             })
 
-    public void deleteBranch(@PathVariable("id") String id) { branchService.deleteBranch(id); }
+    public void deleteDiscount(@PathVariable("id") String id) { discountService.deleteDiscount(id); }
 
-    // Update Branch
+    // Update discount
     @PutMapping(path = "{id}")
     @Operation(
-            description = "Update branch",
-            summary = "Update branch by using id",
+            description = "Update discount by id",
+            summary = "Update discount by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -106,5 +106,5 @@ public class BranchController {
                     )
             })
 
-    public void updateBranch(@PathVariable("id") String id, @RequestBody Branch branch) { branchService.updateBranch(id, branch); }
+    public void updateDiscount(@PathVariable("id") String id, @RequestBody Discount discount) { discountService.updateDiscount(id, discount); }
 }
