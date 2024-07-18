@@ -18,8 +18,9 @@ public class DiscountService {
     public DiscountService(DiscountRepository discountRepository) { this.discountRepository = discountRepository; }
 
     // Add new discount
-    public String addDiscount(Discount discount) {
+    public String addNewDiscount(Discount discount) {
         String error = null;
+        LocalDateTime now = LocalDateTime.now();
 
         if (discount.getName() == null || discount.getName().isEmpty()) {
             error = "Name cannot be empty";
@@ -36,12 +37,18 @@ public class DiscountService {
         else if (discount.getDiscountAmount() < 0 ) {
             error = "Discount amount not valid";
         }
-//        else if (!LocalDateTime.toInstant().isBefore(discount.getStartDate().toInstant())) {
-//            error = "Start date not valid";
-//        }
-//        else if (!discount.getEndDate().toInstant().isAfter(discount.getStartDate().toInstant())) {
-//            error = "End date not valid";
-//        }
+        else if (discount.getStartDate() == null || discount.getStartDate().toString().isEmpty()) {
+            error = "Start date not valid";
+        }
+        else if (LocalDateTime.parse(discount.getStartDate().toString()).isBefore(now)) {
+            error = "Start date not valid";
+        }
+        else if (discount.getEndDate() == null || discount.getEndDate().toString().isEmpty()) {
+            error = "End date not valid";
+        }
+        else if (LocalDateTime.parse(discount.getEndDate().toString()).isBefore(LocalDateTime.parse(discount.getStartDate().toString()))) {
+            error = "End date not valid";
+        }
         else if (discount.getCafeId() == null || discount.getCafeId().isEmpty()) {
             error = "Cafe Id cannot be empty";
         }
@@ -85,40 +92,41 @@ public class DiscountService {
     // Update Discount by id
     public void updateDiscount(String id, Discount discount) {
         Discount existingDiscount = discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id " + id));
+        LocalDateTime now = LocalDateTime.now();
 
-        if (existingDiscount.getName() != null && !existingDiscount.getName().isEmpty()) {
-            existingDiscount.setName(existingDiscount.getName());
+        if (discount.getName() != null && !discount.getName().isEmpty()) {
+            existingDiscount.setName(discount.getName());
         }
-        if (existingDiscount.getDescription() != null && !existingDiscount.getDescription().isEmpty()) {
-            existingDiscount.setDescription(existingDiscount.getDescription());
+        if (discount.getDescription() != null && !discount.getDescription().isEmpty()) {
+            existingDiscount.setDescription(discount.getDescription());
         }
-        if (existingDiscount.getDiscountType().equals("Price Offer") || existingDiscount.getDiscountType().equals("Promotional Offer")) {
-            existingDiscount.setDiscountType(existingDiscount.getDiscountType());
+        if (discount.getDiscountType().equals("Price Offer") || discount.getDiscountType().equals("Promotional Offer")) {
+            existingDiscount.setDiscountType(discount.getDiscountType());
         }
-        if (existingDiscount.getDiscountAmount() > 0) {
-            existingDiscount.setDiscountAmount(existingDiscount.getDiscountAmount());
+        if (discount.getDiscountAmount() > 0) {
+            existingDiscount.setDiscountAmount(discount.getDiscountAmount());
         }
-        if (existingDiscount.getCafeId() != null && !existingDiscount.getCafeId().isEmpty()) {
-            existingDiscount.setCafeId(existingDiscount.getCafeId());
+        if (discount.getStartDate() != null && !discount.getStartDate().toString().isEmpty() && !LocalDateTime.parse(discount.getStartDate().toString()).isBefore(now)) {
+            existingDiscount.setStartDate(discount.getStartDate());
         }
-        if (existingDiscount.getIsActive() == 0 || existingDiscount.getIsActive() == 1) {
-            existingDiscount.setIsActive(existingDiscount.getIsActive());
+        if (discount.getEndDate() != null && !discount.getEndDate().toString().isEmpty() && !LocalDateTime.parse(discount.getEndDate().toString()).isBefore(LocalDateTime.parse(discount.getStartDate().toString()))) {
+            existingDiscount.setEndDate(discount.getEndDate());
         }
-        if (existingDiscount.getMenuItemId() != null && !existingDiscount.getMenuItemId().isEmpty()) {
+        if (discount.getCafeId() != null && !discount.getCafeId().isEmpty()) {
+            existingDiscount.setCafeId(discount.getCafeId());
+        }
+        if (discount.getIsActive() == 0 || discount.getIsActive() == 1) {
+            existingDiscount.setIsActive(discount.getIsActive());
+        }
+        if (discount.getMenuItemId() != null && !discount.getMenuItemId().isEmpty()) {
             existingDiscount.setMenuItemId(existingDiscount.getMenuItemId());
         }
-        if (existingDiscount.getMenuItemType().equals("Food Item") || existingDiscount.getMenuItemType().equals("Food Combo")) {
+        if (discount.getMenuItemType().equals("Food Item") || discount.getMenuItemType().equals("Food Combo")) {
             existingDiscount.setMenuItemType(existingDiscount.getMenuItemType());
         }
-        if (existingDiscount.getOfferDetails() != null && !existingDiscount.getOfferDetails().isEmpty()) {
-            existingDiscount.setOfferDetails(existingDiscount.getOfferDetails());
+        if (discount.getOfferDetails() != null && !discount.getOfferDetails().isEmpty()) {
+            existingDiscount.setOfferDetails(discount.getOfferDetails());
         }
-//        else if (!LocalDateTime.toInstant().isBefore(discount.getStartDate().toInstant())) {
-//            error = "Start date not valid";
-//        }
-//        else if (!discount.getEndDate().toInstant().isAfter(discount.getStartDate().toInstant())) {
-//            error = "End date not valid";
-//        }
 
         discountRepository.save(existingDiscount);
     }
