@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/branch")
 @AllArgsConstructor
 @Tag(name = "Branch Controller")
