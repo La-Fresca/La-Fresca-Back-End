@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl AS builder
+FROM bellsoft/liberica-openjdk-alpine:21 AS builder
 
 WORKDIR /home/app
 ADD ./ /home/app/la-fresca
@@ -6,7 +6,7 @@ RUN chmod +x /home/app/la-fresca/mvnw
 RUN cd la-fresca && ./mvnw -Dmaven.test.skip=true clean package
 
 
-FROM bellsoft/liberica-runtime-container:jre-21-musl
+FROM bellsoft/liberica-openjdk-alpine:21
 
 WORKDIR /home/app
 EXPOSE 8080
