@@ -33,6 +33,8 @@ public class CategoryService {
         return error;
     }
 
+    // Get All Categories
+    public List<Category> getCategories() { return categoryRepository.findAll(); }
 
 
 }

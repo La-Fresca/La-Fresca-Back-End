@@ -35,5 +35,21 @@ public class CategoryController {
 
     public String addNewCategory(@RequestBody Category category) { return categoryService.addNewCategory(category); }
 
+    // Get all categories
+    @GetMapping
+    @Operation(
+            description = "Get all categories",
+            summary = "Retrieve all categories",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
 
+    public List<Category> getCategories() { return categoryService.getCategories(); }
 }
