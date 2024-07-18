@@ -12,7 +12,7 @@ public record FoodItemDTO(
         Integer available,
         List<CustomFeature> features,
         String cafeId,
-        String category,
+        List<String> category,
         Double rating,
         Integer discountStatus,
         String discountID
