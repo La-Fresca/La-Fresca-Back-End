@@ -4,25 +4,25 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.lafresca.lafrescabackend.Models.Discount;
-import org.lafresca.lafrescabackend.Services.DiscountService;
+import org.lafresca.lafrescabackend.Models.Category;
+import org.lafresca.lafrescabackend.Services.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/lafresca/discount")
+@RequestMapping(path = "/api/lafresca/category")
 @AllArgsConstructor
-@Tag(name = "Discount Controller")
-public class DiscountController {
-    private final DiscountService discountService;
+@Tag(name = "Category Controller")
+public class CategoryController {
+    private final CategoryService categoryService;
 
-    // Add new discount
+    // Add new category
     @PostMapping
     @Operation(
-            description = "Add new discount",
-            summary = "Add new discount to branch",
+            description = "Add new category",
+            summary = "Add new category ",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -34,13 +34,13 @@ public class DiscountController {
                     )
             })
 
-    public String addNewDiscount(@RequestBody Discount discount) { return discountService.addNewDiscount(discount); }
+    public String addNewCategory(@RequestBody Category category) { return categoryService.addNewCategory(category); }
 
-    // Retrieve all discounts
+    // Get all categories
     @GetMapping
     @Operation(
-            description = "Get all discounts",
-            summary = "Retrieve all discounts in the branch",
+            description = "Get all categories",
+            summary = "Retrieve all categories",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -52,13 +52,13 @@ public class DiscountController {
                     )
             })
 
-    public List<Discount> getDiscounts() { return discountService.getDiscounts(); }
+    public List<Category> getCategories() { return categoryService.getCategories(); }
 
-    // Search discount
+    // Search Category
     @GetMapping(path = "{id}")
     @Operation(
-            description = "Search discount by id",
-            summary = "Retrieve discount by using the id",
+            description = "Search category by id",
+            summary = "Retrieve categories by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -70,13 +70,13 @@ public class DiscountController {
                     )
             })
 
-    public Optional<Discount> getDiscount(@PathVariable("id") String id) { return discountService.getDiscount(id);}
+    public Optional<Category> getCategory (@PathVariable("id") String id) { return categoryService.getCategory(id); }
 
-    // Delete discount
+    // Delete Category
     @DeleteMapping(path = "{id}")
     @Operation(
-            description = "Delete discount by id",
-            summary = "Delete discount by using the id",
+            description = "Delete category by id",
+            summary = "Delete categories by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -88,13 +88,13 @@ public class DiscountController {
                     )
             })
 
-    public void deleteDiscount(@PathVariable("id") String id) { discountService.deleteDiscount(id); }
+    public void deleteCategory (@PathVariable("id") String id) { categoryService.deleteCategory(id);}
 
-    // Update discount
+    // Update Category
     @PutMapping(path = "{id}")
     @Operation(
-            description = "Update discount by id",
-            summary = "Update discount by using the id",
+            description = "Update category by id",
+            summary = "Update categories by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -106,5 +106,7 @@ public class DiscountController {
                     )
             })
 
-    public void updateDiscount(@PathVariable("id") String id, @RequestBody Discount discount) { discountService.updateDiscount(id, discount); }
+    public void updateCategory (@PathVariable("id") String id, @RequestBody Category category) {
+        categoryService.updateCategory(id, category);
+    }
 }

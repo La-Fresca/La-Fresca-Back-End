@@ -18,7 +18,7 @@ public class DiscountService {
     public DiscountService(DiscountRepository discountRepository) { this.discountRepository = discountRepository; }
 
     // Add new discount
-    public String addDiscount(Discount discount) {
+    public String addNewDiscount(Discount discount) {
         String error = null;
         LocalDateTime now = LocalDateTime.now();
 

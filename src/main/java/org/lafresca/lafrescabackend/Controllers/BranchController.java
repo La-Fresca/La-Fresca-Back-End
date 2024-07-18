@@ -34,7 +34,7 @@ public class BranchController {
                     )
             })
 
-    public String addBranch(@RequestBody Branch branch) { return branchService.addNewBranch(branch); }
+    public String addNewBranch(@RequestBody Branch branch) { return branchService.addNewBranch(branch); }
 
     // Get all branches
     @GetMapping
