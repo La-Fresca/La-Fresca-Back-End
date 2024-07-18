@@ -29,27 +29,41 @@ public class FoodItemService {
 
         if (foodItem.getName() == null || foodItem.getName().isEmpty()) {
             error = "Please enter name";
-        } else if (foodItem.getDescription() == null || foodItem.getDescription().isEmpty()) {
+        }
+        else if (foodItem.getDescription() == null || foodItem.getDescription().isEmpty()) {
             error = "Please enter description";
-        } else if (foodItem.getPrice() <= 0) {
+        }
+        else if (foodItem.getPrice() <= 0) {
             error = "Please enter a valid price";
-        } else if (foodItem.getImage() == null || foodItem.getImage().isEmpty()) {
+        }
+        else if (foodItem.getImage() == null || foodItem.getImage().isEmpty()) {
             error = "Please upload image";
-        } else if (foodItem.getCafeId() == null || foodItem.getCafeId().isEmpty()) {
+        }
+        else if (foodItem.getCafeId() == null || foodItem.getCafeId().isEmpty()) {
             error = "Please enter cafe id";
-        } else if (foodItem.getAvailable() < 0 || foodItem.getAvailable() > 1) {
+        }
+        else if (foodItem.getDiscountStatus() == null) {
+            foodItem.setDiscountStatus(0);
+        }
+        else if (foodItem.getAvailable() < 0 || foodItem.getAvailable() > 1) {
             error = "Invalid value for availability";
-        } else if (foodItem.getDiscountStatus() < 0 || foodItem.getDiscountStatus() > 1) {
+        }
+        else if (foodItem.getDiscountStatus() < 0 || foodItem.getDiscountStatus() > 1) {
             error = "Invalid value for deleted status";
-        } else if (foodItem.getDiscountStatus() == 1 && (foodItem.getDiscountID() != null || foodItem.getDiscountID().isEmpty())) {
+        }
+        else if (foodItem.getDiscountStatus() == 1 && (foodItem.getDiscountID() != null || foodItem.getDiscountID().isEmpty())) {
             error = "Invalid value for discount id";
-        } else if (foodItem.getDeleted() < 0 || foodItem.getDeleted() > 1) {
+        }
+        else if (foodItem.getDeleted() < 0 || foodItem.getDeleted() > 1) {
             error = "Invalid value for discount status";
-        } else if (foodItem.getFeatures() == null || foodItem.getFeatures().isEmpty()) {
+        }
+        else if (foodItem.getFeatures() == null || foodItem.getFeatures().isEmpty()) {
             error = "Please enter at least one feature";
         }
 
         if (error == null) {
+            foodItem.setDeleted(0);
+            foodItem.setDiscountStatus(0);
             foodItemRepository.save(foodItem);
         }
         return error;
