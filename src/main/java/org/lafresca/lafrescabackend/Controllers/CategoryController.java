@@ -57,7 +57,7 @@ public class CategoryController {
     // Search Category
     @GetMapping(path = "{id}")
     @Operation(
-            description = "Get categorries by id",
+            description = "Search category by id",
             summary = "Retrieve categories by using the id",
             responses = {
                     @ApiResponse(
@@ -71,4 +71,22 @@ public class CategoryController {
             })
 
     public Optional<Category> getCategory (@PathVariable("id") String id) { return categoryService.getCategory(id); }
+
+    // Delete Category
+    @DeleteMapping(path = "{id}")
+    @Operation(
+            description = "Delete category by id",
+            summary = "Delete categories by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public void deleteCategory (@PathVariable("id") String id) { categoryService.deleteCategory(id);}
 }

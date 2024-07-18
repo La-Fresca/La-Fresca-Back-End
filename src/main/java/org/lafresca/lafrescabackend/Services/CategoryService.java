@@ -43,4 +43,10 @@ public class CategoryService {
         categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         return categoryRepository.findById(id);
     }
+
+    // Delete Category
+    public void deleteCategory(String id) {
+        categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+        categoryRepository.deleteById(id);
+    }
 }
