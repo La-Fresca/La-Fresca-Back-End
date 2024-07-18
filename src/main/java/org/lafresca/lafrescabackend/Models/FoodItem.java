@@ -21,4 +21,6 @@ public class FoodItem {
     private Integer Deleted;
     private String Category;
     private Double Rating;
+    private Integer DiscountStatus;
+    private String DiscountID;
 }
