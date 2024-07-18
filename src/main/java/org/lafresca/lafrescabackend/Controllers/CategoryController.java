@@ -106,7 +106,6 @@ public class CategoryController {
                     )
             })
 
-    // Update Category by id
     public void updateCategory (@PathVariable("id") String id, @RequestBody Category category) {
         categoryService.updateCategory(id, category);
     }
