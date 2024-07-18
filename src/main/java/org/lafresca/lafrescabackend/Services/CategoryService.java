@@ -1,11 +1,13 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Category;
 import org.lafresca.lafrescabackend.Repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -36,5 +38,9 @@ public class CategoryService {
     // Get All Categories
     public List<Category> getCategories() { return categoryRepository.findAll(); }
 
-
+    // Search Category
+    public Optional<Category> getCategory(String id) {
+        categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+        return categoryRepository.findById(id);
+    }
 }

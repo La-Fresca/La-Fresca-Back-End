@@ -9,6 +9,7 @@ import org.lafresca.lafrescabackend.Services.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/lafresca/category")
@@ -52,4 +53,22 @@ public class CategoryController {
             })
 
     public List<Category> getCategories() { return categoryService.getCategories(); }
+
+    // Search Category
+    @GetMapping(path = "{id}")
+    @Operation(
+            description = "Get categorries by id",
+            summary = "Retrieve categories by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public Optional<Category> getCategory (@PathVariable("id") String id) { return categoryService.getCategory(id); }
 }
