@@ -89,4 +89,25 @@ public class CategoryController {
             })
 
     public void deleteCategory (@PathVariable("id") String id) { categoryService.deleteCategory(id);}
+
+    // Update Category
+    @PutMapping(path = "{id}")
+    @Operation(
+            description = "Update category by id",
+            summary = "Update categories by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    // Update Category by id
+    public void updateCategory (@PathVariable("id") String id, @RequestBody Category category) {
+        categoryService.updateCategory(id, category);
+    }
 }

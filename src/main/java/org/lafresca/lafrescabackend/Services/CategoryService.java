@@ -49,4 +49,19 @@ public class CategoryService {
         categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         categoryRepository.deleteById(id);
     }
+
+    // Update Category
+    public void updateCategory(String id, Category category) {
+        Category existingCategory = categoryRepository.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+
+        if (category.getName() != null && !category.getName().isEmpty()) {
+            existingCategory.setName(category.getName());
+        }
+        if (category.getDescription() != null && !category.getDescription().isEmpty()) {
+            existingCategory.setDescription(category.getDescription());
+        }
+
+        categoryRepository.save(existingCategory);
+    }
 }
