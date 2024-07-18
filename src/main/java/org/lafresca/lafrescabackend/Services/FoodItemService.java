@@ -55,10 +55,9 @@ public class FoodItemService {
         return error;
     }
 
-
     // Retrieve all food items
     public List<FoodItemDTO> getFoodItems() {
-        return foodItemRepository.findAll()
+        return foodItemRepository.findByDeleted(0)
                 .stream()
                 .map(foodItemDTOMapper)
                 .collect(Collectors.toList());
