@@ -1,4 +1,9 @@
 package org.lafresca.lafrescabackend.Repositories;
 
-public interface CategoryRepository {
+import org.lafresca.lafrescabackend.Models.Category;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CategoryRepository extends MongoRepository<Category, String> {
 }

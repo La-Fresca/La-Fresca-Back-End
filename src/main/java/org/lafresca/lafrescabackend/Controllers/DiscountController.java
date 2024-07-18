@@ -34,7 +34,7 @@ public class DiscountController {
                     )
             })
 
-    public String addDiscount(@RequestBody Discount discount) { return discountService.addDiscount(discount); }
+    public String addNewDiscount(@RequestBody Discount discount) { return discountService.addNewDiscount(discount); }
 
     // Retrieve all discounts
     @GetMapping
