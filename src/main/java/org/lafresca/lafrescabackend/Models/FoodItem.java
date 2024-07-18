@@ -19,7 +19,7 @@ public class FoodItem {
     private List<CustomFeature> Features;
     private String CafeId;
     private Integer Deleted;
-    private String Category;
+    private List<String> Category;
     private Double Rating;
     private Integer DiscountStatus;
     private String DiscountID;
