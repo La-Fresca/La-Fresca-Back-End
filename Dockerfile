@@ -6,7 +6,7 @@ RUN chmod +x /home/app/la-fresca/mvnw
 RUN cd la-fresca && ./mvnw -Dmaven.test.skip=true clean package
 
 
-FROM bellsoft/liberica-openjdk-alpine:21
+FROM bellsoft/liberica-openjre-alpine:21
 
 WORKDIR /home/app
 EXPOSE 8080
