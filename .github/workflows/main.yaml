@@ -12,12 +12,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Backend-Build
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          command_timeout: 30m
-          script: |
-            ./lafresca-backend-action.sh
+          script: ./lafresca-backend-action.sh
