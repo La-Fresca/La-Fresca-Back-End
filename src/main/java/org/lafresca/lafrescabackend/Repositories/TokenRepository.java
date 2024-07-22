@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface TokenRepository extends MongoRepository<Token, Integer> {
-    List<Token> findAllAccessTokensByUser(Integer userId);
+    List<Token> findAllAccessTokensByUser(String userId);
 
     Optional<Token> findByAccessToken(String token);
 
