@@ -109,12 +109,24 @@ public class AuthenticationService {
         System.out.println("Inside authenticate " + request.getEmail() + " " + request.getPassword());
 
         // Authenticate the user
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+//        authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+//        );
+
+        User backUser = userRepository.findUserByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+        String incomingPassword = passwordEncoder.encode(request.getPassword());
+        System.out.println("Incoming password: " + incomingPassword);
+        System.out.println("Back password: " + backUser.getPassword());
+
+        if (passwordEncoder.matches(request.getPassword(), backUser.getPassword())) {
+            System.out.println("Password matches");
+        } else {
+            System.out.println("Password does not match");
+            return new AuthenticationResponse(null, null, "User login failed. Password does not match");
+        }
 
         // Retrieve user and generate tokens
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findUserByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
         System.out.println("User: " + user.getEmail() + " UserID: " + user.getId());
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
