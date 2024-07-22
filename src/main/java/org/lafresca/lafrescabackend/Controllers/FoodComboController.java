@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/foodCombo")
 @Tag(name="Food Combo Controller")
 public class FoodComboController {
