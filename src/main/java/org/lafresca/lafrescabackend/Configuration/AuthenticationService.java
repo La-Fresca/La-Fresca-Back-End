@@ -162,7 +162,7 @@ public class AuthenticationService {
         String email = jwtService.extractUsername(token);
 
         // Check if the user exists
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("No user found"));
 
         // Validate the refresh token

@@ -48,12 +48,15 @@ public class JwtService {
     }
 
     public boolean isValidRefreshToken(String token, User user) {
+        System.out.println("Inside isValidRefreshToken");
         String username = extractUsername(token);
 
         boolean validRefreshToken = tokenRepository
                 .findByRefreshToken(token)
                 .map(t -> !t.isLoggedOut())
                 .orElse(false);
+
+        System.out.println("validRefreshToken: " + validRefreshToken);
 
         return (username.equals(user.getEmail())) && !isTokenExpired(token) && validRefreshToken;
     }
