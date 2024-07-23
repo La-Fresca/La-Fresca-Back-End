@@ -35,5 +35,8 @@ public class CartService {
         return error;
     }
 
-
+    // Get all cart items by UserId
+    public List<Cart> getCartItems(String userId) {
+        return cartRepository.findByUserId(userId);
+    }
 }

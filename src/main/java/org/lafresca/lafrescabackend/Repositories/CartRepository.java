@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface CartRepository extends MongoRepository<Cart, String> {
-
+    @Query("{'UserId' : ?0 }")
+    List<Cart> findByUserId(String userId);
 }

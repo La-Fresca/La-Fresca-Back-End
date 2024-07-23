@@ -36,5 +36,22 @@ public class CartController {
 
     public String addNewItemToCart(@RequestBody Cart cart) { return cartService.addNewItemToCart(cart); }
 
+    // Get all items
+    @GetMapping(path = "{userid}")
+    @Operation(
+            description = "Get all items",
+            summary = "Retrieve all menu items from cart",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public List<Cart> getCartItems(@PathVariable("userid") String userId) { return cartService.getCartItems(userId); }
 
 }
