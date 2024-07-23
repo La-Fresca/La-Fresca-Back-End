@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class CartItem {
-    private String foodItemId;
+    private String menuItemId;
     private String name;
     private Integer quantity;
     private Double unitPrice;
