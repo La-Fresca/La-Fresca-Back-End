@@ -8,6 +8,8 @@ import org.lafresca.lafrescabackend.Models.Cart;
 import org.lafresca.lafrescabackend.Services.CartService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping(path = "/api/lafresca/cart")
@@ -16,11 +18,11 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
     private final CartService cartService;
 
-    // Add a cart
+    // Add new item
     @PostMapping
     @Operation(
-            description = "Add new cart",
-            summary = "Add new menu item",
+            description = "Add to cart",
+            summary = "Add new menu item to cart",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -33,4 +35,6 @@ public class CartController {
             })
 
     public String addNewItemToCart(@RequestBody Cart cart) { return cartService.addNewItemToCart(cart); }
+
+
 }

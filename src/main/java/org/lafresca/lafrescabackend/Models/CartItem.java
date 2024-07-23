@@ -6,10 +6,10 @@ import java.util.List;
 
 @Data
 public class CartItem {
-    private String menuItemId;
-    private String name;
-    private Integer quantity;
-    private Double unitPrice;
-    private List<CustomFeature> customFeatures;
-    private Double itemTotalPrice;
+    private String MenuItemId;
+    private String Name;
+    private Integer Quantity;
+    private Double UnitPrice;
+    private List<CustomFeature> CustomFeatures;
+    private Double ItemTotalPrice;
 }

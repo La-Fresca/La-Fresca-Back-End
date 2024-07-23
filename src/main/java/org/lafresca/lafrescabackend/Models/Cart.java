@@ -11,7 +11,7 @@ import java.util.List;
 public class Cart {
     @Id
     private String id;
-    private String userId;
-    private List<CartItem> items;
-    private Double totalPrice;
+    private String UserId;
+    private List<CartItem> Items;
+    private Double TotalPrice;
 }
