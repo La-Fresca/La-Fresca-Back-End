@@ -61,7 +61,7 @@ public class StockService {
 
     public void updateStock(String id, Stock stock) {
         Stock existingStock = stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
-        // LocalDateTime now = LocalDateTime.now();
+         LocalDateTime now = LocalDateTime.now();
 
         if (stock.getName() != null && !stock.getName().isEmpty()) {
             existingStock.setName(stock.getName());
@@ -70,14 +70,14 @@ public class StockService {
             existingStock.setBatchId(stock.getBatchId());
         }
         if (stock.getAvailableAmount() >= 0) {
-            existingStock.setAvailableAmount(-stock.getAvailableAmount());
+            existingStock.setAvailableAmount(stock.getAvailableAmount());
         }
         if (stock.getLowerLimit() >= 0) {
-            existingStock.setLowerLimit(-stock.getLowerLimit());
+            existingStock.setLowerLimit(stock.getLowerLimit());
         }
-//        else if(!LocalDateTime.parse(stock.getExpiryDate().toString()).isBefore(now)) {
-//            existingStock.setExpiryDate(stock.getExpiryDate());
-//        }
+        else if(stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDateTime.parse(stock.getExpiryDate().toString()).isBefore(now)) {
+            existingStock.setExpiryDate(stock.getExpiryDate());
+        }
 
         stockRepository.save(existingStock);
     }
