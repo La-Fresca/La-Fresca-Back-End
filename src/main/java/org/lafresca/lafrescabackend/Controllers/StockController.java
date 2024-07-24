@@ -92,5 +92,23 @@ public class StockController {
             })
 
     public void deleteStock(@PathVariable("id") String id) { stockService.deleteStock(id);}
+
+    // Update stock by id
+    @PutMapping(path = "{id}")
+    @Operation(
+            description = "Update stock by id",
+            summary = "Update stock by using id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public void updateStock(@PathVariable("id") String id, @RequestBody Stock stock) { stockService.updateStock(id, stock); }
 }
 
