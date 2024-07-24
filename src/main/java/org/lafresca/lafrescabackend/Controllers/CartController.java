@@ -9,6 +9,7 @@ import org.lafresca.lafrescabackend.Services.CartService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -36,7 +37,7 @@ public class CartController {
 
     public String addNewItemToCart(@RequestBody Cart cart) { return cartService.addNewItemToCart(cart); }
 
-    // Get all items
+    // Get all cart items
     @GetMapping(path = "{userid}")
     @Operation(
             description = "Get all items",
@@ -54,4 +55,21 @@ public class CartController {
 
     public List<Cart> getCartItems(@PathVariable("userid") String userId) { return cartService.getCartItems(userId); }
 
+    // Delete cart item by id
+    @DeleteMapping(path = "{id}")
+    @Operation(
+            description = "Delete cart items by id",
+            summary = "Delete menu items from cart by using id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public void deleteCartItem(@PathVariable("id") String id) { cartService.deleteCartItem(id); }
 }

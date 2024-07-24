@@ -1,11 +1,13 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Cart;
 import org.lafresca.lafrescabackend.Repositories.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
@@ -38,5 +40,11 @@ public class CartService {
     // Get all cart items by UserId
     public List<Cart> getCartItems(String userId) {
         return cartRepository.findByUserId(userId);
+    }
+
+    // Delete cart item by id
+    public void deleteCartItem(String id) {
+        cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart Item Not Found with Id: " + id));
+        cartRepository.deleteById(id);
     }
 }
