@@ -53,4 +53,9 @@ public class StockService {
         stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
         return stockRepository.findById(id);
     }
+
+    public void deleteStock(String id) {
+        stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
+        stockRepository.deleteById(id);
+    }
 }
