@@ -41,4 +41,12 @@ public class AuthenticationController {
     ) {
         return authService.refreshToken(request, response);
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        return authService.logout(request, response);
+    }
 }
