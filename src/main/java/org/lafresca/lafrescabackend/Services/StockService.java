@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StockService {
@@ -45,4 +47,10 @@ public class StockService {
 
     // Get all stocks
     public List<Stock> getStocks() { return stockRepository.findAll(); }
+
+    // Get stock by id
+    public Optional<Stock> getStock(String id) {
+        stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
+        return stockRepository.findById(id);
+    }
 }

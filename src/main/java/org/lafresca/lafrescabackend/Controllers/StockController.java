@@ -9,6 +9,7 @@ import org.lafresca.lafrescabackend.Services.StockService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -52,6 +53,24 @@ public class StockController {
                     )
             })
 
-    public List<Stock> getStocks() { return stockService.getStocks();}
+    public List<Stock> getStocks() { return stockService.getStocks(); }
+
+    // Search stock by id
+    @GetMapping(path = "{id}")
+    @Operation(
+            description = "Get stock by id",
+            summary = "Retrieve stock by using id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public Optional<Stock> getStock(@PathVariable("id") String id) { return stockService.getStock(id); }
 }
 
