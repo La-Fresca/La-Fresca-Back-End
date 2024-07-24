@@ -75,7 +75,7 @@ public class StockService {
         if (stock.getLowerLimit() >= 0) {
             existingStock.setLowerLimit(stock.getLowerLimit());
         }
-        else if(stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDateTime.parse(stock.getExpiryDate().toString()).isBefore(now)) {
+        if(stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDateTime.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             existingStock.setExpiryDate(stock.getExpiryDate());
         }
 
