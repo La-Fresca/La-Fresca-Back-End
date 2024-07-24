@@ -72,4 +72,22 @@ public class CartController {
             })
 
     public void deleteCartItem(@PathVariable("id") String id) { cartService.deleteCartItem(id); }
+
+    // Update cart item by id
+    @PutMapping(path = "{id}")
+    @Operation(
+            description = "Update cart items by id",
+            summary = "Update menu items from cart by using id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public void updateCartItem(@PathVariable("id") String id, @RequestBody Cart cart) { cartService.updateCartItem(id, cart); }
 }

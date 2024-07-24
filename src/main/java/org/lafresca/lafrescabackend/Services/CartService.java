@@ -47,4 +47,15 @@ public class CartService {
         cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart Item Not Found with Id: " + id));
         cartRepository.deleteById(id);
     }
+
+    // Update cart item ny id
+    public void updateCartItem(String id, Cart cart) {
+        Cart existingCart = cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart Item Not Found with Id: " + id));
+
+        if (cart.getTotalPrice() > 0) {
+            existingCart.setTotalPrice(cart.getTotalPrice());
+        }
+
+        cartRepository.save(existingCart);
+    }
 }
