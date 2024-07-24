@@ -8,6 +8,8 @@ import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Services.StockService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping(path = "/api/lafresca/stock")
@@ -33,5 +35,23 @@ public class StockController {
             })
 
     public String addNewStock(@RequestBody Stock stock) { return stockService.addNewStock(stock); }
+
+    // Get all stock
+    @GetMapping
+    @Operation(
+            description = "Get all stocks",
+            summary = "Retrieve all stocks in inventory",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public List<Stock> getStocks() { return stockService.getStocks();}
 }
 
