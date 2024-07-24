@@ -42,7 +42,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("api/lafresca/user/login/**","api/lafresca/user/register/**", "api/lafresca/user/refresh_token/**", "swagger-ui/**", "api-docs/**")
+                        req->req.requestMatchers("api/lafresca/user/login/**","api/lafresca/user/register/**", "api/lafresca/user/refresh_token/**", "swagger-ui/**", "api-docs/**" , "api/lafresca/user/logout/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
