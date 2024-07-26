@@ -88,6 +88,7 @@ public class JwtService {
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("role", user.getRole())
+                .claim("userId", user.getId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigninKey())
