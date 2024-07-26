@@ -18,7 +18,9 @@ public class FoodItem {
     private Integer Available; // 1 for available, 0 for not available
     private List<CustomFeature> Features;
     private String CafeId;
-    private Integer Deleted;
-    private String Category;
+    private Integer Deleted; // 1 for deleted, 0 for not deleted
+    private List<String> Categories;
     private Double Rating;
+    private Integer DiscountStatus;
+    private String DiscountID;
 }
