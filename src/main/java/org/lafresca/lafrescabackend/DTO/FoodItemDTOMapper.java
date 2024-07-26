@@ -17,7 +17,9 @@ public class FoodItemDTOMapper implements Function<FoodItem, FoodItemDTO> {
                 foodItem.getAvailable(),
                 foodItem.getFeatures(),
                 foodItem.getCafeId(),
-                foodItem.getCategory(),
+                foodItem.getDiscountStatus(),
+                foodItem.getDiscountID(),
+                foodItem.getCategories(),
                 foodItem.getRating()
         );
     }
