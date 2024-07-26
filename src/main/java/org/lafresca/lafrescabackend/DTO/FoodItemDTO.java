@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.DTO;
 
 import org.lafresca.lafrescabackend.Models.CustomFeature;
+import org.lafresca.lafrescabackend.Models.Discount;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public record FoodItemDTO(
         String cafeId,
         Integer discountStatus,
         List<String> categories,
-        Double rating
+        Double rating,
+        Discount discountDetails
 ) {
 }
