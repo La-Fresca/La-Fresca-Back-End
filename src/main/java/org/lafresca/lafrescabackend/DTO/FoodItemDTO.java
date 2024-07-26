@@ -12,9 +12,8 @@ public record FoodItemDTO(
         Integer available,
         List<CustomFeature> features,
         String cafeId,
-        List<String> category,
-        Double rating,
         Integer discountStatus,
-        String discountID
+        List<String> categories,
+        Double rating
 ) {
 }
