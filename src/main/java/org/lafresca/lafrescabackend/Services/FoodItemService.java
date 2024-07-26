@@ -152,7 +152,7 @@ public class FoodItemService {
         if (foodItem.getDiscountStatus() == 0 || foodItem.getDiscountStatus() == 1) {
             existingFoodItem.setDiscountStatus(foodItem.getDiscountStatus());
         }
-        if (foodItem.getRating() != 0) {
+        if (foodItem.getRating() != 0){
             existingFoodItem.setRating(foodItem.getRating());
         }
         if (foodItem.getDiscountDetails().getName() != null && !foodItem.getDiscountDetails().getName().isEmpty()) {
