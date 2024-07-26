@@ -109,4 +109,23 @@ public class FoodItemController {
     public void updateFoodItem(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
         foodItemService.updateFoodItem(id, foodItem);
     }
+
+    // Logical Delete
+    @PutMapping(path = "delete/{id}")
+    @Operation(
+            description = "Logically delete food item by id",
+            summary = "Logically delete food items by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public void logicallyDeleteFoodItem(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
+        foodItemService.logicallyDeleteFoodItem(id, foodItem);
+    }
 }

@@ -128,4 +128,14 @@ public class FoodItemService {
         foodItemRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
         return foodItemRepository.findById(id);
     }
+
+    // Logical Delete
+    public void logicallyDeleteFoodItem(String id, FoodItem foodItem) {
+        FoodItem existingFood = foodItemRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("FoodItem not found with id " + id));
+
+        existingFood.setDeleted(foodItem.getDeleted());
+
+        foodItemRepository.save(existingFood);
+    }
 }
