@@ -11,9 +11,9 @@ import java.time.LocalDate;
 public class Stock {
     @Id
     private String id;
-    private String StockCategoryName;
+    private String StockCollectionName;
     private String BatchId;
-    private Double AvailableAmount;
+    private Double InitialAmount;
     private String SupplierName;
     private LocalDate ExpiryDate;
 }

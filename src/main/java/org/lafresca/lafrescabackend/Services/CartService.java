@@ -45,6 +45,35 @@ public class CartService {
             error = "MenuItem type cannot be null";
         }
 
+        if (cart.getMenuItemType() == "Food Item") {
+            FoodItem foodItem = foodItemRepository.findById(cart.getMenuItemId()).orElse(null);
+
+            if (foodItem != null) {
+                List<CustomFeature> additionalPrices = cart.getCustomFeatures();
+
+                double totalAdditionalPrice = 0;
+
+                for (CustomFeature customFeature : additionalPrices) {
+                    List<Double> additionalPriceList =  customFeature.getAdditionalPrices();
+                    for (Double additionalPrice : additionalPriceList) {
+                        totalAdditionalPrice += additionalPrice;
+                    }
+                }
+
+                double totalPrice = (foodItem.getPrice() + totalAdditionalPrice) * cart.getQuantity();
+                cart.setItemTotalPrice(totalPrice);
+            }
+        }
+
+        else if (cart.getMenuItemType() == "Food Combo") {
+            FoodCombo foodCombo = foodComboRepository.findById(cart.getMenuItemId()).orElse(null);
+
+            if (foodCombo != null) {
+                double totalPrice = foodCombo.getPrice() * cart.getQuantity();
+                cart.setItemTotalPrice(totalPrice);
+            }
+        }
+
         if (error == null) {
             cartRepository.save(cart);
         }
