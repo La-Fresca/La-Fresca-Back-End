@@ -22,8 +22,8 @@ public class StockService {
         String error = null;
         LocalDate now = LocalDate.now();
 
-        if (stock.getName() == null || stock.getName().isEmpty()) {
-            error = "Stock name cannot be empty";
+        if (stock.getStockCategoryName() == null || stock.getStockCategoryName().isEmpty()) {
+            error = "Stock Category name cannot be empty";
         }
         else if (stock.getBatchId() == null || stock.getBatchId().isEmpty()) {
             error = "Batch id cannot be empty";
@@ -60,11 +60,12 @@ public class StockService {
     }
 
     public void updateStock(String id, Stock stock) {
-        Stock existingStock = stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
+        Stock existingStock = stockRepository.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
          LocalDate now = LocalDate.now();
 
-        if (stock.getName() != null && !stock.getName().isEmpty()) {
-            existingStock.setName(stock.getName());
+        if (stock.getStockCategoryName() != null && !stock.getStockCategoryName().isEmpty()) {
+            existingStock.setStockCategoryName(stock.getStockCategoryName());
         }
         if (stock.getBatchId() != null && !stock.getBatchId().isEmpty()) {
             existingStock.setBatchId(stock.getBatchId());

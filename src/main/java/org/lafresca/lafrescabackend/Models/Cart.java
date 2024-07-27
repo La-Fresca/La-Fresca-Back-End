@@ -12,6 +12,9 @@ public class Cart {
     @Id
     private String id;
     private String UserId;
-    private List<CartItem> Items;
-    private Double TotalPrice;
+    private String MenuItemId;
+    private String MenuItemType;
+    private Integer Quantity;
+    private List<CustomFeature> CustomFeatures;
+    private Double ItemTotalPrice;
 }
