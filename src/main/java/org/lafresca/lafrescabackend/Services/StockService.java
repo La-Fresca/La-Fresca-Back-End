@@ -22,14 +22,14 @@ public class StockService {
         String error = null;
         LocalDate now = LocalDate.now();
 
-        if (stock.getName() == null || stock.getName().isEmpty()) {
-            error = "Stock name cannot be empty";
+        if (stock.getStockCollectionName() == null || stock.getStockCollectionName().isEmpty()) {
+            error = "Stock collection name cannot be empty";
         }
         else if (stock.getBatchId() == null || stock.getBatchId().isEmpty()) {
             error = "Batch id cannot be empty";
         }
-        else if (stock.getAvailableAmount() < 0) {
-            error = "Invalid value for Available amount";
+        else if (stock.getInitialAmount() < 0) {
+            error = "Invalid value for initial amount";
         }
         else if(LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             error = "Expiry date is before current date";
@@ -60,17 +60,18 @@ public class StockService {
     }
 
     public void updateStock(String id, Stock stock) {
-        Stock existingStock = stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
+        Stock existingStock = stockRepository.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
          LocalDate now = LocalDate.now();
 
-        if (stock.getName() != null && !stock.getName().isEmpty()) {
-            existingStock.setName(stock.getName());
+        if (stock.getStockCollectionName() != null && !stock.getStockCollectionName().isEmpty()) {
+            existingStock.setStockCollectionName(stock.getStockCollectionName());
         }
         if (stock.getBatchId() != null && !stock.getBatchId().isEmpty()) {
             existingStock.setBatchId(stock.getBatchId());
         }
-        if (stock.getAvailableAmount() >= 0) {
-            existingStock.setAvailableAmount(stock.getAvailableAmount());
+        if (stock.getInitialAmount() >= 0) {
+            existingStock.setInitialAmount(stock.getInitialAmount());
         }
         if (stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             existingStock.setExpiryDate(stock.getExpiryDate());
