@@ -55,6 +55,7 @@ public class UserController {
 
     @GetMapping(value = "/specificuserbyrole/{role}")
     public List<UserDTO> getUsersByRole(@PathVariable("role") String role) {
+        System.out.println("\n\n\n\n\nRole: " + role);
         return userService.getUsersByRole(role);
     }
 
@@ -78,4 +79,7 @@ public class UserController {
     public void updateUser(@RequestBody User user) {
         userService.updateUser(user);
     }
+
+
+
 }
