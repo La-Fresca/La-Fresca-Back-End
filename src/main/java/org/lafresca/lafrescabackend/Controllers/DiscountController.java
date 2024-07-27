@@ -107,5 +107,7 @@ public class DiscountController {
                     )
             })
 
-    public void updateDiscount(@PathVariable("id") String id, @RequestBody Discount discount) { discountService.updateDiscount(id, discount); }
+    public void updateDiscount(@PathVariable("id") String id, @RequestBody Discount discount) {
+        discountService.updateDiscount(id, discount);
+    }
 }

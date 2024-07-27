@@ -88,5 +88,7 @@ public class CartController {
                     )
             })
 
-    public void updateCartItem(@PathVariable("id") String id, @RequestBody Cart cart) { cartService.updateCartItem(id, cart); }
+    public void updateCartItem(@PathVariable("id") String id, @RequestBody Cart cart) {
+        cartService.updateCartItem(id, cart);
+    }
 }

@@ -107,5 +107,7 @@ public class BranchController {
                     )
             })
 
-    public void updateBranch(@PathVariable("id") String id, @RequestBody Branch branch) { branchService.updateBranch(id, branch); }
+    public void updateBranch(@PathVariable("id") String id, @RequestBody Branch branch) {
+        branchService.updateBranch(id, branch);
+    }
 }

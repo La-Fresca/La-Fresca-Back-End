@@ -19,7 +19,6 @@ import java.util.Optional;
 @Tag(name = "Stock Controller")
 public class StockController {
     private final StockService stockService;
-    private final StockRepository stockRepository;
 
     // Add new stock
     @PostMapping
@@ -109,6 +108,8 @@ public class StockController {
                     )
             })
 
-    public void updateStock(@PathVariable("id") String id, @RequestBody Stock stock) { stockService.updateStock(id, stock); }
+    public void updateStock(@PathVariable("id") String id, @RequestBody Stock stock) {
+        stockService.updateStock(id, stock);
+    }
 }
 

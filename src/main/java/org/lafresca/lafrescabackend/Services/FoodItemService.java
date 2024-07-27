@@ -105,7 +105,6 @@ public class FoodItemService {
             error = "Offer details cannot be empty";
         }
 
-
         if (error == null) {
             foodItem.setDeleted(0);
             foodItem.setDiscountStatus(0);
