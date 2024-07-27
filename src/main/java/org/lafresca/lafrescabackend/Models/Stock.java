@@ -3,7 +3,7 @@ package org.lafresca.lafrescabackend.Models;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Document(collection = "Stock")
 @Data
@@ -12,6 +12,8 @@ public class Stock {
     private String Name;
     private String BatchId;
     private double AvailableAmount;
-    private String SupplierName;
-    private LocalDate ExpiryDate;
+
+    private double LowerLimit;
+    private LocalDateTime ExpiryDate;
+
 }
