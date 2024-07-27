@@ -220,9 +220,15 @@ public class OrderService {
                 if(orderStatusChangeRequest.getOrderStatus().equals(OrderStatus.READY)) {
                     if(order.getOrderType().equals("ONLINE")) {
                         order.setDeliveryPersonId(findDeliveryPerson(order.getCafeId()));
+                        if(order.getDeliveryPersonId().equals("No delivery person available")) {
+                            throw new IllegalStateException("No delivery person available");
+                        }
                     }
                     else if(order.getOrderType().equals("OFFLINE")) {
                         order.setWaiterId(findWaiter(order.getCafeId()));
+                        if(order.getWaiterId().equals("No waiter available")) {
+                            throw new IllegalStateException("No waiter available");
+                        }
                     }
                 }
                 orderRepository.save(order);
@@ -238,7 +244,7 @@ public class OrderService {
         System.out.println("Waiters found " + waiters.size());
         if(waiters.isEmpty()) {
             System.out.println("No waiter available");
-            throw new IllegalStateException("No waiter available");
+            return "No waiter available";
         }
 
         waiters.sort(Comparator.comparingLong(User::getStatusUpdatedAt).reversed());
@@ -249,7 +255,7 @@ public class OrderService {
     private String findDeliveryPerson(String cafeId) {
         List<User> deliveryPersons = userRepository.findUserByCafeIdAndRole(cafeId,"DELIVERY_PERSON");
         if(deliveryPersons.isEmpty()) {
-            throw new IllegalStateException("No delivery person available");
+            return "No delivery person available";
         }
 
         deliveryPersons.sort(Comparator.comparingLong(User::getStatusUpdatedAt).reversed());
