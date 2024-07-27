@@ -26,6 +26,4 @@ public class Order {
     //for offline orders
     private String CashierId;
     private String WaiterId;
-
-
 }
