@@ -1,8 +1,9 @@
 package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
-import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.Stock;
+import org.lafresca.lafrescabackend.Models.StockCollection;
+import org.lafresca.lafrescabackend.Repositories.StockCollectionRepository;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,12 @@ import java.util.Optional;
 @Service
 public class StockService {
     private final StockRepository stockRepository;
+    private final StockCollectionRepository stockCollectionRepository;
 
     @Autowired
-    public StockService(StockRepository stockRepository) { this.stockRepository = stockRepository; }
+    public StockService(StockRepository stockRepository, StockCollectionRepository stockCollectionRepository) { this.stockRepository = stockRepository;
+        this.stockCollectionRepository = stockCollectionRepository;
+    }
 
     // Add new stock
     public String addNewStock(Stock stock) {
@@ -43,6 +47,22 @@ public class StockService {
         }
 
         if (error == null) {
+            StockCollection stockCollection = stockCollectionRepository.findByName(stock.getStockCollectionName());
+            if (stockCollection == null) {
+                StockCollection newStockCollection = new StockCollection();
+                newStockCollection.setName(stock.getStockCollectionName());
+                newStockCollection.setDeleted(0);
+                newStockCollection.setLowerLimit(0.0);
+                newStockCollection.setAvailableAmount(stock.getInitialAmount());
+
+                stockCollectionRepository.save(newStockCollection);
+            }
+            else {
+//                stockCollection.setName(stockCollection.getId());
+                stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() + stock.getInitialAmount());
+                stockCollectionRepository.save(stockCollection);
+            }
+
             stockRepository.save(stock);
         }
 

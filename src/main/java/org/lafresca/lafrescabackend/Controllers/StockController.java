@@ -4,9 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.Stock;
-import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.lafresca.lafrescabackend.Services.StockService;
 import org.springframework.web.bind.annotation.*;
 

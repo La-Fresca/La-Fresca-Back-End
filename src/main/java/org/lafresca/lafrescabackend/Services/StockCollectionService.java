@@ -1,7 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
-import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Models.StockCollection;
 import org.lafresca.lafrescabackend.Repositories.StockCollectionRepository;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
