@@ -15,7 +15,7 @@ public class Cart {
     private String MenuItemId;
     private String MenuItemType;
     private Integer Quantity;
-    private List<CustomFeature> CustomFeatures;
+    private List<CartItemFeature> CustomFeatures;
     private Double ItemTotalPrice;
     private Double DiscountedPrice;
 }
