@@ -3,30 +3,27 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.lafresca.lafrescabackend.Models.Menu;
-import org.lafresca.lafrescabackend.Services.MenuService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.Models.Category;
+import org.lafresca.lafrescabackend.Services.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/lafresca/menu")
-@Tag(name="Menu Controller")
-public class MenuController {
-    private final MenuService menuService;
+@CrossOrigin
+@RequestMapping(path = "/api/lafresca/category")
+@AllArgsConstructor
+@Tag(name = "Category Controller")
+public class CategoryController {
+    private final CategoryService categoryService;
 
-    @Autowired
-    public MenuController(MenuService menuService) {
-        this.menuService = menuService;
-    }
-
-    // Add new menu item
+    // Add new category
     @PostMapping
     @Operation(
-            description = "Add new menu",
-            summary = "Add new menu to the branch",
+            description = "Add new category",
+            summary = "Add new category ",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -34,17 +31,17 @@ public class MenuController {
                     ),
                     @ApiResponse(
                             description = "Unauthorized / Invalid Token",
-                            responseCode = "403")
+                            responseCode = "403"
+                    )
             })
-    public String addNewMenu(@RequestBody Menu menu) {
-        return menuService.addNewMenu(menu);
-    }
 
-    // Retrieve all menu items
+    public String addNewCategory(@RequestBody Category category) { return categoryService.addNewCategory(category); }
+
+    // Get all categories
     @GetMapping
     @Operation(
-            description = "Get all menus",
-            summary = "Retrieve all menus in the branch",
+            description = "Get all categories",
+            summary = "Retrieve all categories",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -52,17 +49,17 @@ public class MenuController {
                     ),
                     @ApiResponse(
                             description = "Unauthorized / Invalid Token",
-                            responseCode = "403")
+                            responseCode = "403"
+                    )
             })
-    public List<Menu> getMenus(){
-        return menuService.getMenus();
-    }
 
-    // Search menu item
+    public List<Category> getCategories() { return categoryService.getCategories(); }
+
+    // Search Category
     @GetMapping(path = "{id}")
     @Operation(
-            description = "Search menu by id",
-            summary = "Retrieve menus by using the id",
+            description = "Search category by id",
+            summary = "Retrieve categories by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -70,17 +67,17 @@ public class MenuController {
                     ),
                     @ApiResponse(
                             description = "Unauthorized / Invalid Token",
-                            responseCode = "403")
+                            responseCode = "403"
+                    )
             })
-    public Optional<Menu> getMenu(@PathVariable("id") String id){
-        return menuService.getMenu(id);
-    }
 
-    // Delete menu item
+    public Optional<Category> getCategory (@PathVariable("id") String id) { return categoryService.getCategory(id); }
+
+    // Delete Category
     @DeleteMapping(path = "{id}")
     @Operation(
-            description = "Delete menu by id",
-            summary = "Delete menus by using the id",
+            description = "Delete category by id",
+            summary = "Delete categories by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -88,17 +85,17 @@ public class MenuController {
                     ),
                     @ApiResponse(
                             description = "Unauthorized / Invalid Token",
-                            responseCode = "403")
+                            responseCode = "403"
+                    )
             })
-    public void deleteMenu(@PathVariable("id") String id){
-        menuService.deleteMenu(id);
-    }
 
-    // Update menu item
+    public void deleteCategory (@PathVariable("id") String id) { categoryService.deleteCategory(id);}
+
+    // Update Category
     @PutMapping(path = "{id}")
     @Operation(
-            description = "Update menu by id",
-            summary = "Update menus by using the id",
+            description = "Update category by id",
+            summary = "Update categories by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -106,9 +103,11 @@ public class MenuController {
                     ),
                     @ApiResponse(
                             description = "Unauthorized / Invalid Token",
-                            responseCode = "403")
+                            responseCode = "403"
+                    )
             })
-    public void updateMenu(@PathVariable("id") String id, @RequestBody Menu menu){
-        menuService.updateMenu(id, menu);
+
+    public void updateCategory (@PathVariable("id") String id, @RequestBody Category category) {
+        categoryService.updateCategory(id, category);
     }
 }
