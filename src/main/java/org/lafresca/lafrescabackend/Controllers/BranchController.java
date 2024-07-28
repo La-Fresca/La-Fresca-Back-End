@@ -115,8 +115,8 @@ public class BranchController {
     // Logical Delete
     @PutMapping(path = "delete/{id}")
     @Operation(
-            description = "Logically delete food item by id",
-            summary = "Logically delete food items by using the id",
+            description = "Logically delete branch by id",
+            summary = "Logically delete branches by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -127,7 +127,7 @@ public class BranchController {
                             responseCode = "403")
             })
 
-    public void logicallyDeleteFoodItem(@PathVariable("id") String id, @RequestBody Branch branch){
+    public void logicallyDeleteBranch(@PathVariable("id") String id, @RequestBody Branch branch){
         branchService.logicallyDeleteBranch(id, branch);
     }
 }

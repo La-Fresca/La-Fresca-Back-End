@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
+import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Services.FoodComboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -111,5 +112,24 @@ public class FoodComboController {
             })
     public void updateFoodCombo(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
         foodComboService.updateFoodCombo(id, foodCombo);
+    }
+
+    // Logical Delete
+    @PutMapping(path = "delete/{id}")
+    @Operation(
+            description = "Logically delete food combo by id",
+            summary = "Logically delete food combos by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public void logicallyDeleteFoodCombo(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
+        foodComboService.logicallyDeleteFoodCombo(id, foodCombo);
     }
 }

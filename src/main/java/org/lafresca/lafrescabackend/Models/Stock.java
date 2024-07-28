@@ -16,4 +16,5 @@ public class Stock {
     private Double InitialAmount;
     private String SupplierName;
     private LocalDate ExpiryDate;
+    private Integer Deleted;
 }

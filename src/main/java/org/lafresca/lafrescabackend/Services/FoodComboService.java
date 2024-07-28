@@ -2,6 +2,7 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
+import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Repositories.FoodComboRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -134,9 +135,6 @@ public class FoodComboService {
         if (foodCombo.getAvailable() == 0 || foodCombo.getAvailable() == 1) {
             existingFoodCombo.setAvailable(foodCombo.getAvailable());
         }
-        if (foodCombo.getDeleted() == 0 || foodCombo.getDeleted() == 1) {
-            existingFoodCombo.setDeleted(foodCombo.getDeleted());
-        }
         if (foodCombo.getDiscountStatus() == 0 || foodCombo.getDiscountStatus() == 1) {
             existingFoodCombo.setDiscountStatus(foodCombo.getDiscountStatus());
         }
@@ -192,5 +190,15 @@ public class FoodComboService {
     public Optional<FoodCombo> getFoodCombo(String id) {
         foodComboRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Food Combo not found with id " + id));
         return foodComboRepository.findById(id);
+    }
+
+    // Logical Delete
+    public void logicallyDeleteFoodCombo(String id, FoodCombo foodCombo) {
+        FoodCombo existingFoodCombo = foodComboRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Food Combo not found with id " + id));
+
+        existingFoodCombo.setDeleted(foodCombo.getDeleted());
+
+        foodComboRepository.save(existingFoodCombo);
     }
 }
