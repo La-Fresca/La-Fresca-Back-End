@@ -21,6 +21,7 @@ public class FoodItem {
     private String CafeId;
     private Integer Deleted; // 1 for deleted, 0 for not deleted
     private List<String> Categories;
+    private Double Cost;
     private Double Rating;
     private Integer DiscountStatus;
     private Discount DiscountDetails;

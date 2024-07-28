@@ -32,23 +32,23 @@ public class StockCollectionService {
         else if (stockCollection.getAvailableAmount() == null) {
             error = "Stock collection available amount cannot be null";
         }
-        else if (stockCollection.getAvailableAmount() != null) {
-            List<Stock> stockList = stockRepository.findByStockCollectionName(stockCollection.getName());
-
-            double availableAmount = 0;
-
-            if (stockList != null) {
-                for (Stock stock : stockList) {
-                    availableAmount += stock.getInitialAmount();
-                }
-
-                stockCollection.setAvailableAmount(availableAmount);
-            }
-
-            else {
-                error = "Stock collection does not exist";
-            }
-        }
+//        else if (stockCollection.getAvailableAmount() != null) {
+//            List<Stock> stockList = stockRepository.findByStockCollectionName(stockCollection.getName());
+//
+//            double availableAmount = 0;
+//
+//            if (stockList != null) {
+//                for (Stock stock : stockList) {
+//                    availableAmount += stock.getInitialAmount();
+//                }
+//
+//                stockCollection.setAvailableAmount(availableAmount);
+//            }
+//
+//            else {
+//                error = "Stock collection does not exist";
+//            }
+//        }
         else if (stockCollection.getLowerLimit() == null) {
             error = "Stock collection lower limit cannot be null";
         }
