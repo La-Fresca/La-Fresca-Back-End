@@ -100,6 +100,10 @@ public class OrderService {
         if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
             throw new IllegalStateException("Invalid total amount");
         }
+        //validate order status
+        if(order.getDiscount() == null || order.getDiscount() == 0) {
+            order.setDiscount(0.0f);
+        }
 
         //set order status to pending and set dates
         order.setOrderStatus(OrderStatus.valueOf("PENDING"));
@@ -158,6 +162,9 @@ public class OrderService {
         }
         if (order.getDeliveryPersonId() != null && !order.getDeliveryPersonId().isEmpty() && !orderToUpdate.getDeliveryPersonId().equals(order.getDeliveryPersonId())) {
             orderToUpdate.setDeliveryPersonId(order.getDeliveryPersonId());
+        }
+        if (order.getDiscount() != null && order.getDiscount() != 0 && !orderToUpdate.getDiscount().equals(order.getDiscount())) {
+            orderToUpdate.setDiscount(order.getDiscount());
         }
 
         orderRepository.save(orderToUpdate);

@@ -8,5 +8,5 @@ import java.util.List;
 public class CustomFeature {
     private String Name;
     private List<String> Levels;
-    private List<Float> AdditionalPrices;
+    private List<Double> AdditionalPrices;
 }

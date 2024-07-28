@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
+import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,17 @@ public class StockService {
         LocalDateTime now = LocalDateTime.now();
 
 
-        if (stock.getName() == null || stock.getName().isEmpty()) {
-            error = "Stock name cannot be empty";
+        if (stock.getStockCollectionName() == null || stock.getStockCollectionName().isEmpty()) {
+            error = "Stock collection name cannot be empty";
         }
         else if (stock.getBatchId() == null || stock.getBatchId().isEmpty()) {
             error = "Batch id cannot be empty";
         }
-        else if (stock.getAvailableAmount() < 0) {
-            error = "Invalid value for Available amount";
+        else if (stock.getInitialAmount() < 0) {
+            error = "Invalid value for initial amount";
+        }
+        else if (stock.getDeleted() == null) {
+            stock.setDeleted(0);
         }
 
         else if (stock.getLowerLimit() < 0) {
@@ -65,18 +69,18 @@ public class StockService {
     }
 
     public void updateStock(String id, Stock stock) {
-        Stock existingStock = stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
+        Stock existingStock = stockRepository.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
+         LocalDate now = LocalDate.now();
 
-         LocalDateTime now = LocalDateTime.now();
-
-        if (stock.getName() != null && !stock.getName().isEmpty()) {
-            existingStock.setName(stock.getName());
+        if (stock.getStockCollectionName() != null && !stock.getStockCollectionName().isEmpty()) {
+            existingStock.setStockCollectionName(stock.getStockCollectionName());
         }
         if (stock.getBatchId() != null && !stock.getBatchId().isEmpty()) {
             existingStock.setBatchId(stock.getBatchId());
         }
-        if (stock.getAvailableAmount() >= 0) {
-            existingStock.setAvailableAmount(stock.getAvailableAmount());
+        if (stock.getInitialAmount() >= 0) {
+            existingStock.setInitialAmount(stock.getInitialAmount());
         }
         if (stock.getLowerLimit() >= 0) {
             existingStock.setLowerLimit(stock.getLowerLimit());
@@ -85,6 +89,16 @@ public class StockService {
             existingStock.setExpiryDate(stock.getExpiryDate());
 
         }
+
+        stockRepository.save(existingStock);
+    }
+
+    // Logical Delete
+    public void logicallyDeleteStock(String id, Stock stock) {
+        Stock existingStock = stockRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Stock not found with id " + id));
+
+        existingStock.setDeleted(stock.getDeleted());
 
         stockRepository.save(existingStock);
     }

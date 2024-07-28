@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.lafresca.lafrescabackend.Models.Branch;
-import org.lafresca.lafrescabackend.Models.FoodItem;
-import org.lafresca.lafrescabackend.Services.BranchService;
+import org.lafresca.lafrescabackend.Models.Stock;
+import org.lafresca.lafrescabackend.Models.StockCollection;
+import org.lafresca.lafrescabackend.Services.StockCollectionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,17 +14,17 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "api/lafresca/branch")
+@RequestMapping(path = "/api/lafresca/stockCollection")
 @AllArgsConstructor
-@Tag(name = "Branch Controller")
-public class BranchController {
-    private final BranchService branchService;
+@Tag(name = "Stock Collection Controller")
+public class StockCollectionController {
+    private final StockCollectionService stockCollectionService;
 
-    // Add new branch
+    // Add New Stock Collection
     @PostMapping
     @Operation(
-            description = "Add new branch",
-            summary = "Add new branch to the chain",
+            description = "Add new stock collection",
+            summary = "Add new stock collection to inventory",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -36,13 +36,15 @@ public class BranchController {
                     )
             })
 
-    public String addNewBranch(@RequestBody Branch branch) { return branchService.addNewBranch(branch); }
+    public String addNewStockCollection(@RequestBody StockCollection stockCollection) {
+        return stockCollectionService.addNewStockCollection(stockCollection);
+    }
 
-    // Get all branches
+    // Get all stock collections
     @GetMapping
     @Operation(
-            description = "Get all branches",
-            summary = "Retrieve all branches in the chain",
+            description = "Get all stock collections",
+            summary = "Retrieve all stock collections from inventory",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -54,13 +56,13 @@ public class BranchController {
                     )
             })
 
-    public List<Branch> getBranches() { return branchService.getBranches(); }
+    public List<StockCollection> getStockCollections() { return stockCollectionService.getStockCollections(); }
 
-    // Search branch
+    // Search stock collection
     @GetMapping(path = "{id}")
     @Operation(
-            description = "Search branch by id",
-            summary = "Retrieve branches by using id",
+            description = "Get stock collections by id",
+            summary = "Retrieve stock collections by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -72,13 +74,15 @@ public class BranchController {
                     )
             })
 
-    public Optional<Branch> getBranch(@PathVariable("id") String id) { return branchService.getBranch(id); }
+    public Optional<StockCollection> getStockCollection(@PathVariable("id") String id) {
+        return stockCollectionService.getStockCollection(id);
+    }
 
-    // Delete branch
+    // Delete stock collection by id
     @DeleteMapping(path = "{id}")
     @Operation(
-            description = "Delete branch",
-            summary = "Delete branch by using id",
+            description = "Delete stock collections by id",
+            summary = "Delete stock collections by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -90,13 +94,15 @@ public class BranchController {
                     )
             })
 
-    public void deleteBranch(@PathVariable("id") String id) { branchService.deleteBranch(id); }
+    public void deleteStockCollection(@PathVariable("id") String id) {
+        stockCollectionService.deleteStockCollection(id);
+    }
 
-    // Update Branch
+    // Update stock collection by id
     @PutMapping(path = "{id}")
     @Operation(
-            description = "Update branch",
-            summary = "Update branch by using id",
+            description = "Update stock collections by id",
+            summary = "Update stock collections by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -108,15 +114,15 @@ public class BranchController {
                     )
             })
 
-    public void updateBranch(@PathVariable("id") String id, @RequestBody Branch branch) {
-        branchService.updateBranch(id, branch);
+    public void updateStockCollection(@PathVariable("id") String id, @RequestBody StockCollection stockCollection) {
+        stockCollectionService.updateStockCollection(id, stockCollection);
     }
 
     // Logical Delete
     @PutMapping(path = "delete/{id}")
     @Operation(
-            description = "Logically delete branch by id",
-            summary = "Logically delete branches by using the id",
+            description = "Logically delete stock collection by id",
+            summary = "Logically delete stock collections by using the id",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -127,7 +133,7 @@ public class BranchController {
                             responseCode = "403")
             })
 
-    public void logicallyDeleteBranch(@PathVariable("id") String id, @RequestBody Branch branch){
-        branchService.logicallyDeleteBranch(id, branch);
+    public void logicallyDeleteStockCollection(@PathVariable("id") String id, @RequestBody StockCollection stockCollection){
+        stockCollectionService.logicallyDeleteStockCollection(id, stockCollection);
     }
 }

@@ -4,15 +4,13 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Branch")
+@Document(collection = "StockCollection")
 @Data
-public class Branch {
+public class StockCollection {
     @Id
     private String id;
-    private String Address;
-    private String ContactNo;
-    private Double Longitude;
-    private Double Latitude;
-    private String BranchManager;
+    private String Name;
+    private Double LowerLimit;
+    private Double AvailableAmount;
     private Integer Deleted;
 }
