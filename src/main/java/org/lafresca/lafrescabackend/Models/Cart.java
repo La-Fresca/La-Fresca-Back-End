@@ -17,4 +17,5 @@ public class Cart {
     private Integer Quantity;
     private List<CustomFeature> CustomFeatures;
     private Double ItemTotalPrice;
+    private Double DiscountedPrice;
 }

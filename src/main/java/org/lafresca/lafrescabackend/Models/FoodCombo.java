@@ -17,6 +17,7 @@ public class FoodCombo {
     private Double Price;
     private List<String> FoodIds;
     private Integer Deleted; // 1 for deleted, 0 for not deleted
+    private Double Cost;
     private String Rating;
     private Integer DiscountStatus;
     private Discount DiscountDetails;

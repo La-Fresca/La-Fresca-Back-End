@@ -148,44 +148,46 @@ public class FoodItemService {
         if (foodItem.getDeleted() == 0 || foodItem.getDeleted() == 1) {
             existingFoodItem.setDeleted(foodItem.getDeleted());
         }
-        if (foodItem.getDiscountStatus() == 0 || foodItem.getDiscountStatus() == 1) {
+        if (foodItem.getDiscountStatus() != null && (foodItem.getDiscountStatus() == 0 || foodItem.getDiscountStatus() == 1)) {
             existingFoodItem.setDiscountStatus(foodItem.getDiscountStatus());
         }
-        if (foodItem.getRating() != 0){
+        if (foodItem.getRating() != null && foodItem.getRating() != 0){
             existingFoodItem.setRating(foodItem.getRating());
         }
-        if (foodItem.getDiscountDetails().getName() != null && !foodItem.getDiscountDetails().getName().isEmpty()) {
-            existingFoodItem.getDiscountDetails().setName(foodItem.getDiscountDetails().getName());
-        }
-        if (foodItem.getDiscountDetails().getDescription() != null && !foodItem.getDiscountDetails().getDescription().isEmpty()) {
-            existingFoodItem.getDiscountDetails().setDescription(foodItem.getDiscountDetails().getDescription());
-        }
-        if (foodItem.getDiscountDetails().getDiscountType().equals("Price Offer") || foodItem.getDiscountDetails().getDiscountType().equals("Promotional Offer")) {
-            existingFoodItem.getDiscountDetails().setDiscountType(foodItem.getDiscountDetails().getDiscountType());
-        }
-        if (foodItem.getDiscountDetails().getDiscountAmount() > 0) {
-            existingFoodItem.getDiscountDetails().setDiscountAmount(foodItem.getDiscountDetails().getDiscountAmount());
-        }
-        if (foodItem.getDiscountDetails().getStartDate() != null && !foodItem.getDiscountDetails().getStartDate().toString().isEmpty() && !LocalDateTime.parse(foodItem.getDiscountDetails().getStartDate().toString()).isBefore(now)) {
-            existingFoodItem.getDiscountDetails().setStartDate(foodItem.getDiscountDetails().getStartDate());
-        }
-        if (foodItem.getDiscountDetails().getEndDate() != null && !foodItem.getDiscountDetails().getEndDate().toString().isEmpty() && !LocalDateTime.parse(foodItem.getDiscountDetails().getEndDate().toString()).isBefore(LocalDateTime.parse(foodItem.getDiscountDetails().getStartDate().toString()))) {
-            existingFoodItem.getDiscountDetails().setEndDate(foodItem.getDiscountDetails().getEndDate());
-        }
-        if (foodItem.getDiscountDetails().getCafeId() != null && !foodItem.getDiscountDetails().getCafeId().isEmpty()) {
-            existingFoodItem.getDiscountDetails().setCafeId(foodItem.getDiscountDetails().getCafeId());
-        }
-        if (foodItem.getDiscountDetails().getIsActive() == 0 || foodItem.getDiscountDetails().getIsActive() == 1) {
-            existingFoodItem.getDiscountDetails().setIsActive(foodItem.getDiscountDetails().getIsActive());
-        }
-        if (foodItem.getDiscountDetails().getMenuItemId() != null && !foodItem.getDiscountDetails().getMenuItemId().isEmpty()) {
-            existingFoodItem.getDiscountDetails().setMenuItemId(existingFoodItem.getDiscountDetails().getMenuItemId());
-        }
-        if (foodItem.getDiscountDetails().getMenuItemType().equals("Food Item")) {
-            existingFoodItem.getDiscountDetails().setMenuItemType(existingFoodItem.getDiscountDetails().getMenuItemType());
-        }
-        if (foodItem.getDiscountDetails().getOfferDetails() != null && !foodItem.getDiscountDetails().getOfferDetails().isEmpty()) {
-            existingFoodItem.getDiscountDetails().setOfferDetails(foodItem.getDiscountDetails().getOfferDetails());
+        if (foodItem.getDiscountDetails() != null){
+            if (foodItem.getDiscountDetails().getName() != null && !foodItem.getDiscountDetails().getName().isEmpty()) {
+                existingFoodItem.getDiscountDetails().setName(foodItem.getDiscountDetails().getName());
+            }
+            if (foodItem.getDiscountDetails().getDescription() != null && !foodItem.getDiscountDetails().getDescription().isEmpty()) {
+                existingFoodItem.getDiscountDetails().setDescription(foodItem.getDiscountDetails().getDescription());
+            }
+            if (foodItem.getDiscountDetails().getDiscountType().equals("Price Offer") || foodItem.getDiscountDetails().getDiscountType().equals("Promotional Offer")) {
+                existingFoodItem.getDiscountDetails().setDiscountType(foodItem.getDiscountDetails().getDiscountType());
+            }
+            if (foodItem.getDiscountDetails().getDiscountAmount() > 0) {
+                existingFoodItem.getDiscountDetails().setDiscountAmount(foodItem.getDiscountDetails().getDiscountAmount());
+            }
+            if (foodItem.getDiscountDetails().getStartDate() != null && !foodItem.getDiscountDetails().getStartDate().toString().isEmpty() && !LocalDateTime.parse(foodItem.getDiscountDetails().getStartDate().toString()).isBefore(now)) {
+                existingFoodItem.getDiscountDetails().setStartDate(foodItem.getDiscountDetails().getStartDate());
+            }
+            if (foodItem.getDiscountDetails().getEndDate() != null && !foodItem.getDiscountDetails().getEndDate().toString().isEmpty() && !LocalDateTime.parse(foodItem.getDiscountDetails().getEndDate().toString()).isBefore(LocalDateTime.parse(foodItem.getDiscountDetails().getStartDate().toString()))) {
+                existingFoodItem.getDiscountDetails().setEndDate(foodItem.getDiscountDetails().getEndDate());
+            }
+            if (foodItem.getDiscountDetails().getCafeId() != null && !foodItem.getDiscountDetails().getCafeId().isEmpty()) {
+                existingFoodItem.getDiscountDetails().setCafeId(foodItem.getDiscountDetails().getCafeId());
+            }
+            if (foodItem.getDiscountDetails().getIsActive() == 0 || foodItem.getDiscountDetails().getIsActive() == 1) {
+                existingFoodItem.getDiscountDetails().setIsActive(foodItem.getDiscountDetails().getIsActive());
+            }
+            if (foodItem.getDiscountDetails().getMenuItemId() != null && !foodItem.getDiscountDetails().getMenuItemId().isEmpty()) {
+                existingFoodItem.getDiscountDetails().setMenuItemId(existingFoodItem.getDiscountDetails().getMenuItemId());
+            }
+            if (foodItem.getDiscountDetails().getMenuItemType().equals("Food Item")) {
+                existingFoodItem.getDiscountDetails().setMenuItemType(existingFoodItem.getDiscountDetails().getMenuItemType());
+            }
+            if (foodItem.getDiscountDetails().getOfferDetails() != null && !foodItem.getDiscountDetails().getOfferDetails().isEmpty()) {
+                existingFoodItem.getDiscountDetails().setOfferDetails(foodItem.getDiscountDetails().getOfferDetails());
+            }
         }
 
         existingFoodItem.setCategories(foodItem.getCategories());

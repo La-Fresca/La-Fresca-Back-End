@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static io.jsonwebtoken.lang.Collections.size;
@@ -45,33 +46,47 @@ public class CartService {
             error = "MenuItem type cannot be null";
         }
 
-        if (cart.getMenuItemType() == "Food Item") {
+        if (Objects.equals(cart.getMenuItemType(), "Food Item")) {
             FoodItem foodItem = foodItemRepository.findById(cart.getMenuItemId()).orElse(null);
 
             if (foodItem != null) {
-                List<CustomFeature> additionalPrices = cart.getCustomFeatures();
-
-                double totalAdditionalPrice = 0;
-
-                for (CustomFeature customFeature : additionalPrices) {
-                    List<Double> additionalPriceList =  customFeature.getAdditionalPrices();
-                    for (Double additionalPrice : additionalPriceList) {
-                        totalAdditionalPrice += additionalPrice;
-                    }
+                if (foodItem.getDeleted() == 1) {
+                    error = "Food Item not found";
                 }
+                else {
+                    List<CustomFeature> additionalPrices = cart.getCustomFeatures();
 
-                double totalPrice = (foodItem.getPrice() + totalAdditionalPrice) * cart.getQuantity();
-                cart.setItemTotalPrice(totalPrice);
+                    double totalAdditionalPrice = 0;
+
+                    for (CustomFeature customFeature : additionalPrices) {
+                        List<Double> additionalPriceList = customFeature.getAdditionalPrices();
+                        for (Double additionalPrice : additionalPriceList) {
+                            totalAdditionalPrice += additionalPrice;
+                        }
+                    }
+
+                    double totalPrice = (foodItem.getPrice() + totalAdditionalPrice) * cart.getQuantity();
+                    cart.setItemTotalPrice(totalPrice);
+                }
             }
         }
 
-        else if (cart.getMenuItemType() == "Food Combo") {
+        else if (Objects.equals(cart.getMenuItemType(), "Food Combo")) {
             FoodCombo foodCombo = foodComboRepository.findById(cart.getMenuItemId()).orElse(null);
 
             if (foodCombo != null) {
-                double totalPrice = foodCombo.getPrice() * cart.getQuantity();
-                cart.setItemTotalPrice(totalPrice);
+                if (foodCombo.getDeleted() == 1) {
+                    error = "Food Combo not found";
+                }
+                else {
+                    double totalPrice = foodCombo.getPrice() * cart.getQuantity();
+                    cart.setItemTotalPrice(totalPrice);
+                }
             }
+        }
+
+        else {
+            error =  "Invalid MenuItem type";
         }
 
         if (error == null) {
@@ -83,7 +98,41 @@ public class CartService {
 
     // Get all cart items by UserId
     public List<Cart> getCartItems(String userId) {
-        return cartRepository.findByUserId(userId);
+        List<Cart> cartList = cartRepository.findByUserId(userId);
+
+        if (!cartList.isEmpty()) {
+            for (Cart cart : cartList) {
+                String menuItemType = cart.getMenuItemType();
+                String menuItemId = cart.getMenuItemId();
+                if (Objects.equals(menuItemType, "Food Item")) {
+                    FoodItem foodItem = foodItemRepository.findById(menuItemId).orElse(null);
+                    assert foodItem != null;
+                    if (foodItem.getDiscountStatus() == 1) {
+                        if (Objects.equals(foodItem.getDiscountDetails().getDiscountType(), "Price Offer")) {
+                            double price = cart.getItemTotalPrice();
+                            double discountAmount = foodItem.getDiscountDetails().getDiscountAmount();
+                            double discountedPrice = price - (price * discountAmount) / 100;
+                            cart.setDiscountedPrice(discountedPrice);
+                        }
+                    }
+                }
+
+                else if (Objects.equals(menuItemType, "Food Combo")) {
+                    FoodCombo foodCombo = foodComboRepository.findById(menuItemId).orElse(null);
+                    assert foodCombo != null;
+                    if (foodCombo.getDiscountStatus() == 1) {
+                        if (Objects.equals(foodCombo.getDiscountDetails().getDiscountType(), "Price Offer")) {
+                            double price = cart.getItemTotalPrice();
+                            double discountAmount = foodCombo.getDiscountDetails().getDiscountAmount();
+                            double discountedPrice = price - (price * discountAmount) / 100;
+                            cart.setDiscountedPrice(discountedPrice);
+                        }
+                    }
+                }
+            }
+        }
+
+        return cartList;
     }
 
     // Delete cart item by id
@@ -92,7 +141,7 @@ public class CartService {
         cartRepository.deleteById(id);
     }
 
-    // Update cart item ny id
+    // Update cart item by id
     public void updateCartItem(String id, Cart cart) {
         Cart existingCart = cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart Item Not Found with Id: " + id));
 
