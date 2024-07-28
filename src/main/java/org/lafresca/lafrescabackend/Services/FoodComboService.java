@@ -131,10 +131,10 @@ public class FoodComboService {
         if (foodCombo.getCafeId() != null && !foodCombo.getCafeId().isEmpty()) {
             existingFoodCombo.setCafeId(foodCombo.getCafeId());
         }
-        if (foodCombo.getAvailable() != 0 && foodCombo.getAvailable() != 1) {
+        if (foodCombo.getAvailable() == 0 || foodCombo.getAvailable() == 1) {
             existingFoodCombo.setAvailable(foodCombo.getAvailable());
         }
-        if (foodCombo.getDeleted() != 0 && foodCombo.getDeleted() != 1) {
+        if (foodCombo.getDeleted() == 0 || foodCombo.getDeleted() == 1) {
             existingFoodCombo.setDeleted(foodCombo.getDeleted());
         }
         if (foodCombo.getDiscountStatus() == 0 || foodCombo.getDiscountStatus() == 1) {
@@ -143,38 +143,40 @@ public class FoodComboService {
         if (foodCombo.getRating() != null) {
             existingFoodCombo.setRating(foodCombo.getRating());
         }
-        if (foodCombo.getDiscountDetails().getName() != null && !foodCombo.getDiscountDetails().getName().isEmpty()) {
-            existingFoodCombo.getDiscountDetails().setName(foodCombo.getDiscountDetails().getName());
-        }
-        if (foodCombo.getDiscountDetails().getDescription() != null && !foodCombo.getDiscountDetails().getDescription().isEmpty()) {
-            existingFoodCombo.getDiscountDetails().setDescription(foodCombo.getDiscountDetails().getDescription());
-        }
-        if (foodCombo.getDiscountDetails().getDiscountType().equals("Price Offer") || foodCombo.getDiscountDetails().getDiscountType().equals("Promotional Offer")) {
-            existingFoodCombo.getDiscountDetails().setDiscountType(foodCombo.getDiscountDetails().getDiscountType());
-        }
-        if (foodCombo.getDiscountDetails().getDiscountAmount() > 0) {
-            existingFoodCombo.getDiscountDetails().setDiscountAmount(foodCombo.getDiscountDetails().getDiscountAmount());
-        }
-        if (foodCombo.getDiscountDetails().getStartDate() != null && !foodCombo.getDiscountDetails().getStartDate().toString().isEmpty() && !LocalDateTime.parse(foodCombo.getDiscountDetails().getStartDate().toString()).isBefore(now)) {
-            existingFoodCombo.getDiscountDetails().setStartDate(foodCombo.getDiscountDetails().getStartDate());
-        }
-        if (foodCombo.getDiscountDetails().getEndDate() != null && !foodCombo.getDiscountDetails().getEndDate().toString().isEmpty() && !LocalDateTime.parse(foodCombo.getDiscountDetails().getEndDate().toString()).isBefore(LocalDateTime.parse(foodCombo.getDiscountDetails().getStartDate().toString()))) {
-            existingFoodCombo.getDiscountDetails().setEndDate(foodCombo.getDiscountDetails().getEndDate());
-        }
-        if (foodCombo.getDiscountDetails().getCafeId() != null && !foodCombo.getDiscountDetails().getCafeId().isEmpty()) {
-            existingFoodCombo.getDiscountDetails().setCafeId(foodCombo.getDiscountDetails().getCafeId());
-        }
-        if (foodCombo.getDiscountDetails().getIsActive() == 0 || foodCombo.getDiscountDetails().getIsActive() == 1) {
-            existingFoodCombo.getDiscountDetails().setIsActive(foodCombo.getDiscountDetails().getIsActive());
-        }
-        if (foodCombo.getDiscountDetails().getMenuItemId() != null && !foodCombo.getDiscountDetails().getMenuItemId().isEmpty()) {
-            existingFoodCombo.getDiscountDetails().setMenuItemId(existingFoodCombo.getDiscountDetails().getMenuItemId());
-        }
-        if (foodCombo.getDiscountDetails().getMenuItemType().equals("Food Combo")) {
-            existingFoodCombo.getDiscountDetails().setMenuItemType(existingFoodCombo.getDiscountDetails().getMenuItemType());
-        }
-        if (foodCombo.getDiscountDetails().getOfferDetails() != null && !foodCombo.getDiscountDetails().getOfferDetails().isEmpty()) {
-            existingFoodCombo.getDiscountDetails().setOfferDetails(foodCombo.getDiscountDetails().getOfferDetails());
+        if (foodCombo.getDiscountDetails() != null) {
+            if (foodCombo.getDiscountDetails().getName() != null && !foodCombo.getDiscountDetails().getName().isEmpty()) {
+                existingFoodCombo.getDiscountDetails().setName(foodCombo.getDiscountDetails().getName());
+            }
+            if (foodCombo.getDiscountDetails().getDescription() != null && !foodCombo.getDiscountDetails().getDescription().isEmpty()) {
+                existingFoodCombo.getDiscountDetails().setDescription(foodCombo.getDiscountDetails().getDescription());
+            }
+            if (foodCombo.getDiscountDetails().getDiscountType().equals("Price Offer") || foodCombo.getDiscountDetails().getDiscountType().equals("Promotional Offer")) {
+                existingFoodCombo.getDiscountDetails().setDiscountType(foodCombo.getDiscountDetails().getDiscountType());
+            }
+            if (foodCombo.getDiscountDetails().getDiscountAmount() > 0) {
+                existingFoodCombo.getDiscountDetails().setDiscountAmount(foodCombo.getDiscountDetails().getDiscountAmount());
+            }
+            if (foodCombo.getDiscountDetails().getStartDate() != null && !foodCombo.getDiscountDetails().getStartDate().toString().isEmpty() && !LocalDateTime.parse(foodCombo.getDiscountDetails().getStartDate().toString()).isBefore(now)) {
+                existingFoodCombo.getDiscountDetails().setStartDate(foodCombo.getDiscountDetails().getStartDate());
+            }
+            if (foodCombo.getDiscountDetails().getEndDate() != null && !foodCombo.getDiscountDetails().getEndDate().toString().isEmpty() && !LocalDateTime.parse(foodCombo.getDiscountDetails().getEndDate().toString()).isBefore(LocalDateTime.parse(foodCombo.getDiscountDetails().getStartDate().toString()))) {
+                existingFoodCombo.getDiscountDetails().setEndDate(foodCombo.getDiscountDetails().getEndDate());
+            }
+            if (foodCombo.getDiscountDetails().getCafeId() != null && !foodCombo.getDiscountDetails().getCafeId().isEmpty()) {
+                existingFoodCombo.getDiscountDetails().setCafeId(foodCombo.getDiscountDetails().getCafeId());
+            }
+            if (foodCombo.getDiscountDetails().getIsActive() == 0 || foodCombo.getDiscountDetails().getIsActive() == 1) {
+                existingFoodCombo.getDiscountDetails().setIsActive(foodCombo.getDiscountDetails().getIsActive());
+            }
+            if (foodCombo.getDiscountDetails().getMenuItemId() != null && !foodCombo.getDiscountDetails().getMenuItemId().isEmpty()) {
+                existingFoodCombo.getDiscountDetails().setMenuItemId(existingFoodCombo.getDiscountDetails().getMenuItemId());
+            }
+            if (foodCombo.getDiscountDetails().getMenuItemType().equals("Food Combo")) {
+                existingFoodCombo.getDiscountDetails().setMenuItemType(existingFoodCombo.getDiscountDetails().getMenuItemType());
+            }
+            if (foodCombo.getDiscountDetails().getOfferDetails() != null && !foodCombo.getDiscountDetails().getOfferDetails().isEmpty()) {
+                existingFoodCombo.getDiscountDetails().setOfferDetails(foodCombo.getDiscountDetails().getOfferDetails());
+            }
         }
 
         foodComboRepository.save(existingFoodCombo);

@@ -50,19 +50,24 @@ public class CartService {
             FoodItem foodItem = foodItemRepository.findById(cart.getMenuItemId()).orElse(null);
 
             if (foodItem != null) {
-                List<CustomFeature> additionalPrices = cart.getCustomFeatures();
-
-                double totalAdditionalPrice = 0;
-
-                for (CustomFeature customFeature : additionalPrices) {
-                    List<Double> additionalPriceList =  customFeature.getAdditionalPrices();
-                    for (Double additionalPrice : additionalPriceList) {
-                        totalAdditionalPrice += additionalPrice;
-                    }
+                if (foodItem.getDeleted() == 1) {
+                    error = "Food Item not found";
                 }
+                else {
+                    List<CustomFeature> additionalPrices = cart.getCustomFeatures();
 
-                double totalPrice = (foodItem.getPrice() + totalAdditionalPrice) * cart.getQuantity();
-                cart.setItemTotalPrice(totalPrice);
+                    double totalAdditionalPrice = 0;
+
+                    for (CustomFeature customFeature : additionalPrices) {
+                        List<Double> additionalPriceList = customFeature.getAdditionalPrices();
+                        for (Double additionalPrice : additionalPriceList) {
+                            totalAdditionalPrice += additionalPrice;
+                        }
+                    }
+
+                    double totalPrice = (foodItem.getPrice() + totalAdditionalPrice) * cart.getQuantity();
+                    cart.setItemTotalPrice(totalPrice);
+                }
             }
         }
 
@@ -70,8 +75,13 @@ public class CartService {
             FoodCombo foodCombo = foodComboRepository.findById(cart.getMenuItemId()).orElse(null);
 
             if (foodCombo != null) {
-                double totalPrice = foodCombo.getPrice() * cart.getQuantity();
-                cart.setItemTotalPrice(totalPrice);
+                if (foodCombo.getDeleted() == 1) {
+                    error = "Food Combo not found";
+                }
+                else {
+                    double totalPrice = foodCombo.getPrice() * cart.getQuantity();
+                    cart.setItemTotalPrice(totalPrice);
+                }
             }
         }
 
@@ -131,7 +141,7 @@ public class CartService {
         cartRepository.deleteById(id);
     }
 
-    // Update cart item ny id
+    // Update cart item by id
     public void updateCartItem(String id, Cart cart) {
         Cart existingCart = cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart Item Not Found with Id: " + id));
 
