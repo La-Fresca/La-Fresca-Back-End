@@ -100,4 +100,13 @@ public class StockCollectionService {
         stockCollectionRepository.save(existingStockCollection);
     }
 
+    // Logical Delete
+    public void logicallyDeleteStockCollection(String id, StockCollection stockCollection) {
+        StockCollection existingStockCollection = stockCollectionRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Stock Collection not found with id " + id));
+
+        existingStockCollection.setDeleted(stockCollection.getDeleted());
+
+        stockCollectionRepository.save(existingStockCollection);
+    }
 }

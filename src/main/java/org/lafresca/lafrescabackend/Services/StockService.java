@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
+import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class StockService {
         }
         else if (stock.getInitialAmount() < 0) {
             error = "Invalid value for initial amount";
+        }
+        else if (stock.getDeleted() == null) {
+            stock.setDeleted(0);
         }
         else if(LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             error = "Expiry date is before current date";
@@ -79,6 +83,16 @@ public class StockService {
         if (stock.getSupplierName() != null && !stock.getSupplierName().isEmpty()) {
             existingStock.setSupplierName(stock.getSupplierName());
         }
+
+        stockRepository.save(existingStock);
+    }
+
+    // Logical Delete
+    public void logicallyDeleteStock(String id, Stock stock) {
+        Stock existingStock = stockRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Stock not found with id " + id));
+
+        existingStock.setDeleted(stock.getDeleted());
 
         stockRepository.save(existingStock);
     }

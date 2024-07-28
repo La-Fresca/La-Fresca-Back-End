@@ -12,4 +12,5 @@ public class StockCollection {
     private String Name;
     private Double LowerLimit;
     private Double AvailableAmount;
+    private Integer Deleted;
 }

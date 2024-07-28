@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.lafresca.lafrescabackend.Services.StockService;
@@ -110,6 +111,25 @@ public class StockController {
 
     public void updateStock(@PathVariable("id") String id, @RequestBody Stock stock) {
         stockService.updateStock(id, stock);
+    }
+
+    // Logical Delete
+    @PutMapping(path = "delete/{id}")
+    @Operation(
+            description = "Logically delete stock by id",
+            summary = "Logically delete stocks by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public void logicallyDeleteStock(@PathVariable("id") String id, @RequestBody Stock stock){
+        stockService.logicallyDeleteStock(id, stock);
     }
 }
 

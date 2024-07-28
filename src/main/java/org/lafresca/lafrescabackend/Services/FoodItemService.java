@@ -51,10 +51,10 @@ public class FoodItemService {
             error = "Invalid value for availability";
         }
         else if (foodItem.getDiscountStatus() < 0 || foodItem.getDiscountStatus() > 1) {
-            error = "Invalid value for deleted status";
+            error = "Invalid value for discount status";
         }
         else if (foodItem.getDeleted() < 0 || foodItem.getDeleted() > 1) {
-            error = "Invalid value for discount status";
+            error = "Invalid value for deleted status";
         }
         else if (foodItem.getFeatures() == null || foodItem.getFeatures().isEmpty()) {
             error = "Please enter at least one feature";
@@ -145,9 +145,6 @@ public class FoodItemService {
         if (foodItem.getAvailable() == 0 || foodItem.getAvailable() == 1) {
             existingFoodItem.setAvailable(foodItem.getAvailable());
         }
-        if (foodItem.getDeleted() == 0 || foodItem.getDeleted() == 1) {
-            existingFoodItem.setDeleted(foodItem.getDeleted());
-        }
         if (foodItem.getDiscountStatus() != null && (foodItem.getDiscountStatus() == 0 || foodItem.getDiscountStatus() == 1)) {
             existingFoodItem.setDiscountStatus(foodItem.getDiscountStatus());
         }
@@ -211,11 +208,11 @@ public class FoodItemService {
 
     // Logical Delete
     public void logicallyDeleteFoodItem(String id, FoodItem foodItem) {
-        FoodItem existingFood = foodItemRepository.findById(id)
+        FoodItem existingFoodItem = foodItemRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("FoodItem not found with id " + id));
 
-        existingFood.setDeleted(foodItem.getDeleted());
+        existingFoodItem.setDeleted(foodItem.getDeleted());
 
-        foodItemRepository.save(existingFood);
+        foodItemRepository.save(existingFoodItem);
     }
 }
