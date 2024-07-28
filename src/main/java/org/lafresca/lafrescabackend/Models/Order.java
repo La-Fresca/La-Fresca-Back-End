@@ -15,6 +15,7 @@ public class Order {
     private String CafeId;
     private String CreatedAt;
     private String UpdatedAt;
+    private Float Discount;
     private List<OrderFood> OrderItems;
 
     //for online orders
