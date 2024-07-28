@@ -116,4 +116,9 @@ public class StockService {
 
         stockRepository.save(existingStock);
     }
+
+    // Get stock by stock collection name
+    public List<Stock> getStockByCollectionName(String stockCollectionName) {
+        return stockRepository.findByName(stockCollectionName);
+    }
 }
