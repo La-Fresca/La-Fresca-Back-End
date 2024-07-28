@@ -14,4 +14,5 @@ public class Branch {
     private Double Longitude;
     private Double Latitude;
     private String BranchManager;
+    private Integer Deleted;
 }

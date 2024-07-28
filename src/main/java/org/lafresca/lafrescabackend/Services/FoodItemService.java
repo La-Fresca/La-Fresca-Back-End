@@ -51,10 +51,10 @@ public class FoodItemService {
             error = "Invalid value for availability";
         }
         else if (foodItem.getDiscountStatus() < 0 || foodItem.getDiscountStatus() > 1) {
-            error = "Invalid value for deleted status";
+            error = "Invalid value for discount status";
         }
         else if (foodItem.getDeleted() < 0 || foodItem.getDeleted() > 1) {
-            error = "Invalid value for discount status";
+            error = "Invalid value for deleted status";
         }
         else if (foodItem.getFeatures() == null || foodItem.getFeatures().isEmpty()) {
             error = "Please enter at least one feature";

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.lafresca.lafrescabackend.Models.Branch;
+import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Services.BranchService;
 import org.springframework.web.bind.annotation.*;
 
@@ -109,5 +110,24 @@ public class BranchController {
 
     public void updateBranch(@PathVariable("id") String id, @RequestBody Branch branch) {
         branchService.updateBranch(id, branch);
+    }
+
+    // Logical Delete
+    @PutMapping(path = "delete/{id}")
+    @Operation(
+            description = "Logically delete food item by id",
+            summary = "Logically delete food items by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public void logicallyDeleteFoodItem(@PathVariable("id") String id, @RequestBody Branch branch){
+        branchService.logicallyDeleteBranch(id, branch);
     }
 }
