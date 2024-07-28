@@ -87,6 +87,8 @@ public class JwtService {
     private String generateToken(User user, long expiration) {
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
+                .claim("role", user.getRole())
+                .claim("userId", user.getId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigninKey())

@@ -1,23 +1,29 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Models.OrderStatus;
+import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.OrderRepository;
+import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.lafresca.lafrescabackend.Validations.FoodAmountValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
 //    private final UserValidation userValidation;
     @Autowired
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -188,5 +194,71 @@ public class OrderService {
 
     public List<Order> getPendingOrdersbydeliveryPersonId(String userId) {
         return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.READY);
+    }
+
+    public void changeOrderStatus(OrderStatusChangeRequest orderStatusChangeRequest) {
+        if(orderStatusChangeRequest == null || orderStatusChangeRequest.getId() == null || orderStatusChangeRequest.getOrderStatus() == null) {
+            throw new IllegalStateException("OrderStatusChangeRequest cannot be null");
+        }
+        else {
+            try {
+                System.out.println("Changing order status" + orderStatusChangeRequest.getId() + " " + orderStatusChangeRequest.getOrderStatus());
+                Order order = orderRepository.findById(orderStatusChangeRequest.getId())
+                        .orElseThrow(() -> new IllegalStateException("Order with id " + orderStatusChangeRequest.getId() + " does not exist"));
+
+                if(!(orderStatusChangeRequest.getOrderStatus().equals(OrderStatus.PREPARING) || orderStatusChangeRequest.getOrderStatus().equals(OrderStatus.READY) || orderStatusChangeRequest.getOrderStatus().equals(OrderStatus.DELIVERED))){
+                    throw new IllegalStateException("Invalid OrderStatusChangeRequest");
+                }
+                if(order.getOrderStatus().equals(orderStatusChangeRequest.getOrderStatus())) {
+                    throw new IllegalStateException("Nothing to change");
+                }
+                order.setOrderStatus(orderStatusChangeRequest.getOrderStatus());
+                SimpleDateFormat DateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                Date date = new Date();
+                order.setUpdatedAt(DateTimeFormatter.format(date));
+
+                if(orderStatusChangeRequest.getOrderStatus().equals(OrderStatus.READY)) {
+                    if(order.getOrderType().equals("ONLINE")) {
+                        order.setDeliveryPersonId(findDeliveryPerson(order.getCafeId()));
+                        if(order.getDeliveryPersonId().equals("No delivery person available")) {
+                            throw new IllegalStateException("No delivery person available");
+                        }
+                    }
+                    else if(order.getOrderType().equals("OFFLINE")) {
+                        order.setWaiterId(findWaiter(order.getCafeId()));
+                        if(order.getWaiterId().equals("No waiter available")) {
+                            throw new IllegalStateException("No waiter available");
+                        }
+                    }
+                }
+                orderRepository.save(order);
+            } catch (Exception e) {
+                throw new IllegalStateException("OrderStatusChangeRequest cannot be null");
+            }
+        }
+    }
+
+    private String findWaiter(String cafeId) {
+        System.out.println("Finding waiter" + cafeId);
+        List<User> waiters = userRepository.findUserByCafeIdAndRole(cafeId,"WAITER");
+        System.out.println("Waiters found " + waiters.size());
+        if(waiters.isEmpty()) {
+            System.out.println("No waiter available");
+            return "No waiter available";
+        }
+
+        waiters.sort(Comparator.comparingLong(User::getStatusUpdatedAt).reversed());
+        System.out.println("Waiter found" + waiters.get(0).getUserId() + "waiter name" + waiters.get(0).getFirstName() + " " + waiters.get(0).getLastName());
+        return waiters.get(0).getUserId();
+    }
+
+    private String findDeliveryPerson(String cafeId) {
+        List<User> deliveryPersons = userRepository.findUserByCafeIdAndRole(cafeId,"DELIVERY_PERSON");
+        if(deliveryPersons.isEmpty()) {
+            return "No delivery person available";
+        }
+
+        deliveryPersons.sort(Comparator.comparingLong(User::getStatusUpdatedAt).reversed());
+        return deliveryPersons.get(0).getUserId();
     }
 }

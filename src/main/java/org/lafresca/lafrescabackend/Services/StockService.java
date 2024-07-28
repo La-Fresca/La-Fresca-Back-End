@@ -6,7 +6,9 @@ import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +22,9 @@ public class StockService {
     // Add new stock
     public String addNewStock(Stock stock) {
         String error = null;
+
         LocalDateTime now = LocalDateTime.now();
+
 
         if (stock.getName() == null || stock.getName().isEmpty()) {
             error = "Stock name cannot be empty";
@@ -31,6 +35,7 @@ public class StockService {
         else if (stock.getAvailableAmount() < 0) {
             error = "Invalid value for Available amount";
         }
+
         else if (stock.getLowerLimit() < 0) {
             error = "Invalid value for Lower limit";
         }
@@ -61,6 +66,7 @@ public class StockService {
 
     public void updateStock(String id, Stock stock) {
         Stock existingStock = stockRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
+
          LocalDateTime now = LocalDateTime.now();
 
         if (stock.getName() != null && !stock.getName().isEmpty()) {
@@ -77,6 +83,7 @@ public class StockService {
         }
         else if(stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDateTime.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             existingStock.setExpiryDate(stock.getExpiryDate());
+
         }
 
         stockRepository.save(existingStock);

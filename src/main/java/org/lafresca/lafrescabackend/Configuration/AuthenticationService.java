@@ -132,7 +132,7 @@ public class AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(user);
 
         // Revoke old tokens and save new ones
-        revokeAllTokenByUser(user);
+//        revokeAllTokenByUser(user);
         saveUserToken(accessToken, refreshToken, user);
 
         return new AuthenticationResponse(accessToken, refreshToken, "User login was successful");
@@ -140,10 +140,27 @@ public class AuthenticationService {
 
     // Revokes all tokens for a user
     private void revokeAllTokenByUser(User user) {
-        List<Token> validTokens = tokenRepository.findAllAccessTokensByUser(user.getId());
+        List<Token> validTokens = tokenRepository.findAllByUserId(user.getId());
+        System.out.println("Valid tokens: " + validTokens.size());
         if (!validTokens.isEmpty()) {
             validTokens.forEach(t -> t.setLoggedOut(true));
             tokenRepository.saveAll(validTokens);
+        }
+    }
+
+    private void revokeAllTokenByAcessToken(String token) {
+        List<Token> validToken = tokenRepository.findAllByAccessTokenAndLoggedOut(token, true);
+        if (!validToken.isEmpty()) {
+            validToken.forEach(t -> t.setLoggedOut(true));
+            tokenRepository.saveAll(validToken);
+        }
+    }
+
+    private void revokeAllTokenByRefreshToken(String token) {
+        List<Token> validToken = tokenRepository.findAllByRefreshTokenAndLoggedOut(token, true);
+        if (!validToken.isEmpty()) {
+            validToken.forEach(t -> t.setLoggedOut(true));
+            tokenRepository.saveAll(validToken);
         }
     }
 
@@ -169,15 +186,41 @@ public class AuthenticationService {
         if (jwtService.isValidRefreshToken(token, user)) {
             // Generate new tokens
             String accessToken = jwtService.generateAccessToken(user);
-            String refreshToken = jwtService.generateRefreshToken(user);
+//            String refreshToken = jwtService.generateRefreshToken(user);
 
             // Revoke old tokens and save new ones
-            revokeAllTokenByUser(user);
-            saveUserToken(accessToken, refreshToken, user);
+//            revokeAllTokenByUser(user);
+//            revokeAllTokenByAcessToken(token);
+            revokeAllTokenByRefreshToken(token);
+            saveUserToken(token, accessToken, user);
 
-            return new ResponseEntity<>(new AuthenticationResponse(accessToken, refreshToken, "New token generated"), HttpStatus.OK);
+            return new ResponseEntity<>(new AuthenticationResponse(accessToken, token, "New token generated"), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) {
+        // Extract the token from the authorization header
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = authHeader.substring(7);
+
+        // Extract username from token
+        String email = jwtService.extractUsername(token);
+
+        // Check if the user exists
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("No user found"));
+
+        // Revoke all tokens
+        revokeAllTokenByRefreshToken(token);
+        System.out.println("Done");
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

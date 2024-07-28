@@ -28,6 +28,12 @@ public class CategoryService {
             error = "Category description cannot be empty";
         }
 
+        Category alreadyExisting = categoryRepository.findByName(category.getName());
+
+        if (alreadyExisting != null) {
+            error = "Category already exists";
+        }
+
         if (error == null) {
             categoryRepository.save(category);
         }

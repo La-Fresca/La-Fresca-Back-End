@@ -12,6 +12,8 @@ public class Stock {
     private String Name;
     private String BatchId;
     private double AvailableAmount;
+
     private double LowerLimit;
     private LocalDateTime ExpiryDate;
+
 }
