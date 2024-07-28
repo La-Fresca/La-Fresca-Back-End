@@ -129,5 +129,24 @@ public class StockController {
     public void logicallyDeleteStock(@PathVariable("id") String id, @RequestBody Stock stock){
         stockService.logicallyDeleteStock(id, stock);
     }
+
+    // Get stock by stock collection
+    @GetMapping(path = "collection/{name}")
+    @Operation(
+            description = "Get stock by stock collection name",
+            summary = "Retrieve stocks by using the stock collection name",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public List<Stock> getStockByCollectionName(@PathVariable("name") String stockCollectionName) {
+        return stockService.getStockByCollectionName(stockCollectionName);
+    }
 }
 
