@@ -57,6 +57,7 @@ public class StockCollectionService {
         }
 
         if (error == null) {
+            stockCollection.setDeleted(0);
             stockCollectionRepository.save(stockCollection);
         }
 
