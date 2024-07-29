@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.lafresca.lafrescabackend.DTO.ItemStatusChangeDTO;
 import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Services.OrderService;
@@ -83,6 +84,11 @@ public class OrderController {
     @PostMapping(value = "/changestatus")
     public void changeOrderStatus(@RequestBody OrderStatusChangeRequest orderStatusChangeRequest) {
         orderService.changeOrderStatus(orderStatusChangeRequest);
+    }
+
+    @PutMapping(value = "/updateOrderItemStatus")
+    public void updateOrderItemStatus(@RequestBody ItemStatusChangeDTO itemStatusChangeDTO) {
+        orderService.updateOrderStatus(itemStatusChangeDTO);
     }
 
 

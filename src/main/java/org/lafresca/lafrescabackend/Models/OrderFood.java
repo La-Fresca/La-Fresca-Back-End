@@ -11,4 +11,5 @@ public class OrderFood {
     private Integer Quantity;
     private List<AddedFeature> AddedFeatures;
     private Float TotalPrice;
+    private OrderStatus OrderStatus;
 }
