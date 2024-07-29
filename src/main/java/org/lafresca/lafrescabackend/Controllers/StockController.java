@@ -4,9 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.Stock;
-import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.lafresca.lafrescabackend.Services.StockService;
 import org.springframework.web.bind.annotation.*;
 
@@ -130,6 +128,25 @@ public class StockController {
 
     public void logicallyDeleteStock(@PathVariable("id") String id, @RequestBody Stock stock){
         stockService.logicallyDeleteStock(id, stock);
+    }
+
+    // Get stock by stock collection
+    @GetMapping(path = "collection/{name}")
+    @Operation(
+            description = "Get stock by stock collection name",
+            summary = "Retrieve stocks by using the stock collection name",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public List<Stock> getStockByCollectionName(@PathVariable("name") String stockCollectionName) {
+        return stockService.getStockByCollectionName(stockCollectionName);
     }
 }
 

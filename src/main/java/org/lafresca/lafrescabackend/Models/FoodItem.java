@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "FoodItem")
@@ -23,6 +22,7 @@ public class FoodItem {
     private List<String> Categories;
     private Double Cost;
     private Double Rating;
+//    private Integer RatingCount;
     private Integer DiscountStatus;
     private Discount DiscountDetails;
 }

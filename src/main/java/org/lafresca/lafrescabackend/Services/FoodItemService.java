@@ -53,6 +53,9 @@ public class FoodItemService {
         else if (foodItem.getDiscountStatus() < 0 || foodItem.getDiscountStatus() > 1) {
             error = "Invalid value for discount status";
         }
+        else if (foodItem.getCost() == null || foodItem.getCost() <= 0) {
+            error = "Invalid value for cost";
+        }
         else if (foodItem.getDeleted() < 0 || foodItem.getDeleted() > 1) {
             error = "Invalid value for deleted status";
         }
@@ -144,6 +147,9 @@ public class FoodItemService {
         }
         if (foodItem.getAvailable() == 0 || foodItem.getAvailable() == 1) {
             existingFoodItem.setAvailable(foodItem.getAvailable());
+        }
+        if (foodItem.getCost() != null && foodItem.getCost() > 0) {
+            existingFoodItem.setCost(foodItem.getCost());
         }
         if (foodItem.getDiscountStatus() != null && (foodItem.getDiscountStatus() == 0 || foodItem.getDiscountStatus() == 1)) {
             existingFoodItem.setDiscountStatus(foodItem.getDiscountStatus());
