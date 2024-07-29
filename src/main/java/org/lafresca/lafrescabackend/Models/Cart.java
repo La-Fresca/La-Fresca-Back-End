@@ -18,4 +18,7 @@ public class Cart {
     private List<CartItemFeature> CustomFeatures;
     private Double ItemTotalPrice;
     private Double DiscountedPrice;
+    private String Image;
+    private String Name;
+    private String Description;
 }
