@@ -65,7 +65,7 @@ public class StockCollectionService {
 
     // Get all stock collections
     public List<StockCollection> getStockCollections() {
-        return stockCollectionRepository.findAll();
+        return stockCollectionRepository.findByDeleted(0);
     }
 
     // Get stock collection by id

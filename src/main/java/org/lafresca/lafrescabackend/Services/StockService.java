@@ -70,7 +70,7 @@ public class StockService {
     }
 
     // Get all stocks
-    public List<Stock> getStocks() { return stockRepository.findAll(); }
+    public List<Stock> getStocks() { return stockRepository.findByDeleted(0); }
 
     // Get stock by id
     public Optional<Stock> getStock(String id) {
@@ -86,7 +86,7 @@ public class StockService {
     public void updateStock(String id, Stock stock) {
         Stock existingStock = stockRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
-         LocalDate now = LocalDate.now();
+        LocalDate now = LocalDate.now();
 
         if (stock.getStockCollectionName() != null && !stock.getStockCollectionName().isEmpty()) {
             existingStock.setStockCollectionName(stock.getStockCollectionName());

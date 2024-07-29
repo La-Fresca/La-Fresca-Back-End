@@ -107,7 +107,7 @@ public class FoodComboService {
 
     // Retrieve all food combos
     public List<FoodCombo> getFoodCombos() {
-        return foodComboRepository.findAll();
+        return foodComboRepository.findByDeleted(0);
     }
 
     // Update food combo
