@@ -2,21 +2,27 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
+import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Repositories.FoodComboRepository;
+import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FoodComboService {
     private final FoodComboRepository foodComboRepository;
+    private final FoodItemRepository foodItemRepository;
 
     @Autowired
-    public FoodComboService(FoodComboRepository foodComboRepository) {
+    public FoodComboService(FoodComboRepository foodComboRepository, FoodItemRepository foodItemRepository) {
         this.foodComboRepository = foodComboRepository;
+        this.foodItemRepository = foodItemRepository;
     }
 
     // Add new food combo
@@ -107,7 +113,19 @@ public class FoodComboService {
 
     // Retrieve all food combos
     public List<FoodCombo> getFoodCombos() {
-        return foodComboRepository.findByDeleted(0);
+        List<FoodCombo> foodComboList = foodComboRepository.findByDeleted(0);
+
+        for (FoodCombo foodCombo : foodComboList){
+            List<String> foodNames = new ArrayList<>();
+            for (String foodId : foodCombo.getFoodIds()){
+                FoodItem foodItem = foodItemRepository.findOneById(foodId);
+                foodNames.add(foodItem.getName());
+            }
+
+            foodCombo.setFoodNames(foodNames);
+        }
+
+        return foodComboList;
     }
 
     // Update food combo
