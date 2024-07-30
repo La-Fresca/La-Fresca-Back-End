@@ -87,6 +87,18 @@ public class OrderController {
         return orderService.getCompletedOrdersByDeliveryPersonId(userId);
     }
 
+    @GetMapping(value = "/ondeliveryordersbydeliverypersonid/{userId}")
+    public Order ondeliveryordersbydeliverypersonid(@PathVariable("userId") String userId) {
+        System.out.println("userId: " + userId);
+        List<Order> orders = orderService.ondeliveryordersbydeliverypersonid(userId);
+        System.out.println(orders);
+        if (orders.isEmpty()) {
+            return null;
+        }
+        return orders.get(0);
+//        return orderService.ondeliveryordersbydeliverypersonid(userId).get(0);
+    }
+
     @PostMapping(value = "/changestatus")
     public void changeOrderStatus(@RequestBody OrderStatusChangeRequest orderStatusChangeRequest) {
         orderService.changeOrderStatus(orderStatusChangeRequest);

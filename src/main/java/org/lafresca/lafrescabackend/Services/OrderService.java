@@ -99,9 +99,11 @@ public class OrderService {
         if(order.getTotalAmount() == null || order.getTotalAmount() == 0){
             throw new IllegalStateException("Total amount cannot be null or empty");
         }
-        if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
-            throw new IllegalStateException("Invalid total amount");
-        }
+//        -----------------------------------------------------------------------------
+//        if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
+//            throw new IllegalStateException("Invalid total amount");
+//        }
+//        ------------------------------------------------------------------------------
         //validate order status
         if(order.getDiscount() == null || order.getDiscount() == 0) {
             order.setDiscount(0.0f);
@@ -365,5 +367,9 @@ public class OrderService {
 
     public List<Order> getCompletedOrdersByDeliveryPersonId(String userId) {
         return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.DELIVERED);
+    }
+
+    public List<Order> ondeliveryordersbydeliverypersonid(String userId) {
+        return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.DELIVERING);
     }
 }
