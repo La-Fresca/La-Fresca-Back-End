@@ -56,7 +56,8 @@ public class AuthenticationService {
 
         // Validate and set user role
         if (request.getRole() == null) {
-            return new AuthenticationResponse(null, null, "Role is required");
+            request.setRole("CUSTOMER");
+//            return new AuthenticationResponse(null, null, "Role is required");
         }
 
         // Check if the role is valid

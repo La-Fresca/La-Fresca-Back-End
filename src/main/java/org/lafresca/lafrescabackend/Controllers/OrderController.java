@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/order")
 @Tag(name = "Order Controller")
 public class OrderController {
@@ -106,8 +107,11 @@ public class OrderController {
         return orderService.getReadyItems(cafeId);
     }
 
-
-
+    //change status after ready (after kitchen manager process)
+    @GetMapping(value = "/deliveryOrderStatus/{cafeId}")
+    public void getDeliveryOrderStatus(@RequestBody ItemStatusChangeDTO itemStatusChangeDTO) {
+        orderService.deliveryOrderStatus(itemStatusChangeDTO);
+    }
 
 
 }
