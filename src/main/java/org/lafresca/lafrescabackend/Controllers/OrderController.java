@@ -106,8 +106,11 @@ public class OrderController {
         return orderService.getReadyItems(cafeId);
     }
 
-
-
+    //change status after ready (after kitchen manager process)
+    @GetMapping(value = "/deliveryOrderStatus/{cafeId}")
+    public void getDeliveryOrderStatus(@RequestBody ItemStatusChangeDTO itemStatusChangeDTO) {
+        orderService.deliveryOrderStatus(itemStatusChangeDTO);
+    }
 
 
 }

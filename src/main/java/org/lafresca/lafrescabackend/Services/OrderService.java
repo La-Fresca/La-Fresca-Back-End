@@ -280,11 +280,49 @@ public class OrderService {
         Order orderToUpdate = orderRepository.findById(itemStatusChangeDTO.getOrderId())
                 .orElseThrow(() -> new IllegalStateException("Order with id " + itemStatusChangeDTO.getOrderId() + " does not exist"));
 
+        int queueItems = 0;
+        int processingItems = 0;
+        int readyItems = 0;
+        int deliveringItems = 0;
+        int deliveredItems = 0;
+
         orderToUpdate.getOrderItems().forEach(item -> {
             if(item.getFoodId().equals(itemStatusChangeDTO.getItemId())) {
-                item.setOrderStatus(OrderStatus.valueOf(itemStatusChangeDTO.getStatus()));
+                item.setOrderStatus(itemStatusChangeDTO.getStatus());
             }
         });
+
+        for(int i = 0; i < orderToUpdate.getOrderItems().size(); i++) {
+            if(orderToUpdate.getOrderItems().get(i).getOrderStatus().equals(OrderStatus.PENDING)) {
+                queueItems++;
+            }
+            else if(orderToUpdate.getOrderItems().get(i).getOrderStatus().equals(OrderStatus.PREPARING)) {
+                processingItems++;
+            }
+            else if(orderToUpdate.getOrderItems().get(i).getOrderStatus().equals(OrderStatus.READY)) {
+                readyItems++;
+            }
+            else if(orderToUpdate.getOrderItems().get(i).getOrderStatus().equals(OrderStatus.DELIVERING)) {
+                deliveringItems++;
+            }
+            else if(orderToUpdate.getOrderItems().get(i).getOrderStatus().equals(OrderStatus.DELIVERED)) {
+                deliveredItems++;
+            }
+        }
+
+        if(queueItems == 0 && processingItems != 0 && readyItems != 0 && deliveringItems != 0 && deliveredItems != 0) {
+            orderToUpdate.setOrderStatus(OrderStatus.PREPARING);
+        }
+        else if(queueItems == 0 && processingItems == 0 && readyItems != 0 && deliveringItems != 0 && deliveredItems != 0){
+            orderToUpdate.setOrderStatus(OrderStatus.READY);
+            orderToUpdate.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+        }
+        else if(readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveringItems != 0 && deliveredItems != 0){
+            orderToUpdate.setOrderStatus(OrderStatus.DELIVERING);
+        }
+        else if(deliveringItems == 0 && readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveredItems != 0){
+            orderToUpdate.setOrderStatus(OrderStatus.DELIVERED);
+        }
 
         orderRepository.save(orderToUpdate);
     }
@@ -309,4 +347,20 @@ public class OrderService {
         }
         return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.READY);
     }
+
+    public void deliveryOrderStatus(ItemStatusChangeDTO itemStatusChangeDTO) {
+        Order orderToUpdate = orderRepository.findById(itemStatusChangeDTO.getOrderId())
+                .orElseThrow(() -> new IllegalStateException("Order with id " + itemStatusChangeDTO.getOrderId() + " does not exist"));
+
+        orderToUpdate.getOrderItems().forEach(item -> {
+            item.setOrderStatus(itemStatusChangeDTO.getStatus());
+        });
+
+        orderToUpdate.setOrderStatus(itemStatusChangeDTO.getStatus());
+
+        orderRepository.save(orderToUpdate);
+
+    }
+
+
 }
