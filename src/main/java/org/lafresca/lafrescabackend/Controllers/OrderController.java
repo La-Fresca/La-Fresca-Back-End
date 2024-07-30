@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.lafresca.lafrescabackend.DTO.ItemStatusChangeDTO;
 import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Services.OrderService;
@@ -84,6 +85,29 @@ public class OrderController {
     public void changeOrderStatus(@RequestBody OrderStatusChangeRequest orderStatusChangeRequest) {
         orderService.changeOrderStatus(orderStatusChangeRequest);
     }
+
+    @PutMapping(value = "/updateOrderItemStatus")
+    public void updateOrderItemStatus(@RequestBody ItemStatusChangeDTO itemStatusChangeDTO) {
+        orderService.updateOrderStatus(itemStatusChangeDTO);
+    }
+
+    @GetMapping(value = "/queueItems/{cafeId}")
+    public List<Order> getQueueItems(@PathVariable("cafeId") Long cafeId) {
+        return orderService.getQueueItems(cafeId);
+    }
+
+    @GetMapping(value = "/preparingItems/{cafeId}")
+    public List<Order> getPreparingItems(@PathVariable("cafeId") Long cafeId) {
+        return orderService.getPreparingItems(cafeId);
+    }
+
+    @GetMapping(value = "/readyItems/{cafeId}")
+    public List<Order> getReadyItems(@PathVariable("cafeId") Long cafeId) {
+        return orderService.getReadyItems(cafeId);
+    }
+
+
+
 
 
 }

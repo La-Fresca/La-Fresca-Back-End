@@ -1,6 +1,8 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.ItemStatusChangeDTO;
 import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
+import org.lafresca.lafrescabackend.Models.Branch;
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Models.OrderStatus;
 import org.lafresca.lafrescabackend.Models.User;
@@ -111,6 +113,9 @@ public class OrderService {
         Date date = new Date();
         order.setCreatedAt(DateTimeFormatter.format(date));
         order.setUpdatedAt(DateTimeFormatter.format(date));
+
+        //set order status in items
+        order.getOrderItems().forEach(item -> item.setOrderStatus(OrderStatus.PENDING));
 
         orderRepository.save(order);
 
@@ -267,5 +272,41 @@ public class OrderService {
 
         deliveryPersons.sort(Comparator.comparingLong(User::getStatusUpdatedAt).reversed());
         return deliveryPersons.get(0).getUserId();
+    }
+
+
+    public void updateOrderStatus(ItemStatusChangeDTO itemStatusChangeDTO) {
+        System.out.println("Updating order status" + itemStatusChangeDTO.getOrderId() + " " + itemStatusChangeDTO.getItemId() + " " + itemStatusChangeDTO.getStatus());
+        Order orderToUpdate = orderRepository.findById(itemStatusChangeDTO.getOrderId())
+                .orElseThrow(() -> new IllegalStateException("Order with id " + itemStatusChangeDTO.getOrderId() + " does not exist"));
+
+        orderToUpdate.getOrderItems().forEach(item -> {
+            if(item.getFoodId().equals(itemStatusChangeDTO.getItemId())) {
+                item.setOrderStatus(OrderStatus.valueOf(itemStatusChangeDTO.getStatus()));
+            }
+        });
+
+        orderRepository.save(orderToUpdate);
+    }
+
+    public List<Order> getQueueItems(Long cafeId) {
+        if(cafeId == null) {
+            throw new IllegalStateException("CafeId cannot be null");
+        }
+        return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.PENDING);
+    }
+
+    public List<Order> getPreparingItems(Long cafeId) {
+        if(cafeId == null) {
+            throw new IllegalStateException("CafeId cannot be null");
+        }
+        return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.PREPARING);
+    }
+
+    public List<Order> getReadyItems(Long cafeId) {
+        if(cafeId == null) {
+            throw new IllegalStateException("CafeId cannot be null");
+        }
+        return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.READY);
     }
 }

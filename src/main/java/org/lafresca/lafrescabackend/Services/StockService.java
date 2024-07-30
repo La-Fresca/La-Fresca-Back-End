@@ -1,31 +1,31 @@
 package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
-import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.Stock;
+import org.lafresca.lafrescabackend.Models.StockCollection;
+import org.lafresca.lafrescabackend.Repositories.StockCollectionRepository;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import java.time.LocalDateTime;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class StockService {
     private final StockRepository stockRepository;
+    private final StockCollectionRepository stockCollectionRepository;
 
     @Autowired
-    public StockService(StockRepository stockRepository) { this.stockRepository = stockRepository; }
+    public StockService(StockRepository stockRepository, StockCollectionRepository stockCollectionRepository) { this.stockRepository = stockRepository;
+        this.stockCollectionRepository = stockCollectionRepository;
+    }
 
     // Add new stock
     public String addNewStock(Stock stock) {
         String error = null;
-
-        LocalDateTime now = LocalDateTime.now();
-
+        LocalDate now = LocalDate.now();
 
         if (stock.getStockCollectionName() == null || stock.getStockCollectionName().isEmpty()) {
             error = "Stock collection name cannot be empty";
@@ -39,15 +39,30 @@ public class StockService {
         else if (stock.getDeleted() == null) {
             stock.setDeleted(0);
         }
-
-        else if (stock.getLowerLimit() < 0) {
-            error = "Invalid value for Lower limit";
-        }
-        else if(LocalDateTime.parse(stock.getExpiryDate().toString()).isBefore(now)) {
+        else if(LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             error = "Expiry date is before current date";
+        }
+        else if (stock.getSupplierName() == null || stock.getSupplierName().isEmpty()) {
+            error = "Supplier name cannot be empty";
         }
 
         if (error == null) {
+            StockCollection stockCollection = stockCollectionRepository.findByName(stock.getStockCollectionName());
+            if (stockCollection == null) {
+                StockCollection newStockCollection = new StockCollection();
+                newStockCollection.setName(stock.getStockCollectionName());
+                newStockCollection.setDeleted(0);
+                newStockCollection.setLowerLimit(0.0);
+                newStockCollection.setAvailableAmount(stock.getInitialAmount());
+
+                stockCollectionRepository.save(newStockCollection);
+            }
+            else {
+//                stockCollection.setName(stockCollection.getId());
+                stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() + stock.getInitialAmount());
+                stockCollectionRepository.save(stockCollection);
+            }
+
             stockRepository.save(stock);
         }
 
@@ -71,7 +86,7 @@ public class StockService {
     public void updateStock(String id, Stock stock) {
         Stock existingStock = stockRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
-         LocalDate now = LocalDate.now();
+        LocalDate now = LocalDate.now();
 
         if (stock.getStockCollectionName() != null && !stock.getStockCollectionName().isEmpty()) {
             existingStock.setStockCollectionName(stock.getStockCollectionName());
@@ -82,12 +97,11 @@ public class StockService {
         if (stock.getInitialAmount() >= 0) {
             existingStock.setInitialAmount(stock.getInitialAmount());
         }
-        if (stock.getLowerLimit() >= 0) {
-            existingStock.setLowerLimit(stock.getLowerLimit());
-        }
-        else if(stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDateTime.parse(stock.getExpiryDate().toString()).isBefore(now)) {
+        if (stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             existingStock.setExpiryDate(stock.getExpiryDate());
-
+        }
+        if (stock.getSupplierName() != null && !stock.getSupplierName().isEmpty()) {
+            existingStock.setSupplierName(stock.getSupplierName());
         }
 
         stockRepository.save(existingStock);
@@ -101,5 +115,10 @@ public class StockService {
         existingStock.setDeleted(stock.getDeleted());
 
         stockRepository.save(existingStock);
+    }
+
+    // Get stock by stock collection name
+    public List<Stock> getStockByCollectionName(String stockCollectionName) {
+        return stockRepository.findByName(stockCollectionName);
     }
 }
