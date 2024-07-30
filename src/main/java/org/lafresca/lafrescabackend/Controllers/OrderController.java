@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/order")
 @Tag(name = "Order Controller")
 public class OrderController {
