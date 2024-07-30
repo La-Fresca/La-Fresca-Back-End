@@ -363,4 +363,7 @@ public class OrderService {
     }
 
 
+    public List<Order> getCompletedOrdersByDeliveryPersonId(String userId) {
+        return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.DELIVERED);
+    }
 }

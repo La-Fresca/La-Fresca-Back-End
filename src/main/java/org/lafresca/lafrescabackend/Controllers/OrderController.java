@@ -82,6 +82,11 @@ public class OrderController {
         return orderService.getPendingOrdersbydeliveryPersonId(userId);
     }
 
+    @GetMapping(value = "/completedordersbydeliverypersonid/{userId}")
+    public List<Order> getCompletedOrdersByDeliveryPersonId(@PathVariable("userId") String userId) {
+        return orderService.getCompletedOrdersByDeliveryPersonId(userId);
+    }
+
     @PostMapping(value = "/changestatus")
     public void changeOrderStatus(@RequestBody OrderStatusChangeRequest orderStatusChangeRequest) {
         orderService.changeOrderStatus(orderStatusChangeRequest);
