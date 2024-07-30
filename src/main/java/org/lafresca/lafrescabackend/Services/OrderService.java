@@ -2,6 +2,7 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.DTO.ItemStatusChangeDTO;
 import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
+import org.lafresca.lafrescabackend.Models.Branch;
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Models.OrderStatus;
 import org.lafresca.lafrescabackend.Models.User;
@@ -286,5 +287,26 @@ public class OrderService {
         });
 
         orderRepository.save(orderToUpdate);
+    }
+
+    public List<Order> getQueueItems(Long cafeId) {
+        if(cafeId == null) {
+            throw new IllegalStateException("CafeId cannot be null");
+        }
+        return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.PENDING);
+    }
+
+    public List<Order> getPreparingItems(Long cafeId) {
+        if(cafeId == null) {
+            throw new IllegalStateException("CafeId cannot be null");
+        }
+        return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.PREPARING);
+    }
+
+    public List<Order> getReadyItems(Long cafeId) {
+        if(cafeId == null) {
+            throw new IllegalStateException("CafeId cannot be null");
+        }
+        return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.READY);
     }
 }
