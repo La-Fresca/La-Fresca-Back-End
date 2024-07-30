@@ -100,9 +100,9 @@ public class OrderService {
             throw new IllegalStateException("Total amount cannot be null or empty");
         }
 //        -----------------------------------------------------------------------------
-//        if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
-//            throw new IllegalStateException("Invalid total amount");
-//        }
+        if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
+            throw new IllegalStateException("Invalid total amount");
+        }
 //        ------------------------------------------------------------------------------
         //validate order status
         if(order.getDiscount() == null || order.getDiscount() == 0) {
