@@ -41,6 +41,7 @@ public class UserService {
             userDTO.setAddress(user.getAddress());
             userDTO.setRole(user.getRole());
             userDTO.setCafeId(user.getCafeId());
+            userDTO.setStatus(user.getStatus());
             userDTOS.add(userDTO);
         }
 
@@ -84,6 +85,10 @@ public class UserService {
         }
         if(user.getCafeId()==null || user.getCafeId().equals(0)) {
             throw new IllegalStateException("User cafe id cannot be null or empty");
+        }
+        if(user.getRole() ==  "WAITER" || user.getRole() == "DELIVERY_PERSON") {
+            user.setStatus("AVAILABLE");
+            user.setStatusUpdatedAt(System.currentTimeMillis());
         }
         //need to add
 //        Optional<Cafe> cafe = cafeRepository.findById(user.getCafeId());
@@ -158,6 +163,7 @@ public class UserService {
         userDTO.setAddress(user.getAddress());
         userDTO.setRole(user.getRole());
         userDTO.setCafeId(user.getCafeId());
+        userDTO.setStatus(user.getStatus());
         return userDTO;
     }
 
@@ -180,6 +186,7 @@ public class UserService {
     }
 
     public List<UserDTO> getUsersByRole(String role) {
+        System.out.println("Getting all users by role "+role);
         List<User> users = userRepository.findUsersByRole(role);
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user: users) {

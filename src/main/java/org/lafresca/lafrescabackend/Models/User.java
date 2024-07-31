@@ -29,6 +29,8 @@ public class User implements UserDetails {
     private String CafeId;
     private Integer Deleted = 0;
     private String username = Email;
+    private String status ;
+    private long statusUpdatedAt;
 
     public String getUserId() {
         return id;
