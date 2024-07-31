@@ -1,11 +1,8 @@
 package org.lafresca.lafrescabackend.Services;
 
-import org.lafresca.lafrescabackend.DTO.ItemStatusChangeDTO;
-import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
-import org.lafresca.lafrescabackend.Models.Branch;
-import org.lafresca.lafrescabackend.Models.Order;
-import org.lafresca.lafrescabackend.Models.OrderStatus;
-import org.lafresca.lafrescabackend.Models.User;
+import org.lafresca.lafrescabackend.DTO.*;
+import org.lafresca.lafrescabackend.Models.*;
+import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.lafresca.lafrescabackend.Repositories.OrderRepository;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.lafresca.lafrescabackend.Validations.FoodAmountValidation;
@@ -13,28 +10,138 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final FoodItemRepository foodItemRepository;
 //    private final UserValidation userValidation;
     @Autowired
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.foodItemRepository = foodItemRepository;
     }
 
 
-    public void addOrder(Order order) {
+    public void addOrder(OrderRequestDTO orderRequestDTO) {
         System.out.println("Adding order");
-        System.out.println(order);
-        if(order == null) {
+        System.out.println(orderRequestDTO);
+        if(orderRequestDTO == null) {
             throw new IllegalStateException("Order cannot be null");
         }
+
+        Order order = new Order();
+        order.setOrderStatus(OrderStatus.PENDING);
+        order.setTotalAmount(orderRequestDTO.getTotalAmount());
+        order.setOrderType(orderRequestDTO.getOrderType());
+        order.setCafeId(orderRequestDTO.getCafeId());
+        order.setCreatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+        order.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+        List<OrderFood> orderItems = new ArrayList<>();
+        orderRequestDTO.getOrderItems().forEach(item -> {
+            OrderFood orderFood = new OrderFood();
+            orderFood.setFoodId(item.getFoodId());
+            orderFood.setQuantity(item.getQuantity());
+            orderFood.setTotalPrice(item.getTotalPrice());
+
+            FoodItem foodItem = foodItemRepository.findById(item.getFoodId())
+                    .orElseThrow(() -> new IllegalStateException("Food item with id " + item.getFoodId() + " does not exist"));
+            orderFood.setName(foodItem.getName());
+            orderFood.setPrice(foodItem.getPrice().floatValue());
+            orderFood.setOrderStatus(OrderStatus.PENDING);
+            orderFood.setImage(foodItem.getImage());
+
+            List<AddedFeatureDTO> addedFeatureDTOList = item.getAddedFeatures();
+            List<AddedFeature> addedFeatureList = new ArrayList<>();
+
+            Integer count = 0;
+            if (Objects.equals(item.getMenuItemType(), "Food Item")) {
+//                FoodItem foodItemO = foodItemRepository.findOneById(item.getFoodId());
+                for (AddedFeatureDTO addedFeatureDTO : addedFeatureDTOList) {
+                    CustomFeature customFeature = foodItem.getFeatures().get(count);
+                    if (addedFeatureDTO.getLevel() != -1) {
+                        AddedFeature addedFeature = new AddedFeature();
+                        addedFeature.setLevel(foodItem.getFeatures().get(count).getLevels().get(addedFeatureDTO.getLevel()));
+                        addedFeature.setAdditionalPrice(foodItem.getFeatures().get(count).getAdditionalPrices().get(addedFeatureDTO.getLevel()).floatValue());
+                        addedFeature.setName(foodItem.getFeatures().get(count).getName());
+                        addedFeatureList.add(addedFeature);
+                    }
+                    count++;
+                }
+                orderFood.setAddedFeatures(addedFeatureList);
+            }
+
+
+//            item.getAddedFeatures().forEach(itemfeature -> {
+//                if(itemfeature.getLevel() >= 0) {
+//                    CustomFeature customFeature = foodItem.getFeatures().get(itemfeature.getLevel());
+//                    AddedFeature addedFeature = new AddedFeature();
+//                    addedFeature.setLevel(itemfeature.getLevel());
+//                    addedFeature.setName(customFeature.getName());
+//
+//
+//                }
+//            });
+
+
+
+            orderItems.add(orderFood);
+        });
+
+        order.setOrderItems(orderItems);
+        order.setCustomerId(orderRequestDTO.getCustomerId());
+        order.setLocation(orderRequestDTO.getLocation());
+        order.setContactNo(orderRequestDTO.getContactNo());
+        order.setDeliveryPersonId(orderRequestDTO.getDeliveryPersonId());
+        order.setWaiterId(orderRequestDTO.getWaiterId());
+        order.setCashierId(orderRequestDTO.getCashierId());
+
+
+
+
+
+//        ==============================================
+
+
+//        order.setOrderStatus(OrderStatus.PENDING);
+//        order.setTotalAmount(orderRequestDTO.getTotalAmount());
+//        order.setOrderType(orderRequestDTO.getOrderType());
+//        order.setCafeId(orderRequestDTO.getCafeId());
+//        order.setCreatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+//        order.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+//
+//        List<OrderFood> orderItems = new ArrayList<>();
+//        for (OrderItemDTO orderItemsDTO : orderRequestDTO.getOrderItems()) {
+//        orderRequestDTO.getOrderItems().forEach(item -> {
+//            OrderFood orderFood = new OrderFood();
+//            List <CustomFeature> featureList = new ArrayList<>();
+//            List<AddedFeatureDTO> addedFeatureDTOList = item.getAddedFeatures();
+//            List<AddedFeature> addedFeatureList = new ArrayList<>();
+//
+//                    Integer count = 0;
+//                    if (Objects.equals(item.getMenuItemType(), "Food Item")){
+//                        FoodItem foodItem = foodItemRepository.findOneById(item.getFoodId());
+//                        for (AddedFeatureDTO addedFeatureDTO : addedFeatureDTOList) {
+//                            CustomFeature customFeature = foodItem.getFeatures().get(count);
+//                            if (addedFeatureDTO.getLevel() != -1){
+//                                AddedFeature addedFeature = new AddedFeature();
+//                                addedFeature.setLevel(foodItem.getFeatures().get(count).getLevels().get(addedFeatureDTO.getLevel()));
+//                                addedFeature.setAdditionalPrice(foodItem.getFeatures().get(count).getAdditionalPrices().get(addedFeatureDTO.getLevel()).floatValue());
+//                                addedFeature.setName(foodItem.getFeatures().get(count).getName());
+//                                addedFeatureList.add(addedFeature);
+//                            }
+//                            count++;
+//                        }
+//
+//
+//                        orderItemsDTO.setAddedFeatures(addedFeatureList);
+//                    }
+//                });
+
         //handling offline orders
         if(order.getOrderType().equals("OFFLINE")) {
             //validate cashier id
@@ -52,6 +159,7 @@ public class OrderService {
         }
         //Handling online orders
         else if(order.getOrderType().equals("ONLINE")) {
+
             //validate customer id
             if(order.getCustomerId() == null || order.getCustomerId().isEmpty()) {
                 throw new IllegalStateException("CustomerId cannot be null or empty");

@@ -55,9 +55,7 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodCombo> getFoodCombos(){
-        return foodComboService.getFoodCombos();
-    }
+    public List<FoodCombo> getFoodCombos(){ return foodComboService.getFoodCombos(); }
 
     // Search food combo
     @GetMapping(path = "{id}")
