@@ -70,7 +70,7 @@ public class StockService {
     }
 
     // Get all stocks
-    public List<Stock> getStocks() { return stockRepository.findAll(); }
+    public List<Stock> getStocks() { return stockRepository.findByDeleted(0); }
 
     // Get stock by id
     public Optional<Stock> getStock(String id) {

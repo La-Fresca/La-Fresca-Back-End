@@ -116,6 +116,9 @@ public class CartService {
                             cart.setDiscountedPrice(discountedPrice);
                         }
                     }
+                    cart.setName(foodItem.getName());
+                    cart.setDescription(foodItem.getDescription());
+                    cart.setImage(foodItem.getImage());
                 }
 
                 else if (Objects.equals(menuItemType, "Food Combo")) {
@@ -129,6 +132,10 @@ public class CartService {
                             cart.setDiscountedPrice(discountedPrice);
                         }
                     }
+
+                    cart.setName(foodCombo.getName());
+                    cart.setDescription(foodCombo.getDescription());
+                    cart.setImage(foodCombo.getImage());
                 }
             }
         }
