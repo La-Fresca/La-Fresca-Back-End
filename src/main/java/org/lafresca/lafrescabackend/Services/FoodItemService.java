@@ -62,55 +62,9 @@ public class FoodItemService {
         else if (foodItem.getFeatures() == null || foodItem.getFeatures().isEmpty()) {
             error = "Please enter at least one feature";
         }
-        else if (foodItem.getDiscountDetails().getName() == null || foodItem.getDiscountDetails().getName().isEmpty()) {
-            error = "Name cannot be empty";
-        }
-        else if (foodItem.getDiscountDetails().getDescription() == null || foodItem.getDiscountDetails().getDescription().isEmpty()) {
-            error = "Description cannot be empty";
-        }
-        else if (foodItem.getDiscountDetails().getDiscountType() == null || foodItem.getDiscountDetails().getDiscountType().isEmpty()) {
-            error = "Discount type cannot be empty";
-        }
-        else if (!(foodItem.getDiscountDetails().getDiscountType().equals("Price Offer")) && !(foodItem.getDiscountDetails().getDiscountType().equals("Promotional Offer"))) {
-            error = "Discount type not valid";
-        }
-        else if (foodItem.getDiscountDetails().getDiscountAmount() < 0 ) {
-            error = "Discount amount not valid";
-        }
-        else if (foodItem.getDiscountDetails().getStartDate() == null || foodItem.getDiscountDetails().getStartDate().toString().isEmpty()) {
-            error = "Start date not valid";
-        }
-        else if (LocalDateTime.parse(foodItem.getDiscountDetails().getStartDate().toString()).isBefore(now)) {
-            error = "Start date not valid";
-        }
-        else if (foodItem.getDiscountDetails().getEndDate() == null || foodItem.getDiscountDetails().getEndDate().toString().isEmpty()) {
-            error = "End date not valid";
-        }
-        else if (LocalDateTime.parse(foodItem.getDiscountDetails().getEndDate().toString()).isBefore(LocalDateTime.parse(foodItem.getDiscountDetails().getStartDate().toString()))) {
-            error = "End date not valid";
-        }
-        else if (foodItem.getDiscountDetails().getCafeId() == null || foodItem.getDiscountDetails().getCafeId().isEmpty()) {
-            error = "Cafe Id cannot be empty";
-        }
-        else if (foodItem.getDiscountDetails().getIsActive() < 0 || foodItem.getDiscountDetails().getIsActive() > 1) {
-            error = "Discount availability value not valid";
-        }
-        else if (foodItem.getDiscountDetails().getMenuItemId() == null || foodItem.getDiscountDetails().getMenuItemId().isEmpty()) {
-            error = "MenuItem Id cannot be empty";
-        }
-        else if (foodItem.getDiscountDetails().getMenuItemType() == null || foodItem.getDiscountDetails().getMenuItemType().isEmpty()) {
-            error = "MenuItem type cannot be empty";
-        }
-        else if (!(foodItem.getDiscountDetails().getMenuItemType().equals("Food Item"))) {
-            error = "MenuItem type not valid";
-        }
-        else if (foodItem.getDiscountDetails().getOfferDetails() == null || foodItem.getDiscountDetails().getOfferDetails().isEmpty()) {
-            error = "Offer details cannot be empty";
-        }
 
         if (error == null) {
             foodItem.setDeleted(0);
-            foodItem.setDiscountStatus(0);
             foodItemRepository.save(foodItem);
         }
         return error;
@@ -156,41 +110,6 @@ public class FoodItemService {
         }
         if (foodItem.getRating() != null && foodItem.getRating() != 0){
             existingFoodItem.setRating(foodItem.getRating());
-        }
-        if (foodItem.getDiscountDetails() != null){
-            if (foodItem.getDiscountDetails().getName() != null && !foodItem.getDiscountDetails().getName().isEmpty()) {
-                existingFoodItem.getDiscountDetails().setName(foodItem.getDiscountDetails().getName());
-            }
-            if (foodItem.getDiscountDetails().getDescription() != null && !foodItem.getDiscountDetails().getDescription().isEmpty()) {
-                existingFoodItem.getDiscountDetails().setDescription(foodItem.getDiscountDetails().getDescription());
-            }
-            if (foodItem.getDiscountDetails().getDiscountType().equals("Price Offer") || foodItem.getDiscountDetails().getDiscountType().equals("Promotional Offer")) {
-                existingFoodItem.getDiscountDetails().setDiscountType(foodItem.getDiscountDetails().getDiscountType());
-            }
-            if (foodItem.getDiscountDetails().getDiscountAmount() > 0) {
-                existingFoodItem.getDiscountDetails().setDiscountAmount(foodItem.getDiscountDetails().getDiscountAmount());
-            }
-            if (foodItem.getDiscountDetails().getStartDate() != null && !foodItem.getDiscountDetails().getStartDate().toString().isEmpty() && !LocalDateTime.parse(foodItem.getDiscountDetails().getStartDate().toString()).isBefore(now)) {
-                existingFoodItem.getDiscountDetails().setStartDate(foodItem.getDiscountDetails().getStartDate());
-            }
-            if (foodItem.getDiscountDetails().getEndDate() != null && !foodItem.getDiscountDetails().getEndDate().toString().isEmpty() && !LocalDateTime.parse(foodItem.getDiscountDetails().getEndDate().toString()).isBefore(LocalDateTime.parse(foodItem.getDiscountDetails().getStartDate().toString()))) {
-                existingFoodItem.getDiscountDetails().setEndDate(foodItem.getDiscountDetails().getEndDate());
-            }
-            if (foodItem.getDiscountDetails().getCafeId() != null && !foodItem.getDiscountDetails().getCafeId().isEmpty()) {
-                existingFoodItem.getDiscountDetails().setCafeId(foodItem.getDiscountDetails().getCafeId());
-            }
-            if (foodItem.getDiscountDetails().getIsActive() == 0 || foodItem.getDiscountDetails().getIsActive() == 1) {
-                existingFoodItem.getDiscountDetails().setIsActive(foodItem.getDiscountDetails().getIsActive());
-            }
-            if (foodItem.getDiscountDetails().getMenuItemId() != null && !foodItem.getDiscountDetails().getMenuItemId().isEmpty()) {
-                existingFoodItem.getDiscountDetails().setMenuItemId(existingFoodItem.getDiscountDetails().getMenuItemId());
-            }
-            if (foodItem.getDiscountDetails().getMenuItemType().equals("Food Item")) {
-                existingFoodItem.getDiscountDetails().setMenuItemType(existingFoodItem.getDiscountDetails().getMenuItemType());
-            }
-            if (foodItem.getDiscountDetails().getOfferDetails() != null && !foodItem.getDiscountDetails().getOfferDetails().isEmpty()) {
-                existingFoodItem.getDiscountDetails().setOfferDetails(foodItem.getDiscountDetails().getOfferDetails());
-            }
         }
 
         existingFoodItem.setCategories(foodItem.getCategories());
