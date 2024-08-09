@@ -17,4 +17,5 @@ public class UserDTO {
     private String Address;
     private String Role;
     private String CafeId;
+    private String status;
 }

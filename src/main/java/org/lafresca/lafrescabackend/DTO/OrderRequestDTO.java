@@ -1,22 +1,20 @@
-package org.lafresca.lafrescabackend.Models;
+package org.lafresca.lafrescabackend.DTO;
 
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.lafresca.lafrescabackend.Models.OrderFood;
+import org.lafresca.lafrescabackend.Models.OrderStatus;
 
 import java.util.List;
 
-@Document(collection = "Order")
 @Data
-public class Order {
+public class OrderRequestDTO {
     private String id;
     private String OrderType;
     private Float TotalAmount;
-    private OrderStatus OrderStatus;
+    private org.lafresca.lafrescabackend.Models.OrderStatus OrderStatus;
     private String CafeId;
-    private String CreatedAt;
-    private String UpdatedAt;
-    private Float Discount;
-    private List<OrderFood> OrderItems;
+    private List<OrderItemDTO> OrderItems;
+
 
     //for online orders
     private String CustomerId;
@@ -28,3 +26,5 @@ public class Order {
     private String CashierId;
     private String WaiterId;
 }
+
+
