@@ -421,19 +421,33 @@ public class OrderService {
             }
         }
 
-        if(queueItems == 0 && processingItems != 0 && readyItems != 0 && deliveringItems != 0 && deliveredItems != 0) {
+        if(processingItems != 0) {
             orderToUpdate.setOrderStatus(OrderStatus.PREPARING);
+            orderToUpdate.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
         }
-        else if(queueItems == 0 && processingItems == 0 && readyItems != 0 && deliveringItems != 0 && deliveredItems != 0){
+        else if(queueItems == 0 && processingItems == 0 && readyItems != 0 ){
             orderToUpdate.setOrderStatus(OrderStatus.READY);
             orderToUpdate.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            if(orderToUpdate.getOrderType().equals("ONLINE")) {
+                orderToUpdate.setDeliveryPersonId(findDeliveryPerson(orderToUpdate.getCafeId()));
+                if(orderToUpdate.getDeliveryPersonId().equals("No delivery person available")) {
+                    throw new IllegalStateException("No delivery person available");
+                }
+            }
+            else {
+                orderToUpdate.setWaiterId(findWaiter(orderToUpdate.getCafeId()));
+                if(orderToUpdate.getWaiterId().equals("No waiter available")) {
+                    throw new IllegalStateException("No waiter available");
+                }
+            }
         }
         else if(readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveringItems != 0 && deliveredItems != 0){
             orderToUpdate.setOrderStatus(OrderStatus.DELIVERING);
+            orderToUpdate.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
         }
-        else if(deliveringItems == 0 && readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveredItems != 0){
-            orderToUpdate.setOrderStatus(OrderStatus.DELIVERED);
-        }
+//        else if(deliveringItems == 0 && readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveredItems != 0){
+//            orderToUpdate.setOrderStatus(OrderStatus.DELIVERED);
+//        }
 
         orderRepository.save(orderToUpdate);
     }
