@@ -9,6 +9,7 @@ import org.lafresca.lafrescabackend.Validations.FoodAmountValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -479,5 +480,36 @@ public class OrderService {
 
     public List<Order> ondeliveryordersbydeliverypersonid(String userId) {
         return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.DELIVERING);
+    }
+
+    public List<Order> getSalesInThisWeek(Long cafeId) {
+        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> salesInThisWeek = new ArrayList<>();
+        for(Order order : orders) {
+            if(isInThisWeek(order.getCreatedAt())) {
+                salesInThisWeek.add(order);
+            }
+        }
+        return salesInThisWeek;
+    }
+
+    public boolean isInThisWeek(String createdAt) {
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            // Parse the createdAt string to a Date object
+            Date createdAtDate = dateTimeFormatter.parse(createdAt);
+
+            // Get the current date and time
+            Date now = new Date();
+
+            // Calculate the date and time exactly one week ago from now
+            Date oneWeekAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
+
+            // Check if createdAtDate is within the last week
+            return createdAtDate.after(oneWeekAgo) && createdAtDate.before(now);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false; // Return false if there's a parsing error
+        }
     }
 }
