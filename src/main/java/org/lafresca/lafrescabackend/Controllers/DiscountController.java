@@ -56,58 +56,58 @@ public class DiscountController {
     public List<Discount> getDiscounts() { return discountService.getDiscounts(); }
 
     // Search discount
-    @GetMapping(path = "{id}")
-    @Operation(
-            description = "Search discount by id",
-            summary = "Retrieve discount by using the id",
-            responses = {
-                    @ApiResponse(
-                            description = "Success",
-                            responseCode = "200"
-                    ),
-                    @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
-                            responseCode = "403"
-                    )
-            })
-
-    public Optional<Discount> getDiscount(@PathVariable("id") String id) { return discountService.getDiscount(id);}
+//    @GetMapping(path = "{id}")
+//    @Operation(
+//            description = "Search discount by id",
+//            summary = "Retrieve discount by using the id",
+//            responses = {
+//                    @ApiResponse(
+//                            description = "Success",
+//                            responseCode = "200"
+//                    ),
+//                    @ApiResponse(
+//                            description = "Unauthorized / Invalid Token",
+//                            responseCode = "403"
+//                    )
+//            })
+//
+//    public Optional<Discount> getDiscount(@PathVariable("id") String id) { return discountService.getDiscount(id);}
 
     // Delete discount
-    @DeleteMapping(path = "{id}")
-    @Operation(
-            description = "Delete discount by id",
-            summary = "Delete discount by using the id",
-            responses = {
-                    @ApiResponse(
-                            description = "Success",
-                            responseCode = "200"
-                    ),
-                    @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
-                            responseCode = "403"
-                    )
-            })
-
-    public void deleteDiscount(@PathVariable("id") String id) { discountService.deleteDiscount(id); }
+//    @DeleteMapping(path = "{id}")
+//    @Operation(
+//            description = "Delete discount by id",
+//            summary = "Delete discount by using the id",
+//            responses = {
+//                    @ApiResponse(
+//                            description = "Success",
+//                            responseCode = "200"
+//                    ),
+//                    @ApiResponse(
+//                            description = "Unauthorized / Invalid Token",
+//                            responseCode = "403"
+//                    )
+//            })
+//
+//    public void deleteDiscount(@PathVariable("id") String id) { discountService.deleteDiscount(id); }
 
     // Update discount
-    @PutMapping(path = "{id}")
-    @Operation(
-            description = "Update discount by id",
-            summary = "Update discount by using the id",
-            responses = {
-                    @ApiResponse(
-                            description = "Success",
-                            responseCode = "200"
-                    ),
-                    @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
-                            responseCode = "403"
-                    )
-            })
-
-    public void updateDiscount(@PathVariable("id") String id, @RequestBody Discount discount) {
-        discountService.updateDiscount(id, discount);
-    }
+//    @PutMapping(path = "{id}")
+//    @Operation(
+//            description = "Update discount by id",
+//            summary = "Update discount by using the id",
+//            responses = {
+//                    @ApiResponse(
+//                            description = "Success",
+//                            responseCode = "200"
+//                    ),
+//                    @ApiResponse(
+//                            description = "Unauthorized / Invalid Token",
+//                            responseCode = "403"
+//                    )
+//            })
+//
+//    public void updateDiscount(@PathVariable("id") String id, @RequestBody Discount discount) {
+//        discountService.updateDiscount(id, discount);
+//    }
 }
