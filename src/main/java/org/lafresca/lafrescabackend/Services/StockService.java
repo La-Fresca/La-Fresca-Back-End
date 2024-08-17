@@ -36,6 +36,12 @@ public class StockService {
         else if (stock.getInitialAmount() < 0) {
             error = "Invalid value for initial amount";
         }
+        else if (stock.getUnitPrice() == null) {
+            error = "Unit price cannot be null";
+        }
+        else if (stock.getUnitPrice() < 0) {
+            error = "Invalid value for unit price";
+        }
         else if (stock.getDeleted() == null) {
             stock.setDeleted(0);
         }
@@ -96,6 +102,9 @@ public class StockService {
         }
         if (stock.getInitialAmount() >= 0) {
             existingStock.setInitialAmount(stock.getInitialAmount());
+        }
+        if (stock.getUnitPrice() > 0) {
+            existingStock.setUnitPrice(stock.getUnitPrice());
         }
         if (stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             existingStock.setExpiryDate(stock.getExpiryDate());
