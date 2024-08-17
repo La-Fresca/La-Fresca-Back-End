@@ -8,7 +8,7 @@ import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +27,7 @@ public class FoodItemService {
     // Add new food item
     public String addNewFoodItem(FoodItem foodItem) {
         String error = null;
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
 
         if (foodItem.getName() == null || foodItem.getName().isEmpty()) {
             error = "Please enter name";
@@ -65,14 +65,17 @@ public class FoodItemService {
 
         if (error == null) {
             foodItem.setDeleted(0);
+            foodItem.setPostedDate(now);
+            foodItem.setWeeklySellingCount(0);
+            foodItem.setTotalSellingCount(0);
             foodItemRepository.save(foodItem);
         }
         return error;
     }
 
     // Retrieve all food items
-    public List<FoodItemDTO> getFoodItems() {
-        return foodItemRepository.findByDeleted(0)
+    public List<FoodItemDTO> getFoodItems(String cafeId) {
+        return foodItemRepository.findByCafeId(cafeId, 0)
                 .stream()
                 .map(foodItemDTOMapper)
                 .collect(Collectors.toList());
@@ -82,7 +85,6 @@ public class FoodItemService {
     public void updateFoodItem(String id, FoodItem foodItem) {
         FoodItem existingFoodItem = foodItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
-        LocalDateTime now = LocalDateTime.now();
 
         if (foodItem.getName() != null && !foodItem.getName().isEmpty()) {
             existingFoodItem.setName(foodItem.getName());

@@ -32,6 +32,12 @@ public class StockCollectionService {
         else if (stockCollection.getAvailableAmount() == null) {
             error = "Stock collection available amount cannot be null";
         }
+        else if (stockCollection.getUnit() == null || stockCollection.getUnit().isEmpty()) {
+            error = "Stock collection unit cannot be empty";
+        }
+        else if (stockCollection.getCafeId() == null || stockCollection.getCafeId().isEmpty()) {
+            error = "Stock collection cafe id cannot be empty";
+        }
 //        else if (stockCollection.getAvailableAmount() != null) {
 //            List<Stock> stockList = stockRepository.findByStockCollectionName(stockCollection.getName());
 //
@@ -97,6 +103,10 @@ public class StockCollectionService {
         if (stockCollection.getAvailableAmount() != null && stockCollection.getAvailableAmount() > 0) {
             existingStockCollection.setAvailableAmount(stockCollection.getAvailableAmount());
         }
+        if (stockCollection.getUnit() != null && !stockCollection.getUnit().isEmpty()) {
+            existingStockCollection.setUnit(stockCollection.getUnit());
+        }
+
 
         stockCollectionRepository.save(existingStockCollection);
     }

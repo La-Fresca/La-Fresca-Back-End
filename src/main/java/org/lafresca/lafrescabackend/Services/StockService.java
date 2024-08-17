@@ -42,6 +42,9 @@ public class StockService {
         else if (stock.getUnitPrice() < 0) {
             error = "Invalid value for unit price";
         }
+        else if (stock.getCafeId() == null || stock.getCafeId().isEmpty()) {
+            error = "Cafe id cannot be empty";
+        }
         else if (stock.getDeleted() == null) {
             stock.setDeleted(0);
         }
@@ -53,7 +56,7 @@ public class StockService {
         }
 
         if (error == null) {
-            StockCollection stockCollection = stockCollectionRepository.findByName(stock.getStockCollectionName());
+            StockCollection stockCollection = stockCollectionRepository.findByNameAndCafeId(stock.getStockCollectionName());
             if (stockCollection == null) {
                 StockCollection newStockCollection = new StockCollection();
                 newStockCollection.setName(stock.getStockCollectionName());
@@ -75,7 +78,7 @@ public class StockService {
         return error;
     }
 
-    // Get all stocks
+    // Get all stocks by Cafe Id
     public List<Stock> getStocks() { return stockRepository.findByDeleted(0); }
 
     // Get stock by id

@@ -11,4 +11,5 @@ public class Category {
     private String id;
     private String Name;
     private String Description;
+    private String CafeId;
 }
