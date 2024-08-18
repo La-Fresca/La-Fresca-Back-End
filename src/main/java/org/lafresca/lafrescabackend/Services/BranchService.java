@@ -2,10 +2,12 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Branch;
+import org.lafresca.lafrescabackend.Models.IncomeCost;
 import org.lafresca.lafrescabackend.Repositories.BranchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,11 +34,25 @@ public class BranchService {
         else if (branch.getLatitude() < -90 || branch.getLatitude() > 90) {
             error = "Invalid value for latitude";
         }
+        else if (branch.getDeleted() == null) {
+            branch.setDeleted(0);
+        }
         else if (branch.getBranchManager() == null || branch.getBranchManager().isEmpty()) {
             error = "Branch manager cannot be empty";
         }
 
         if (error == null) {
+            IncomeCost income = new IncomeCost();
+            LocalDate now = LocalDate.now();
+            income.setYear(now.getYear());
+            income.setMonth(now.getMonthValue());
+            income.setAmount(0.0);
+
+            branch.getIncome().add(income);
+            branch.getCost().add(income);
+
+            branch.setDailyCost(0.0);
+            branch.setDailyIncome(0.0);
             branchRepository.save(branch);
         }
 
@@ -79,6 +95,22 @@ public class BranchService {
         if (branch.getBranchManager() != null && !branch.getBranchManager().isEmpty()) {
             existingBranch.setBranchManager(branch.getBranchManager());
         }
+        if (branch.getDailyIncome() != null) {
+            existingBranch.setDailyIncome(existingBranch.getDailyIncome() + branch.getDailyIncome());
+        }
+        if (branch.getDailyCost() != null) {
+            existingBranch.setDailyCost(existingBranch.getDailyCost() + branch.getDailyCost());
+        }
+
+        branchRepository.save(existingBranch);
+    }
+
+    // Logical Delete
+    public void logicallyDeleteBranch(String id, Branch branch) {
+        Branch existingBranch = branchRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Branch not found with id " + id));
+
+        existingBranch.setDeleted(branch.getDeleted());
 
         branchRepository.save(existingBranch);
     }

@@ -18,4 +18,11 @@ public interface UserRepository extends MongoRepository<User,String> {
 
     @Query("{ 'Role' : ?0 }")
     List<User> findUsersByRole(String role);
+
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByUsername(String username);
+
+    @Query("{ 'CafeId' : ?0, 'Role' : ?1 }")
+    List<User> findUserByCafeIdAndRole(String cafeId, String role);
 }

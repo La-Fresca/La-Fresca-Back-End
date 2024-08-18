@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/foodCombo")
 @Tag(name="Food Combo Controller")
 public class FoodComboController {
@@ -54,9 +55,7 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodCombo> getFoodCombos(){
-        return foodComboService.getFoodCombos();
-    }
+    public List<FoodCombo> getFoodCombos(){ return foodComboService.getFoodCombos(); }
 
     // Search food combo
     @GetMapping(path = "{id}")
@@ -110,5 +109,24 @@ public class FoodComboController {
             })
     public void updateFoodCombo(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
         foodComboService.updateFoodCombo(id, foodCombo);
+    }
+
+    // Logical Delete
+    @PutMapping(path = "delete/{id}")
+    @Operation(
+            description = "Logically delete food combo by id",
+            summary = "Logically delete food combos by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public void logicallyDeleteFoodCombo(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
+        foodComboService.logicallyDeleteFoodCombo(id, foodCombo);
     }
 }

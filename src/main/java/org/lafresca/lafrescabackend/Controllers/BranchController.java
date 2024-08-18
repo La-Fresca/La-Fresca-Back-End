@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/branch")
 @AllArgsConstructor
 @Tag(name = "Branch Controller")
@@ -30,10 +31,11 @@ public class BranchController {
                     ),
                     @ApiResponse(
                             description = "Unauthorized / Invalid Token",
-                            responseCode = "403")
+                            responseCode = "403"
+                    )
             })
 
-    public String addBranch(@RequestBody Branch branch) { return branchService.addNewBranch(branch); }
+    public String addNewBranch(@RequestBody Branch branch) { return branchService.addNewBranch(branch); }
 
     // Get all branches
     @GetMapping
@@ -105,5 +107,26 @@ public class BranchController {
                     )
             })
 
-    public void updateBranch(@PathVariable("id") String id, @RequestBody Branch branch) { branchService.updateBranch(id, branch); }
+    public void updateBranch(@PathVariable("id") String id, @RequestBody Branch branch) {
+        branchService.updateBranch(id, branch);
+    }
+
+    // Logical Delete
+    @PutMapping(path = "delete/{id}")
+    @Operation(
+            description = "Logically delete branch by id",
+            summary = "Logically delete branches by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public void logicallyDeleteBranch(@PathVariable("id") String id, @RequestBody Branch branch){
+        branchService.logicallyDeleteBranch(id, branch);
+    }
 }

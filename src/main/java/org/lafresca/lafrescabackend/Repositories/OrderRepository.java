@@ -2,6 +2,7 @@ package org.lafresca.lafrescabackend.Repositories;
 
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Models.OrderStatus;
+import org.lafresca.lafrescabackend.Models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,9 +26,15 @@ public interface OrderRepository extends MongoRepository<Order, String> {
     @Query("{ 'deliveryPersonId' : ?0 }")
     List<Order> findByDeliveryPersonId(String userId);
 
-    @Query("{ 'waiterId' : ?0, 'orderStatus' : ?1 }")
+    @Query("{ 'waiterId' : ?0, 'OrderStatus' : ?1 }")
     List<Order> findByWaiterIdAndOrderStatus(String userId, OrderStatus orderStatus);
 
-    @Query("{ 'deliveryPersonId' : ?0, 'orderStatus' : ?1 }")
+    @Query("{ 'deliveryPersonId' : ?0, 'OrderStatus' : ?1 }")
     List<Order> findByDeliveryPersonIdAndOrderStatus(String userId, OrderStatus orderStatus);
+
+    List<User> findDeliveryPersonsByCafeId(String cafeId);
+
+    @Query("{ 'cafeId' : ?0, 'OrderStatus' : ?1 }")
+    List<Order> findByCafeIdAndOrderStatus(Long cafeId, OrderStatus orderStatus);
+
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.FoodItemDTO;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Services.FoodItemService;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/food")
 @AllArgsConstructor
 @Tag(name="Food Item Controller")
@@ -38,7 +40,7 @@ public class FoodItemController {
     }
 
     // Retrieve all food items
-    @GetMapping
+    @GetMapping(path = "{cafeId}")
     @Operation(
             description = "Get all food items",
             summary = "Retrieve all food items in the branch",
@@ -51,8 +53,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodItem> getFoodItems(){
-        return foodItemService.getFoodItems();
+    public List<FoodItemDTO> getFoodItems(@PathVariable("cafeId") String cafeId) {
+        return foodItemService.getFoodItems(cafeId);
     }
 
     // Search food item
@@ -107,5 +109,24 @@ public class FoodItemController {
             })
     public void updateFoodItem(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
         foodItemService.updateFoodItem(id, foodItem);
+    }
+
+    // Logical Delete
+    @PutMapping(path = "delete/{id}")
+    @Operation(
+            description = "Logically delete food item by id",
+            summary = "Logically delete food items by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+
+    public void logicallyDeleteFoodItem(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
+        foodItemService.logicallyDeleteFoodItem(id, foodItem);
     }
 }
