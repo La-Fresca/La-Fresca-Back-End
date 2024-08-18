@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class FoodComboService {
@@ -70,8 +69,8 @@ public class FoodComboService {
     }
 
     // Retrieve all food combos
-    public List<FoodCombo> getFoodCombos() {
-        List<FoodCombo> foodComboList = foodComboRepository.findByDeleted(0);
+    public List<FoodCombo> getFoodCombos(String cafeId) {
+        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId, 0);
 
         for (FoodCombo foodCombo : foodComboList) {
             List<String> foodNames = new ArrayList<>();
