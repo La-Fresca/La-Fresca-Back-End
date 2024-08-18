@@ -2,6 +2,7 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.DTO.*;
 import org.lafresca.lafrescabackend.Models.*;
+import org.lafresca.lafrescabackend.Repositories.FoodComboRepository;
 import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.lafresca.lafrescabackend.Repositories.OrderRepository;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
@@ -12,18 +13,21 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final FoodItemRepository foodItemRepository;
+    private final FoodComboRepository foodCombosRepository;
 //    private final UserValidation userValidation;
     @Autowired
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository, FoodComboRepository foodCombosRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.foodItemRepository = foodItemRepository;
+        this.foodCombosRepository = foodCombosRepository;
     }
 
 
@@ -525,5 +529,53 @@ public class OrderService {
             e.printStackTrace();
             return false; // Return false if there's a parsing error
         }
+    }
+
+    public BranchDetailsDTO getBranchDetails(Long cafeId) {
+        if (cafeId == null) {
+            throw new IllegalStateException("CafeId cannot be null");
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.WEEK_OF_YEAR, -2);
+        Date twoWeeksAgoDate = calendar.getTime();
+
+        // Convert Date to String in the format used in your MongoDB
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        String twoWeeksAgo = sdf.format(twoWeeksAgoDate);
+
+        // Fetch orders from the repository
+        List<Order> orders_of_two_weeks = orderRepository.findOrdersFromLastTwoWeeks(twoWeeksAgo);
+
+        List<FoodItem> foodItems = foodItemRepository.findByCafeId(cafeId);
+        List<FoodCombo> foodCombos = foodCombosRepository.findByCafeId(cafeId);
+
+        // Calculate the total sales in the last two weeks
+        List<Float> dailySales = new ArrayList<>();
+        for (int i = 0; i < 14; i++) {
+            dailySales.add(0.0f);
+        }
+
+        Date now = new Date();
+
+        for (Order order : orders_of_two_weeks) {
+            // Parse the createdAt string to a Date object
+            Date createdAtDate = null;
+            try {
+                createdAtDate = sdf.parse(order.getCreatedAt());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            // Calculate the difference in days between the createdAt date and today
+            long diffInMillies = Math.abs(now.getTime() - createdAtDate.getTime());
+            long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+            // Add the total amount of the order to the daily sales
+            dailySales.set((int) diff, dailySales.get((int) diff) + order.getTotalAmount());
+        }
+
+
+        return null;
     }
 }

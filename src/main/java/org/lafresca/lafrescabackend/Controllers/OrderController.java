@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.lafresca.lafrescabackend.DTO.BranchDetailsDTO;
 import org.lafresca.lafrescabackend.DTO.ItemStatusChangeDTO;
 import org.lafresca.lafrescabackend.DTO.OrderRequestDTO;
 import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
@@ -134,6 +135,11 @@ public class OrderController {
     @GetMapping(value = "/getSalesInThisWeek/{cafeId}")
     public List<Order> getSalesInThisWeek(@PathVariable("cafeId") Long cafeId) {
         return orderService.getSalesInThisWeek(cafeId);
+    }
+
+    @GetMapping(value = "/getBranchDetails/{cafeId}")
+    public BranchDetailsDTO getBranchDetails(@PathVariable("cafeId") Long cafeId) {
+        return orderService.getBranchDetails(cafeId);
     }
 
 

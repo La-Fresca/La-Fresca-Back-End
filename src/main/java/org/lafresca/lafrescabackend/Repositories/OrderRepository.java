@@ -37,4 +37,7 @@ public interface OrderRepository extends MongoRepository<Order, String> {
     @Query("{ 'cafeId' : ?0, 'OrderStatus' : ?1 }")
     List<Order> findByCafeIdAndOrderStatus(Long cafeId, OrderStatus orderStatus);
 
+    @Query("{ 'CreatedAt' : { $gte: ?0 } }")
+    List<Order> findOrdersFromLastTwoWeeks(String twoWeeksAgo);
+
 }

@@ -18,4 +18,7 @@ public interface FoodItemRepository extends MongoRepository<FoodItem, String> {
 
     @Query("{ 'DiscountStatus' : ?0 }")
     List<Discount> findByStatus(int i);
+
+    @Query("{ 'CafeId' : ?0 }")
+    List<FoodItem> findByCafeId(Long cafeId);
 }
