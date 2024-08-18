@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin
 @RestController
 @CrossOrigin
 @RequestMapping(path = "api/lafresca/food")
@@ -40,7 +39,7 @@ public class FoodItemController {
     }
 
     // Retrieve all food items
-    @GetMapping(path = "{cafeId}")
+    @GetMapping(path = "getAll/{cafeId}")
     @Operation(
             description = "Get all food items",
             summary = "Retrieve all food items in the branch",
