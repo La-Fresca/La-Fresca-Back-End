@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface StockCollectionRepository extends MongoRepository<StockCollection, String> {
-    @Query("{'Name' : ?0 }")
-    StockCollection findByName(String name);
+    @Query("{ 'Name' : ?0 }")
+    StockCollection findByNameAndCafeId(String name);
 
     @Query("{ 'Deleted' : ?0 }")
     List<StockCollection> findByDeleted(Integer Deleted);

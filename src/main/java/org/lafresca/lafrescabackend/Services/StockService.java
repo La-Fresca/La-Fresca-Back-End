@@ -36,6 +36,15 @@ public class StockService {
         else if (stock.getInitialAmount() < 0) {
             error = "Invalid value for initial amount";
         }
+        else if (stock.getUnitPrice() == null) {
+            error = "Unit price cannot be null";
+        }
+        else if (stock.getUnitPrice() < 0) {
+            error = "Invalid value for unit price";
+        }
+        else if (stock.getCafeId() == null || stock.getCafeId().isEmpty()) {
+            error = "Cafe id cannot be empty";
+        }
         else if (stock.getDeleted() == null) {
             stock.setDeleted(0);
         }
@@ -47,7 +56,7 @@ public class StockService {
         }
 
         if (error == null) {
-            StockCollection stockCollection = stockCollectionRepository.findByName(stock.getStockCollectionName());
+            StockCollection stockCollection = stockCollectionRepository.findByNameAndCafeId(stock.getStockCollectionName());
             if (stockCollection == null) {
                 StockCollection newStockCollection = new StockCollection();
                 newStockCollection.setName(stock.getStockCollectionName());
@@ -69,7 +78,7 @@ public class StockService {
         return error;
     }
 
-    // Get all stocks
+    // Get all stocks by Cafe Id
     public List<Stock> getStocks() { return stockRepository.findByDeleted(0); }
 
     // Get stock by id
@@ -96,6 +105,9 @@ public class StockService {
         }
         if (stock.getInitialAmount() >= 0) {
             existingStock.setInitialAmount(stock.getInitialAmount());
+        }
+        if (stock.getUnitPrice() > 0) {
+            existingStock.setUnitPrice(stock.getUnitPrice());
         }
         if (stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             existingStock.setExpiryDate(stock.getExpiryDate());

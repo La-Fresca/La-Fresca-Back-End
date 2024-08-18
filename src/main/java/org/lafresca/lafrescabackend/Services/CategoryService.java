@@ -27,6 +27,9 @@ public class CategoryService {
         else if (category.getDescription() == null || category.getDescription().isEmpty()) {
             error = "Category description cannot be empty";
         }
+        else if (category.getCafeId() == null || category.getCafeId().isEmpty()) {
+            error = "Cafe id cannot be empty";
+        }
 
         Category alreadyExisting = categoryRepository.findByName(category.getName());
 
@@ -66,6 +69,9 @@ public class CategoryService {
         }
         if (category.getDescription() != null && !category.getDescription().isEmpty()) {
             existingCategory.setDescription(category.getDescription());
+        }
+        if (category.getCafeId() != null && !category.getCafeId().isEmpty()) {
+            existingCategory.setCafeId(category.getCafeId());
         }
 
         categoryRepository.save(existingCategory);

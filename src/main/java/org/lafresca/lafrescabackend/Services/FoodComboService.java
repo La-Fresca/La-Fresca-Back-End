@@ -8,11 +8,11 @@ import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class FoodComboService {
@@ -28,7 +28,7 @@ public class FoodComboService {
     // Add new food combo
     public String addNewFoodCombo(FoodCombo foodCombo) {
         String error = null;
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
 
         if (foodCombo.getName() == null || foodCombo.getName().isEmpty()) {
             error = "Please enter name";
@@ -60,14 +60,17 @@ public class FoodComboService {
 
         if (error == null) {
             foodCombo.setDeleted(0);
+            foodCombo.setPostedDate(now);
+            foodCombo.setWeeklySellingCount(0);
+            foodCombo.setTotalSellingCount(0);
             foodComboRepository.save(foodCombo);
         }
         return error;
     }
 
     // Retrieve all food combos
-    public List<FoodCombo> getFoodCombos() {
-        List<FoodCombo> foodComboList = foodComboRepository.findByDeleted(0);
+    public List<FoodCombo> getFoodCombos(String cafeId) {
+        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId, 0);
 
         for (FoodCombo foodCombo : foodComboList) {
             List<String> foodNames = new ArrayList<>();

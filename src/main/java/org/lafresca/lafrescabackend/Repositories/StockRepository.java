@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface StockRepository extends MongoRepository<Stock, String> {
-    @Query("{'StockCollectionName' : ?0 }")
+    @Query("{ 'StockCollectionName' : ?0 }")
     List<Stock> findByName(String name);
 
     @Query("{ 'Deleted' : ?0 }")

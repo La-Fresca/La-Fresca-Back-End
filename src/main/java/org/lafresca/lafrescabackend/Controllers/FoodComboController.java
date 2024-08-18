@@ -42,7 +42,7 @@ public class FoodComboController {
     }
 
     // Retrieve all food combos
-    @GetMapping
+    @GetMapping(path = "getAll/{cafeId}")
     @Operation(
             description = "Get all food combos",
             summary = "Retrieve all food combos in the branch",
@@ -55,7 +55,9 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodCombo> getFoodCombos(){ return foodComboService.getFoodCombos(); }
+    public List<FoodCombo> getFoodCombos(@PathVariable("cafeId") String cafeId){
+        return foodComboService.getFoodCombos(cafeId);
+    }
 
     // Search food combo
     @GetMapping(path = "{id}")
