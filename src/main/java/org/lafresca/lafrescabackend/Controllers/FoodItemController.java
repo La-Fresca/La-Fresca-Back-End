@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "api/lafresca/food")
+@RequestMapping(path = "api/lafresca/foodItem")
 @AllArgsConstructor
 @Tag(name="Food Item Controller")
 public class FoodItemController {
