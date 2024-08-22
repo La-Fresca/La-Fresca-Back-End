@@ -99,9 +99,12 @@ public class UserService {
     }
 
     public void deleteUser(String userId) {
-        userRepository.findById(userId)
+        User userToDelete = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not exist"));
-        userRepository.deleteById(userId);
+
+        userToDelete.setDeleted(1);
+        userRepository.save(userToDelete);
+//        userRepository.deleteById(userId);
     }
 
     public void updateUser(User user) {

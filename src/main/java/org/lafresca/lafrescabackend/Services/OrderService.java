@@ -78,23 +78,9 @@ public class OrderService {
                     count++;
                 }
                 orderFood.setAddedFeatures(addedFeatureList);
+                orderItems.add(orderFood);
             }
 
-
-//            item.getAddedFeatures().forEach(itemfeature -> {
-//                if(itemfeature.getLevel() >= 0) {
-//                    CustomFeature customFeature = foodItem.getFeatures().get(itemfeature.getLevel());
-//                    AddedFeature addedFeature = new AddedFeature();
-//                    addedFeature.setLevel(itemfeature.getLevel());
-//                    addedFeature.setName(customFeature.getName());
-//
-//
-//                }
-//            });
-
-
-
-            orderItems.add(orderFood);
         });
 
         order.setOrderItems(orderItems);
