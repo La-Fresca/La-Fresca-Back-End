@@ -47,6 +47,8 @@ public class OrderService {
         order.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
         List<OrderFood> orderItems = new ArrayList<>();
+        List<OrderCombo> orderCombos = new ArrayList<>();
+        //order food gathering
         orderRequestDTO.getOrderItems().forEach(item -> {
             OrderFood orderFood = new OrderFood();
             orderFood.setFoodId(item.getFoodId());
@@ -80,8 +82,39 @@ public class OrderService {
                 orderFood.setAddedFeatures(addedFeatureList);
                 orderItems.add(orderFood);
             }
+            if(Objects.equals(item.getMenuItemType(),"Combos")){
+                OrderCombo orderCombo = new OrderCombo();
+                FoodCombo foodCombo = foodCombosRepository.findOneById(item.getFoodId());
+                orderCombo.setId(item.getFoodId());
+                orderCombo.setImage(foodCombo.getImage());
+                orderCombo.setName(foodCombo.getName());
+                orderCombo.setPrice(foodCombo.getPrice());
+
+                List<OrderFood> foods = new ArrayList<>();
+                for (String foodId : foodCombo.getFoodIds()) {
+                    OrderFood orderFood1 = new OrderFood();
+                    FoodItem foodItem1 = foodItemRepository.findOneById(foodId);
+                    orderFood1.setFoodId(foodItem1.getId());
+                    orderFood1.setName(foodItem1.getName());
+                    orderFood1.setPrice(foodItem1.getPrice().floatValue());
+                    orderFood1.setQuantity(1);
+                    orderFood1.setTotalPrice(foodItem1.getPrice().floatValue());
+                    orderFood1.setOrderStatus(OrderStatus.PENDING);
+                    orderFood1.setImage(foodItem1.getImage());
+                    foods.add(orderFood1);
+                }
+
+
+
+                orderCombos.add(orderCombo);
+
+            }
 
         });
+
+        //Combos classification
+
+
 
         order.setOrderItems(orderItems);
         order.setCustomerId(orderRequestDTO.getCustomerId());

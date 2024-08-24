@@ -17,6 +17,7 @@ public class Order {
     private String UpdatedAt;
     private Float Discount;
     private List<OrderFood> OrderItems;
+    private List<OrderCombo> OrderCombos;
 
     //for online orders
     private String CustomerId;
