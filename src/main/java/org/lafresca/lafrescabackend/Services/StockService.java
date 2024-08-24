@@ -70,6 +70,8 @@ public class StockService {
 //                stockCollection.setName(stockCollection.getId());
                 stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() + stock.getInitialAmount());
                 stockCollectionRepository.save(stockCollection);
+
+                stock.setImage(stockCollection.getImage());
             }
 
             stockRepository.save(stock);

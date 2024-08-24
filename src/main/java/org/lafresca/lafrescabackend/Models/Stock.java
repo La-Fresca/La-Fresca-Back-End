@@ -19,4 +19,5 @@ public class Stock {
     private String CafeId;
     private Double UnitPrice;
     private Integer Deleted;
+    private String Image;
 }
