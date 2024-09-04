@@ -38,7 +38,7 @@ public class DiscountController {
     public String addNewDiscount(@RequestBody Discount discount) { return discountService.addNewDiscount(discount); }
 
     // Retrieve all discounts
-    @GetMapping
+    @GetMapping(path = "{cafeId}")
     @Operation(
             description = "Get all discounts",
             summary = "Retrieve all discounts in the branch",
@@ -53,7 +53,7 @@ public class DiscountController {
                     )
             })
 
-    public List<Discount> getDiscounts() { return discountService.getDiscounts(); }
+    public List<List<Discount>> getDiscounts(@PathVariable("cafeId") String cafeId) { return discountService.getDiscounts(cafeId); }
 
     // Search discount
 //    @GetMapping(path = "{id}")

@@ -1,6 +1,5 @@
 package org.lafresca.lafrescabackend.Services;
 
-import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.FoodItem;
@@ -10,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DiscountService {
@@ -40,6 +39,14 @@ public class DiscountService {
         }
         else if (!(discount.getDiscountType().equals("Price Offer")) && !(discount.getDiscountType().equals("Promotional Offer"))) {
             error = "Discount type not valid";
+        }
+        else if (discount.getDiscountType().equals("Promotional Offer")) {
+            if (discount.getAmount() == null) {
+                error = "Amount cannot be empty";
+            }
+            else if (discount.getAmount() < 0) {
+                error = "Amount not valid";
+            }
         }
         else if (discount.getDiscountAmount() < 0 ) {
             error = "Discount amount not valid";
@@ -70,8 +77,17 @@ public class DiscountService {
         }
 
         if (error == null) {
+            if (discount.getDiscountType().equals("Price Offer")) {
+                discount.setAmount(0);
+            }
+
             if (discount.getMenuItemType().equals("Food Item")) {
                 FoodItem foodItem = foodItemRepository.findOneById(discount.getMenuItemId());
+
+                if (foodItem.getDiscountStatus() == 1) {
+                    return "Active discount already in progress";
+                }
+
                 foodItem.setDiscountStatus(1);
                 foodItem.setDiscountDetails(discount);
 
@@ -80,23 +96,42 @@ public class DiscountService {
 
             else if (discount.getMenuItemType().equals("Food Combo")) {
                 FoodCombo foodCombo = foodComboRepository.findOneById(discount.getMenuItemId());
+
+                if (foodCombo.getDiscountStatus() == 1) {
+                    return "Active discount already in progress";
+                }
+
                 foodCombo.setDiscountStatus(1);
                 foodCombo.setDiscountDetails(discount);
 
                 foodComboRepository.save(foodCombo);
             }
         }
+
         return error;
     }
 
     // Retrieve all discounts
-    public List<Discount> getDiscounts() {
-        List<Discount> foodItemList = foodItemRepository.findByStatus(1);
-        List<Discount> foodComboList = foodComboRepository.findByStatus(1);
+    public List<List<Discount>> getDiscounts(String cafeId) {
+        List<FoodItem> foodItemList = foodItemRepository.findDiscountByStatus(cafeId, 1);
+        List<FoodCombo> foodComboList = foodComboRepository.findDiscountByStatus(cafeId);
 
-        foodComboList.addAll(foodItemList);
+        List<Discount> foodItemDiscount = new ArrayList<>();
+        List<Discount> foodComboDiscount = new ArrayList<>();
 
-        return foodComboList;
+        for (FoodItem foodItem : foodItemList) {
+            foodItemDiscount.add(foodItem.getDiscountDetails());
+        }
+
+        for (FoodCombo foodCombo : foodComboList) {
+            foodComboDiscount.add(foodCombo.getDiscountDetails());
+        }
+
+        List<List<Discount>> discounts = new ArrayList<>();
+        discounts.add(foodItemDiscount);
+        discounts.add(foodComboDiscount);
+
+        return discounts;
     }
 
     // Search discount by id
