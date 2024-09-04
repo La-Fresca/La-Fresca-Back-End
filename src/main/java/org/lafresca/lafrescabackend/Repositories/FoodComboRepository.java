@@ -13,7 +13,7 @@ public interface FoodComboRepository extends MongoRepository<FoodCombo,String> {
     List<FoodCombo> findByCafeId(String CafeID, Integer Deleted);
 
     @Query("{ 'id' :  ?0 }")
-    FoodCombo findOneById(String MenuItemId);
+    FoodCombo findOneById(String id);
 
     @Query("{ 'CafeId' :  ?0, 'DiscountStatus' : 1, 'Deleted' : 0 }")
     List<FoodCombo> findDiscountByStatus(String CafeId);

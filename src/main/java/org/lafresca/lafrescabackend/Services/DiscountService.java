@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.FoodItem;
@@ -8,6 +9,7 @@ import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,9 +113,10 @@ public class DiscountService {
         return error;
     }
 
+
     // Retrieve all discounts
     public List<List<Discount>> getDiscounts(String cafeId) {
-        List<FoodItem> foodItemList = foodItemRepository.findDiscountByStatus(cafeId, 1);
+        List<FoodItem> foodItemList = foodItemRepository.findDiscountByStatus(cafeId);
         List<FoodCombo> foodComboList = foodComboRepository.findDiscountByStatus(cafeId);
 
         List<Discount> foodItemDiscount = new ArrayList<>();
@@ -134,70 +137,102 @@ public class DiscountService {
         return discounts;
     }
 
+
     // Search discount by id
-//    public Optional<Discount> getDiscount(String id) {
-//        discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id " + id));
-//        return discountRepository.findById(id);
-//    }
+    public Discount getDiscount(String menuItemId) {
+        FoodItem foodItem = foodItemRepository.findOneById(menuItemId);
+        FoodCombo foodCombo = foodComboRepository.findOneById(menuItemId);
+
+        if (foodItem != null) {
+            return foodItem.getDiscountDetails();
+        }
+        else if (foodCombo != null) {
+            return foodCombo.getDiscountDetails();
+        }
+        else {
+            return null;
+        }
+    }
+
 
     // Delete discount by id
-//    public void deleteDiscount(String id) {
-//        discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Discount not found with id " + id));
-//        discountRepository.deleteById(id);
-//    }
+    public String deleteDiscount(String menuItemId) {
+        FoodItem foodItem = foodItemRepository.findOneById(menuItemId);
+        FoodCombo foodCombo = foodComboRepository.findOneById(menuItemId);
+
+        if (foodItem != null) {
+            foodItem.setDiscountStatus(0);
+            foodItemRepository.save(foodItem);
+            return "Discount successfully deleted";
+        }
+        else if (foodCombo != null) {
+            foodCombo.setDiscountStatus(0);
+            foodComboRepository.save(foodCombo);
+            return "Discount successfully deleted";
+        }
+        else {
+            return "Discount not found";
+        }
+    }
+
 
     // Update Discount by id
-//    public void updateDiscount(String id, Discount discount) {
-//        if (discount.getMenuItemType().equals("Food Item")) {
-//            FoodItem existingFoodItem = foodItemRepository.findOneById(discount.getMenuItemId());
-//            LocalDateTime now = LocalDateTime.now();
-//
-//            if (discount.getName() != null && !discount.getName().isEmpty()) {
-//                existingFoodItem.getDiscountDetails().setName(discount.getName());
-//            }
-//            if (discount.getDescription() != null && !discount.getDescription().isEmpty()) {
-//                existingFoodItem.getDiscountDetails().setDescription(discount.getDescription());
-//            }
-//            if (discount.getDiscountType().equals("Price Offer")) {
-//                existingFoodItem.getDiscountDetails().setDiscountType("Price Offer");
-//            }
-//            if (discount.getDiscountAmount() > 0) {
-//                existingFoodItem.getDiscountDetails().setDiscountAmount(discount.getDiscountAmount());
-//            }
-//            if (discount.getStartDate() != null && !discount.getStartDate().toString().isEmpty() && !LocalDateTime.parse(discount.getStartDate().toString()).isBefore(now)) {
-//                existingFoodItem.getDiscountDetails().setStartDate(discount.getStartDate());
-//            }
-//            if (discount.getEndDate() != null && !discount.getEndDate().toString().isEmpty() && !LocalDateTime.parse(discount.getEndDate().toString()).isBefore(LocalDateTime.parse(discount.getStartDate().toString()))) {
-//                existingFoodItem.getDiscountDetails().setEndDate(discount.getEndDate());
-//            }
-//            if (discount.getOfferDetails() != null && !discount.getOfferDetails().isEmpty()) {
-//                existingFoodItem.getDiscountDetails().setOfferDetails(discount.getOfferDetails());
-//            }
-//        }
-//        else if (discount.getMenuItemType().equals("Food Combo")) {
-//            FoodCombo existingFoodCombo = foodComboRepository.findOneById(discount.getMenuItemId());
-//
-//            if (discount.getName() != null && !discount.getName().isEmpty()) {
-//                existingFoodCombo.getDiscountDetails().setName(discount.getName());
-//            }
-//            if (discount.getDescription() != null && !discount.getDescription().isEmpty()) {
-//                existingFoodCombo.getDiscountDetails().setDescription(discount.getDescription());
-//            }
-//            if (discount.getDiscountType().equals("Price Offer")) {
-//                existingFoodCombo.getDiscountDetails().setDiscountType("Price Offer");
-//            }
-//            if (discount.getDiscountAmount() > 0) {
-//                existingFoodCombo.getDiscountDetails().setDiscountAmount(discount.getDiscountAmount());
-//            }
-//            if (discount.getStartDate() != null && !discount.getStartDate().toString().isEmpty() && !LocalDateTime.parse(discount.getStartDate().toString()).isBefore(now)) {
-//                existingFoodCombo.getDiscountDetails().setStartDate(discount.getStartDate());
-//            }
-//            if (discount.getEndDate() != null && !discount.getEndDate().toString().isEmpty() && !LocalDateTime.parse(discount.getEndDate().toString()).isBefore(LocalDateTime.parse(discount.getStartDate().toString()))) {
-//                existingFoodCombo.getDiscountDetails().setEndDate(discount.getEndDate());
-//            }
-//            if (discount.getOfferDetails() != null && !discount.getOfferDetails().isEmpty()) {
-//                existingFoodCombo.getDiscountDetails().setOfferDetails(discount.getOfferDetails());
-//            }
-//        }
-//    }
+    public void updateDiscount(String menuItemId, Discount discount) {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (discount.getMenuItemType().equals("Food Item")) {
+            FoodItem existingFoodItem = foodItemRepository.findOneById(menuItemId);
+
+            if (discount.getName() != null && !discount.getName().isEmpty()) {
+                existingFoodItem.getDiscountDetails().setName(discount.getName());
+            }
+            if (discount.getDescription() != null && !discount.getDescription().isEmpty()) {
+                existingFoodItem.getDiscountDetails().setDescription(discount.getDescription());
+            }
+            if (discount.getDiscountType().equals("Price Offer")) {
+                existingFoodItem.getDiscountDetails().setDiscountType("Price Offer");
+            }
+            if (discount.getDiscountAmount() > 0) {
+                existingFoodItem.getDiscountDetails().setDiscountAmount(discount.getDiscountAmount());
+            }
+            if (discount.getStartDate() != null && !discount.getStartDate().toString().isEmpty() && !LocalDateTime.parse(discount.getStartDate().toString()).isBefore(now)) {
+                existingFoodItem.getDiscountDetails().setStartDate(discount.getStartDate());
+            }
+            if (discount.getEndDate() != null && !discount.getEndDate().toString().isEmpty() && !LocalDateTime.parse(discount.getEndDate().toString()).isBefore(LocalDateTime.parse(discount.getStartDate().toString()))) {
+                existingFoodItem.getDiscountDetails().setEndDate(discount.getEndDate());
+            }
+            if (discount.getOfferDetails() != null && !discount.getOfferDetails().isEmpty()) {
+                existingFoodItem.getDiscountDetails().setOfferDetails(discount.getOfferDetails());
+            }
+
+            foodItemRepository.save(existingFoodItem);
+        }
+        else if (discount.getMenuItemType().equals("Food Combo")) {
+            FoodCombo existingFoodCombo = foodComboRepository.findOneById(menuItemId);
+
+            if (discount.getName() != null && !discount.getName().isEmpty()) {
+                existingFoodCombo.getDiscountDetails().setName(discount.getName());
+            }
+            if (discount.getDescription() != null && !discount.getDescription().isEmpty()) {
+                existingFoodCombo.getDiscountDetails().setDescription(discount.getDescription());
+            }
+            if (discount.getDiscountType().equals("Price Offer")) {
+                existingFoodCombo.getDiscountDetails().setDiscountType("Price Offer");
+            }
+            if (discount.getDiscountAmount() > 0) {
+                existingFoodCombo.getDiscountDetails().setDiscountAmount(discount.getDiscountAmount());
+            }
+            if (discount.getStartDate() != null && !discount.getStartDate().toString().isEmpty() && !LocalDateTime.parse(discount.getStartDate().toString()).isBefore(now)) {
+                existingFoodCombo.getDiscountDetails().setStartDate(discount.getStartDate());
+            }
+            if (discount.getEndDate() != null && !discount.getEndDate().toString().isEmpty() && !LocalDateTime.parse(discount.getEndDate().toString()).isBefore(LocalDateTime.parse(discount.getStartDate().toString()))) {
+                existingFoodCombo.getDiscountDetails().setEndDate(discount.getEndDate());
+            }
+            if (discount.getOfferDetails() != null && !discount.getOfferDetails().isEmpty()) {
+                existingFoodCombo.getDiscountDetails().setOfferDetails(discount.getOfferDetails());
+            }
+
+            foodComboRepository.save(existingFoodCombo);
+        }
+    }
 }
