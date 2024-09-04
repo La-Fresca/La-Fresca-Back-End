@@ -3,6 +3,7 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.lafresca.lafrescabackend.DTO.FoodComboDTO;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Services.FoodComboService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodCombo> getFoodCombos(@PathVariable("cafeId") String cafeId){
+    public List<FoodComboDTO> getFoodCombos(@PathVariable("cafeId") String cafeId){
         return foodComboService.getFoodCombos(cafeId);
     }
 
