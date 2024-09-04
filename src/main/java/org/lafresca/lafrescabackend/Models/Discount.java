@@ -9,6 +9,7 @@ public class Discount {
     private String Name;
     private String Description;
     private String DiscountType;
+    private Integer Amount;
     private Integer DiscountAmount;
     private LocalDateTime StartDate;
     private LocalDateTime EndDate;
