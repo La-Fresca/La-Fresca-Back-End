@@ -65,6 +65,8 @@ public class FoodItemService {
 
         if (error == null) {
             foodItem.setDeleted(0);
+            foodItem.setRating(0.0);
+            foodItem.setRatingCount(0);
             foodItem.setPostedDate(now);
             foodItem.setWeeklySellingCount(0);
             foodItem.setTotalSellingCount(0);

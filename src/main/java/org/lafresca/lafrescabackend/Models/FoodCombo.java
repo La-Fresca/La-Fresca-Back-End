@@ -20,8 +20,8 @@ public class FoodCombo {
     private List<String> FoodNames;
     private Integer Deleted; // 1 for deleted, 0 for not deleted
     private Double Cost;
-    private String Rating;
-    //    private Integer RatingCount;
+    private Double Rating;
+    private Integer RatingCount;
     private LocalDate PostedDate;
     private Integer WeeklySellingCount;
     private Integer TotalSellingCount;

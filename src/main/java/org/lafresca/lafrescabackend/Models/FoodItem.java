@@ -23,10 +23,10 @@ public class FoodItem {
     private List<String> Categories;
     private Double Cost;
     private Double Rating;
+    private Integer RatingCount;
     private LocalDate PostedDate;
     private Integer WeeklySellingCount;
     private Integer TotalSellingCount;
-//    private Integer RatingCount;
     private Integer DiscountStatus;
     private Discount DiscountDetails;
 }

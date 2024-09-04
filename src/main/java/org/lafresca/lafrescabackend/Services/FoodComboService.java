@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.FoodComboDTO;
+import org.lafresca.lafrescabackend.DTO.FoodComboDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.FoodItem;
@@ -13,16 +15,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FoodComboService {
     private final FoodComboRepository foodComboRepository;
     private final FoodItemRepository foodItemRepository;
+    private final FoodComboDTOMapper foodComboDTOMapper;
 
     @Autowired
-    public FoodComboService(FoodComboRepository foodComboRepository, FoodItemRepository foodItemRepository) {
+    public FoodComboService(FoodComboRepository foodComboRepository, FoodItemRepository foodItemRepository, FoodComboDTOMapper foodComboDTOMapper) {
         this.foodComboRepository = foodComboRepository;
         this.foodItemRepository = foodItemRepository;
+        this.foodComboDTOMapper = foodComboDTOMapper;
     }
 
     // Add new food combo
@@ -60,6 +65,8 @@ public class FoodComboService {
 
         if (error == null) {
             foodCombo.setDeleted(0);
+            foodCombo.setRating(0.0);
+            foodCombo.setRatingCount(0);
             foodCombo.setPostedDate(now);
             foodCombo.setWeeklySellingCount(0);
             foodCombo.setTotalSellingCount(0);
@@ -69,7 +76,7 @@ public class FoodComboService {
     }
 
     // Retrieve all food combos
-    public List<FoodCombo> getFoodCombos(String cafeId) {
+    public List<FoodComboDTO> getFoodCombos(String cafeId) {
         List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId, 0);
 
         for (FoodCombo foodCombo : foodComboList) {
@@ -82,7 +89,11 @@ public class FoodComboService {
             foodCombo.setFoodNames(foodNames);
         }
 
-        return foodComboList;
+//        return foodComboList;
+        return foodComboList
+                .stream()
+                .map(foodComboDTOMapper)
+                .collect(Collectors.toList());
     }
 
     // Update food combo
