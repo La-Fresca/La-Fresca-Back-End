@@ -8,6 +8,7 @@ import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +73,21 @@ public class StockCollectionService {
 
     // Get all stock collections
     public List<StockCollection> getStockCollections() {
-        return stockCollectionRepository.findByDeleted(0);
+        List<StockCollection> stockCollections = stockCollectionRepository.findByDeleted(0);
+        for (StockCollection stockCollection : stockCollections) {
+            if (stockCollection.getLowerLimit() < stockCollection.getAvailableAmount()){
+                stockCollection.setStatus("High stock");
+            }
+            else if (stockCollection.getLowerLimit() == stockCollection.getAvailableAmount()){
+                stockCollection.setStatus("Low stock");
+            }
+            else {
+                stockCollection.setStatus("Out of stock");
+            }
+
+            stockCollection.setPredictedStockDate(LocalDate.now());
+        }
+        return stockCollections;
     }
 
     // Get stock collection by id
