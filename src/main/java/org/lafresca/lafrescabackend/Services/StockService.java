@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.StockDTO;
+import org.lafresca.lafrescabackend.DTO.StockDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Models.StockCollection;
@@ -11,15 +13,18 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StockService {
     private final StockRepository stockRepository;
     private final StockCollectionRepository stockCollectionRepository;
+    private final StockDTOMapper stockDTOMapper;
 
     @Autowired
-    public StockService(StockRepository stockRepository, StockCollectionRepository stockCollectionRepository) { this.stockRepository = stockRepository;
+    public StockService(StockRepository stockRepository, StockCollectionRepository stockCollectionRepository, StockDTOMapper stockDTOMapper) { this.stockRepository = stockRepository;
         this.stockCollectionRepository = stockCollectionRepository;
+        this.stockDTOMapper = stockDTOMapper;
     }
 
     // Add new stock
@@ -36,6 +41,15 @@ public class StockService {
         else if (stock.getInitialAmount() < 0) {
             error = "Invalid value for initial amount";
         }
+        else if (stock.getUnitPrice() == null) {
+            error = "Unit price cannot be null";
+        }
+        else if (stock.getUnitPrice() < 0) {
+            error = "Invalid value for unit price";
+        }
+        else if (stock.getCafeId() == null || stock.getCafeId().isEmpty()) {
+            error = "Cafe id cannot be empty";
+        }
         else if (stock.getDeleted() == null) {
             stock.setDeleted(0);
         }
@@ -47,7 +61,7 @@ public class StockService {
         }
 
         if (error == null) {
-            StockCollection stockCollection = stockCollectionRepository.findByName(stock.getStockCollectionName());
+            StockCollection stockCollection = stockCollectionRepository.findByName(stock.getCafeId(), stock.getStockCollectionName());
             if (stockCollection == null) {
                 StockCollection newStockCollection = new StockCollection();
                 newStockCollection.setName(stock.getStockCollectionName());
@@ -61,6 +75,8 @@ public class StockService {
 //                stockCollection.setName(stockCollection.getId());
                 stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() + stock.getInitialAmount());
                 stockCollectionRepository.save(stockCollection);
+
+                stock.setImage(stockCollection.getImage());
             }
 
             stockRepository.save(stock);
@@ -69,8 +85,13 @@ public class StockService {
         return error;
     }
 
-    // Get all stocks
-    public List<Stock> getStocks() { return stockRepository.findAll(); }
+    // Get all stocks by Cafe Id
+    public List<StockDTO> getStocks(String cafeId) {
+        return stockRepository.findByCafeId(cafeId)
+                .stream()
+                .map(stockDTOMapper)
+                .collect(Collectors.toList());
+    }
 
     // Get stock by id
     public Optional<Stock> getStock(String id) {
@@ -86,7 +107,7 @@ public class StockService {
     public void updateStock(String id, Stock stock) {
         Stock existingStock = stockRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Stock not found with id: " + id));
-         LocalDate now = LocalDate.now();
+        LocalDate now = LocalDate.now();
 
         if (stock.getStockCollectionName() != null && !stock.getStockCollectionName().isEmpty()) {
             existingStock.setStockCollectionName(stock.getStockCollectionName());
@@ -96,6 +117,9 @@ public class StockService {
         }
         if (stock.getInitialAmount() >= 0) {
             existingStock.setInitialAmount(stock.getInitialAmount());
+        }
+        if (stock.getUnitPrice() > 0) {
+            existingStock.setUnitPrice(stock.getUnitPrice());
         }
         if (stock.getExpiryDate() != null && !stock.getExpiryDate().toString().isEmpty() && !LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
             existingStock.setExpiryDate(stock.getExpiryDate());
@@ -115,5 +139,10 @@ public class StockService {
         existingStock.setDeleted(stock.getDeleted());
 
         stockRepository.save(existingStock);
+    }
+
+    // Get stock by stock collection name
+    public List<Stock> getStockByCollectionName(String cafeId, String stockCollectionName) {
+        return stockRepository.findByName(cafeId, stockCollectionName);
     }
 }

@@ -1,6 +1,9 @@
 package org.lafresca.lafrescabackend.Controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.lafresca.lafrescabackend.DTO.ItemStatusChangeDTO;
+import org.lafresca.lafrescabackend.DTO.OrderRequestDTO;
+import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/lafresca/order")
 @Tag(name = "Order Controller")
 public class OrderController {
@@ -20,8 +24,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public void addOrder(@RequestBody Order order) {
-        orderService.addOrder(order);
+    public void addOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
+        orderService.addOrder(orderRequestDTO);
     }
 
     @GetMapping
@@ -79,6 +83,53 @@ public class OrderController {
         return orderService.getPendingOrdersbydeliveryPersonId(userId);
     }
 
+    @GetMapping(value = "/completedordersbydeliverypersonid/{userId}")
+    public List<Order> getCompletedOrdersByDeliveryPersonId(@PathVariable("userId") String userId) {
+        return orderService.getCompletedOrdersByDeliveryPersonId(userId);
+    }
+
+    @GetMapping(value = "/ondeliveryordersbydeliverypersonid/{userId}")
+    public Order ondeliveryordersbydeliverypersonid(@PathVariable("userId") String userId) {
+        System.out.println("userId: " + userId);
+        List<Order> orders = orderService.ondeliveryordersbydeliverypersonid(userId);
+        System.out.println(orders);
+        if (orders.isEmpty()) {
+            return null;
+        }
+        return orders.get(0);
+//        return orderService.ondeliveryordersbydeliverypersonid(userId).get(0);
+    }
+
+    @PostMapping(value = "/changestatus")
+    public void changeOrderStatus(@RequestBody OrderStatusChangeRequest orderStatusChangeRequest) {
+        orderService.changeOrderStatus(orderStatusChangeRequest);
+    }
+
+    @PutMapping(value = "/updateOrderItemStatus")
+    public void updateOrderItemStatus(@RequestBody ItemStatusChangeDTO itemStatusChangeDTO) {
+        orderService.updateOrderStatus(itemStatusChangeDTO);
+    }
+
+    @GetMapping(value = "/queueItems/{cafeId}")
+    public List<Order> getQueueItems(@PathVariable("cafeId") Long cafeId) {
+        return orderService.getQueueItems(cafeId);
+    }
+
+    @GetMapping(value = "/preparingItems/{cafeId}")
+    public List<Order> getPreparingItems(@PathVariable("cafeId") Long cafeId) {
+        return orderService.getPreparingItems(cafeId);
+    }
+
+    @GetMapping(value = "/readyItems/{cafeId}")
+    public List<Order> getReadyItems(@PathVariable("cafeId") Long cafeId) {
+        return orderService.getReadyItems(cafeId);
+    }
+
+    //change status after ready (after kitchen manager process)
+    @GetMapping(value = "/deliveryOrderStatus/{cafeId}")
+    public void getDeliveryOrderStatus(@RequestBody ItemStatusChangeDTO itemStatusChangeDTO) {
+        orderService.deliveryOrderStatus(itemStatusChangeDTO);
+    }
 
 
 }

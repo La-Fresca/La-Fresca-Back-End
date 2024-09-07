@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "api/lafresca/food")
+@RequestMapping(path = "api/lafresca/foodItem")
 @AllArgsConstructor
 @Tag(name="Food Item Controller")
 public class FoodItemController {
@@ -39,7 +39,7 @@ public class FoodItemController {
     }
 
     // Retrieve all food items
-    @GetMapping
+    @GetMapping(path = "getAll/{cafeId}")
     @Operation(
             description = "Get all food items",
             summary = "Retrieve all food items in the branch",
@@ -52,8 +52,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodItemDTO> getFoodItems(){
-        return foodItemService.getFoodItems();
+    public List<FoodItemDTO> getFoodItems(@PathVariable("cafeId") String cafeId) {
+        return foodItemService.getFoodItems(cafeId);
     }
 
     // Search food item

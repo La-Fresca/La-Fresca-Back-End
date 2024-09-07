@@ -1,10 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
-import org.lafresca.lafrescabackend.Models.Cart;
-import org.lafresca.lafrescabackend.Models.CustomFeature;
-import org.lafresca.lafrescabackend.Models.FoodCombo;
-import org.lafresca.lafrescabackend.Models.FoodItem;
+import org.lafresca.lafrescabackend.Models.*;
 import org.lafresca.lafrescabackend.Repositories.CartRepository;
 import org.lafresca.lafrescabackend.Repositories.FoodComboRepository;
 import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
@@ -54,15 +51,19 @@ public class CartService {
                     error = "Food Item not found";
                 }
                 else {
-                    List<CustomFeature> additionalPrices = cart.getCustomFeatures();
+                    List<CartItemFeature> additionalFeatures = cart.getCustomFeatures();
+                    FoodItem foodItemDetails = foodItemRepository.findById(cart.getMenuItemId()).orElse(null);
+                    List<CustomFeature> FeatureList = foodItemDetails.getFeatures();
 
+                    int count = 0;
                     double totalAdditionalPrice = 0;
 
-                    for (CustomFeature customFeature : additionalPrices) {
-                        List<Double> additionalPriceList = customFeature.getAdditionalPrices();
-                        for (Double additionalPrice : additionalPriceList) {
-                            totalAdditionalPrice += additionalPrice;
+                    for (CustomFeature feature : FeatureList){
+                        List<Double> priceList = feature.getAdditionalPrices();
+                        if (additionalFeatures.get(count).getLevel() != -1) {
+                            totalAdditionalPrice += priceList.get(count);
                         }
+                        count ++;
                     }
 
                     double totalPrice = (foodItem.getPrice() + totalAdditionalPrice) * cart.getQuantity();
@@ -115,6 +116,9 @@ public class CartService {
                             cart.setDiscountedPrice(discountedPrice);
                         }
                     }
+                    cart.setName(foodItem.getName());
+                    cart.setDescription(foodItem.getDescription());
+                    cart.setImage(foodItem.getImage());
                 }
 
                 else if (Objects.equals(menuItemType, "Food Combo")) {
@@ -128,6 +132,10 @@ public class CartService {
                             cart.setDiscountedPrice(discountedPrice);
                         }
                     }
+
+                    cart.setName(foodCombo.getName());
+                    cart.setDescription(foodCombo.getDescription());
+                    cart.setImage(foodCombo.getImage());
                 }
             }
         }

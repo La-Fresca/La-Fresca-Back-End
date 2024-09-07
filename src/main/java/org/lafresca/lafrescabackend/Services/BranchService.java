@@ -2,10 +2,12 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Branch;
+import org.lafresca.lafrescabackend.Models.IncomeCost;
 import org.lafresca.lafrescabackend.Repositories.BranchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +42,17 @@ public class BranchService {
         }
 
         if (error == null) {
+            IncomeCost income = new IncomeCost();
+            LocalDate now = LocalDate.now();
+            income.setYear(now.getYear());
+            income.setMonth(now.getMonthValue());
+            income.setAmount(0.0);
+
+            branch.getIncome().add(income);
+            branch.getCost().add(income);
+
+            branch.setDailyCost(0.0);
+            branch.setDailyIncome(0.0);
             branchRepository.save(branch);
         }
 
@@ -81,6 +94,12 @@ public class BranchService {
         }
         if (branch.getBranchManager() != null && !branch.getBranchManager().isEmpty()) {
             existingBranch.setBranchManager(branch.getBranchManager());
+        }
+        if (branch.getDailyIncome() != null) {
+            existingBranch.setDailyIncome(existingBranch.getDailyIncome() + branch.getDailyIncome());
+        }
+        if (branch.getDailyCost() != null) {
+            existingBranch.setDailyCost(existingBranch.getDailyCost() + branch.getDailyCost());
         }
 
         branchRepository.save(existingBranch);

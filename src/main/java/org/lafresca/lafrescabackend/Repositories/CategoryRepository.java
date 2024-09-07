@@ -9,6 +9,9 @@ import java.util.List;
 
 @Repository
 public interface CategoryRepository extends MongoRepository<Category, String> {
-    @Query("{'Name' : ?0 }")
-    Category findByName(String name);
+    @Query("{ 'CafeId' : ?0, 'Name' : ?1 }")
+    Category findByName(String CafeId, String Name);
+
+    @Query("{ 'CafeId' : ?0 }")
+    List<Category> findByCafeId(String CafeId);
 }

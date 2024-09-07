@@ -9,6 +9,12 @@ import java.util.List;
 
 @Repository
 public interface FoodItemRepository extends MongoRepository<FoodItem, String> {
-    @Query("{ 'Deleted' : ?0 }")
-    List<FoodItem> findByDeleted(Integer Deleted);
+    @Query("{ 'CafeId' : ?0, 'Deleted' : ?1 }")
+    List<FoodItem> findByCafeId(String CafeId, Integer Deleted);
+
+    @Query("{ 'id' :  ?0 }")
+    FoodItem findOneById(String id);
+
+    @Query("{ 'CafeId' : ?0, 'DiscountStatus' : 1, 'Deleted' : 0 }")
+    List<FoodItem> findDiscountByStatus(String CafeId);
 }

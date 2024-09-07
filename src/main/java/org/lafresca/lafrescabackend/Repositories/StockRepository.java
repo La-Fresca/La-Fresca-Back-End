@@ -6,10 +6,12 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface StockRepository extends MongoRepository<Stock, String> {
-    @Query("{'StockCollectionName' : ?0 }")
-    List<Stock> findByStockCollectionName(String name);
+    @Query("{ 'CafeId' :  ?0, 'StockCollectionName' : ?1, 'Deleted' :  0}")
+    List<Stock> findByName(String CafeId, String Name);
+
+    @Query("{ 'CafeId' :  ?0, 'Deleted' : 0 }")
+    List<Stock> findByCafeId(String CafeId);
 }
