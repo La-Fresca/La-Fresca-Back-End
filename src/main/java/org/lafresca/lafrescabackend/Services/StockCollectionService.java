@@ -10,6 +10,7 @@ import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,7 +78,21 @@ public class StockCollectionService {
 
     // Get all stock collections
     public List<StockCollectionDTO> getStockCollections(String cafeId) {
-        return stockCollectionRepository.findByCafeId(cafeId)
+        List<StockCollection> stockCollections = stockCollectionRepository.findByCafeId(cafeId);
+        for (StockCollection stockCollection : stockCollections) {
+            if (stockCollection.getLowerLimit() < stockCollection.getAvailableAmount()){
+                stockCollection.setStatus("High stock");
+            }
+            else if (stockCollection.getLowerLimit().equals(stockCollection.getAvailableAmount())){
+                stockCollection.setStatus("Low stock");
+            }
+            else {
+                stockCollection.setStatus("Out of stock");
+            }
+
+            stockCollection.setPredictedStockoutDate(LocalDate.now());
+        }
+        return stockCollections
                 .stream()
                 .map(stockCollectionDTOMapper)
                 .collect(Collectors.toList());
