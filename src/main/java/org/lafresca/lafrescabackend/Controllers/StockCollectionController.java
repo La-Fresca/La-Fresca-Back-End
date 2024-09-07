@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.StockCollectionDTO;
 import org.lafresca.lafrescabackend.Models.StockCollection;
 import org.lafresca.lafrescabackend.Services.StockCollectionService;
 import org.springframework.web.bind.annotation.*;
@@ -40,10 +41,10 @@ public class StockCollectionController {
     }
 
     // Get all stock collections
-    @GetMapping
+    @GetMapping(path = "{cafeId}")
     @Operation(
-            description = "Get all stock collections",
-            summary = "Retrieve all stock collections from inventory",
+            description = "Get all stock collections by CafeId",
+            summary = "Retrieve all stock collections from inventory by CafeId",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -55,7 +56,7 @@ public class StockCollectionController {
                     )
             })
 
-    public List<StockCollection> getStockCollections() { return stockCollectionService.getStockCollections(); }
+    public List<StockCollectionDTO> getStockCollections(@PathVariable("cafeId") String cafeId) { return stockCollectionService.getStockCollections(cafeId); }
 
     // Search stock collection
     @GetMapping(path = "{id}")

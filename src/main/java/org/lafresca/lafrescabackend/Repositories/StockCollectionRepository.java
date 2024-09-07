@@ -1,6 +1,5 @@
 package org.lafresca.lafrescabackend.Repositories;
 
-import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Models.StockCollection;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -10,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface StockCollectionRepository extends MongoRepository<StockCollection, String> {
-    @Query("{ 'Name' : ?0 }")
-    StockCollection findByNameAndCafeId(String name);
+    @Query("{ 'CafeId' : ?0, 'Name' : ?1, 'Deleted' : 0  }")
+    StockCollection findByName(String CafeId, String Name);
 
-    @Query("{ 'Deleted' : ?0 }")
-    List<StockCollection> findByDeleted(Integer Deleted);
+    @Query("{ 'CafeId' : ?0, 'Deleted' : 0 }")
+    List<StockCollection> findByCafeId(String CafeId);
 }
