@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.StockCollectionDTO;
+import org.lafresca.lafrescabackend.DTO.StockCollectionDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Models.StockCollection;
@@ -10,16 +12,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StockCollectionService {
     private final StockCollectionRepository stockCollectionRepository;
     private final StockRepository stockRepository;
+    private final StockCollectionDTOMapper stockCollectionDTOMapper;
 
     @Autowired
-    private StockCollectionService(StockCollectionRepository stockCollectionRepository, StockRepository stockRepository) {
+    private StockCollectionService(StockCollectionRepository stockCollectionRepository, StockRepository stockRepository, StockCollectionDTOMapper stockCollectionDTOMapper) {
         this.stockCollectionRepository = stockCollectionRepository;
         this.stockRepository = stockRepository;
+        this.stockCollectionDTOMapper = stockCollectionDTOMapper;
     }
 
     // Add New Stock Collection
@@ -71,8 +76,11 @@ public class StockCollectionService {
     }
 
     // Get all stock collections
-    public List<StockCollection> getStockCollections() {
-        return stockCollectionRepository.findByDeleted(0);
+    public List<StockCollectionDTO> getStockCollections(String cafeId) {
+        return stockCollectionRepository.findByCafeId(cafeId)
+                .stream()
+                .map(stockCollectionDTOMapper)
+                .collect(Collectors.toList());
     }
 
     // Get stock collection by id
@@ -118,7 +126,8 @@ public class StockCollectionService {
 
         existingStockCollection.setDeleted(stockCollection.getDeleted());
         String collectionName = existingStockCollection.getName();
-        List<Stock> StockList = stockRepository.findByName(collectionName);
+        String cafeId = existingStockCollection.getCafeId();
+        List<Stock> StockList = stockRepository.findByName(cafeId, collectionName);
 
         for (Stock stock : StockList) {
             stock.setDeleted(1);

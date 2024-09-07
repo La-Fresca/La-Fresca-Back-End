@@ -15,9 +15,10 @@ public class StockCollection {
     private String Unit;
     private Double LowerLimit;
     private Double AvailableAmount;
-    private LocalDate PredictedStockDate;
+    private LocalDate PredictedStockoutDate;
     private String CafeId;
     private String Status;
     private Integer Deleted;
     private String Image;
+
 }
