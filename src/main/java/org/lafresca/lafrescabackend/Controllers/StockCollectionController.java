@@ -59,7 +59,7 @@ public class StockCollectionController {
     public List<StockCollectionDTO> getStockCollections(@PathVariable("cafeId") String cafeId) { return stockCollectionService.getStockCollections(cafeId); }
 
     // Search stock collection
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "view/{id}")
     @Operation(
             description = "Get stock collections by id",
             summary = "Retrieve stock collections by using the id",
