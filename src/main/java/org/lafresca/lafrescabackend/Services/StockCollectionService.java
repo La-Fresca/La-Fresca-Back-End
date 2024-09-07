@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.StockCollectionDTO;
+import org.lafresca.lafrescabackend.DTO.StockCollectionDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Models.StockCollection;
@@ -8,18 +10,22 @@ import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StockCollectionService {
     private final StockCollectionRepository stockCollectionRepository;
     private final StockRepository stockRepository;
+    private final StockCollectionDTOMapper stockCollectionDTOMapper;
 
     @Autowired
-    private StockCollectionService(StockCollectionRepository stockCollectionRepository, StockRepository stockRepository) {
+    private StockCollectionService(StockCollectionRepository stockCollectionRepository, StockRepository stockRepository, StockCollectionDTOMapper stockCollectionDTOMapper) {
         this.stockCollectionRepository = stockCollectionRepository;
         this.stockRepository = stockRepository;
+        this.stockCollectionDTOMapper = stockCollectionDTOMapper;
     }
 
     // Add New Stock Collection
@@ -31,6 +37,12 @@ public class StockCollectionService {
         }
         else if (stockCollection.getAvailableAmount() == null) {
             error = "Stock collection available amount cannot be null";
+        }
+        else if (stockCollection.getUnit() == null || stockCollection.getUnit().isEmpty()) {
+            error = "Stock collection unit cannot be empty";
+        }
+        else if (stockCollection.getCafeId() == null || stockCollection.getCafeId().isEmpty()) {
+            error = "Stock collection cafe id cannot be empty";
         }
 //        else if (stockCollection.getAvailableAmount() != null) {
 //            List<Stock> stockList = stockRepository.findByStockCollectionName(stockCollection.getName());
@@ -65,8 +77,25 @@ public class StockCollectionService {
     }
 
     // Get all stock collections
-    public List<StockCollection> getStockCollections() {
-        return stockCollectionRepository.findByDeleted(0);
+    public List<StockCollectionDTO> getStockCollections(String cafeId) {
+        List<StockCollection> stockCollections = stockCollectionRepository.findByCafeId(cafeId);
+        for (StockCollection stockCollection : stockCollections) {
+            if (stockCollection.getLowerLimit() < stockCollection.getAvailableAmount()){
+                stockCollection.setStatus("High stock");
+            }
+            else if (stockCollection.getLowerLimit().equals(stockCollection.getAvailableAmount())){
+                stockCollection.setStatus("Low stock");
+            }
+            else {
+                stockCollection.setStatus("Out of stock");
+            }
+
+            stockCollection.setPredictedStockoutDate(LocalDate.now());
+        }
+        return stockCollections
+                .stream()
+                .map(stockCollectionDTOMapper)
+                .collect(Collectors.toList());
     }
 
     // Get stock collection by id
@@ -97,6 +126,10 @@ public class StockCollectionService {
         if (stockCollection.getAvailableAmount() != null && stockCollection.getAvailableAmount() > 0) {
             existingStockCollection.setAvailableAmount(stockCollection.getAvailableAmount());
         }
+        if (stockCollection.getUnit() != null && !stockCollection.getUnit().isEmpty()) {
+            existingStockCollection.setUnit(stockCollection.getUnit());
+        }
+
 
         stockCollectionRepository.save(existingStockCollection);
     }
@@ -108,7 +141,8 @@ public class StockCollectionService {
 
         existingStockCollection.setDeleted(stockCollection.getDeleted());
         String collectionName = existingStockCollection.getName();
-        List<Stock> StockList = stockRepository.findByName(collectionName);
+        String cafeId = existingStockCollection.getCafeId();
+        List<Stock> StockList = stockRepository.findByName(cafeId, collectionName);
 
         for (Stock stock : StockList) {
             stock.setDeleted(1);

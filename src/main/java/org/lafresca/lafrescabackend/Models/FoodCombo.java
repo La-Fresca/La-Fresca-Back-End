@@ -3,6 +3,7 @@ package org.lafresca.lafrescabackend.Models;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Document(collection = "FoodCombo")
@@ -19,7 +20,11 @@ public class FoodCombo {
     private List<String> FoodNames;
     private Integer Deleted; // 1 for deleted, 0 for not deleted
     private Double Cost;
-    private String Rating;
+    private Double Rating;
+    private Integer RatingCount;
+    private LocalDate PostedDate;
+    private Integer WeeklySellingCount;
+    private Integer TotalSellingCount;
     private Integer DiscountStatus;
     private Discount DiscountDetails;
 }

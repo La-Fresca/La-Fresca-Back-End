@@ -1,6 +1,5 @@
 package org.lafresca.lafrescabackend.Repositories;
 
-import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -10,12 +9,12 @@ import java.util.List;
 
 @Repository
 public interface FoodItemRepository extends MongoRepository<FoodItem, String> {
-    @Query("{ 'Deleted' : ?0 }")
-    List<FoodItem> findByDeleted(Integer Deleted);
+    @Query("{ 'CafeId' : ?0, 'Deleted' : 0 }")
+    List<FoodItem> findByCafeId(String CafeId);
 
-    @Query("{'id' :  ?0}")
+    @Query("{ 'id' :  ?0 }")
     FoodItem findOneById(String id);
 
-    @Query("{ 'DiscountStatus' : ?0 }")
-    List<Discount> findByStatus(int i);
+    @Query("{ 'CafeId' : ?0, 'DiscountStatus' : 1, 'Deleted' : 0 }")
+    List<FoodItem> findDiscountByStatus(String CafeId);
 }
