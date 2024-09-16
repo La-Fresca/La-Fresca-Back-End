@@ -3,10 +3,15 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.lafresca.lafrescabackend.DTO.Request.StockCollectionRequestDTO;
 import org.lafresca.lafrescabackend.DTO.StockCollectionDTO;
 import org.lafresca.lafrescabackend.Models.StockCollection;
 import org.lafresca.lafrescabackend.Services.StockCollectionService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +21,8 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping(path = "/api/lafresca/stockCollection")
 @AllArgsConstructor
+@Validated
+@Slf4j
 @Tag(name = "Stock Collection Controller")
 public class StockCollectionController {
     private final StockCollectionService stockCollectionService;
@@ -36,8 +43,8 @@ public class StockCollectionController {
                     )
             })
 
-    public String addNewStockCollection(@RequestBody StockCollection stockCollection) {
-        return stockCollectionService.addNewStockCollection(stockCollection);
+    public ResponseEntity<StockCollectionRequestDTO> addNewStockCollection(@Valid @RequestBody StockCollectionRequestDTO stockCollection) {
+        return ResponseEntity.status(201).body(stockCollectionService.addNewStockCollection(stockCollection));
     }
 
     // Get all stock collections

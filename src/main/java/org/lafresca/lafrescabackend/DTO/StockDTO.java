@@ -10,6 +10,7 @@ public record StockDTO(
          String SupplierName,
          LocalDate ExpiryDate,
          Double UnitPrice,
+         String Unit,
          String Image
 ) {
 }

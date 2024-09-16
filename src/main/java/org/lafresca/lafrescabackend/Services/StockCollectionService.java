@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import jakarta.validation.Valid;
+import org.lafresca.lafrescabackend.DTO.Request.StockCollectionRequestDTO;
 import org.lafresca.lafrescabackend.DTO.StockCollectionDTO;
 import org.lafresca.lafrescabackend.DTO.StockCollectionDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
@@ -29,51 +31,23 @@ public class StockCollectionService {
     }
 
     // Add New Stock Collection
-    public String addNewStockCollection(StockCollection stockCollection) {
-        String error = null;
+    public StockCollectionRequestDTO addNewStockCollection(@Valid StockCollectionRequestDTO stockCollection) {
+        StockCollection newStockCollection = new StockCollection();
 
-        if (stockCollection.getName() == null || stockCollection.getName().isEmpty()) {
-            error = "Stock collection name cannot be empty";
-        }
-        else if (stockCollection.getAvailableAmount() == null) {
-            error = "Stock collection available amount cannot be null";
-        }
-        else if (stockCollection.getUnit() == null || stockCollection.getUnit().isEmpty()) {
-            error = "Stock collection unit cannot be empty";
-        }
-        else if (stockCollection.getCafeId() == null || stockCollection.getCafeId().isEmpty()) {
-            error = "Stock collection cafe id cannot be empty";
-        }
-//        else if (stockCollection.getAvailableAmount() != null) {
-//            List<Stock> stockList = stockRepository.findByStockCollectionName(stockCollection.getName());
-//
-//            double availableAmount = 0;
-//
-//            if (stockList != null) {
-//                for (Stock stock : stockList) {
-//                    availableAmount += stock.getInitialAmount();
-//                }
-//
-//                stockCollection.setAvailableAmount(availableAmount);
-//            }
-//
-//            else {
-//                error = "Stock collection does not exist";
-//            }
-//        }
-        else if (stockCollection.getLowerLimit() == null) {
-            error = "Stock collection lower limit cannot be null";
-        }
-        else if (stockCollection.getLowerLimit() > stockCollection.getAvailableAmount()) {
-            error = "Invalid value for lower limit";
-        }
+        newStockCollection.setName(stockCollection.getName());
+        newStockCollection.setUnit(stockCollection.getUnit().toLowerCase());
+        newStockCollection.setLowerLimit(stockCollection.getLowerLimit());
+        newStockCollection.setCafeId(stockCollection.getCafeId());
+        newStockCollection.setImage(stockCollection.getImage());
 
-        if (error == null) {
-            stockCollection.setDeleted(0);
-            stockCollectionRepository.save(stockCollection);
-        }
+        newStockCollection.setDeleted(0);
+        newStockCollection.setPredictedStockoutDate(LocalDate.now());
+        newStockCollection.setStatus("");
+        newStockCollection.setAvailableAmount(0.0);
 
-        return error;
+        stockCollectionRepository.save(newStockCollection);
+
+        return stockCollection;
     }
 
     // Get all stock collections
