@@ -3,10 +3,17 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.FoodItemDTO;
+import org.lafresca.lafrescabackend.DTO.Request.FoodItemRequestDTO;
+import org.lafresca.lafrescabackend.DTO.cafeDTO;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Services.FoodItemService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +22,17 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @RequestMapping(path = "api/lafresca/foodItem")
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Validated
+@Slf4j
 @Tag(name="Food Item Controller")
 public class FoodItemController {
     private final FoodItemService foodItemService;
+
+    @PostMapping("/addCafe")
+    public ResponseEntity<cafeDTO> addRestaurant(@Valid @RequestBody cafeDTO restaurantDto) {
+        return ResponseEntity.status(201).body(foodItemService.createCafe(restaurantDto));
+    }
 
     // Add new food item
     @PostMapping
@@ -34,8 +48,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public String addNewFoodItem(@RequestBody FoodItem foodItem) {
-        return foodItemService.addNewFoodItem(foodItem);
+    public ResponseEntity<FoodItemRequestDTO> addNewFoodItem(@Valid @RequestBody FoodItemRequestDTO foodItem) {
+        return ResponseEntity.status(201).body(foodItemService.addNewFoodItem(foodItem));
     }
 
     // Retrieve all food items
