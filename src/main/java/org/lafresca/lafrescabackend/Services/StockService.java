@@ -38,45 +38,30 @@ public class StockService {
     @Transactional
     public ResponseEntity<StockRequestDTO> addNewStock(@Valid StockRequestDTO stock) {
         Stock newStock = new Stock();
-//        String error = null;
-//        LocalDate now = LocalDate.now();
-//
-//        if (stock.getInitialAmount() < 0) {
-//            error = "Invalid value for initial amount";
-//        }
-//        else if (stock.getUnitPrice() < 0) {
-//            error = "Invalid value for unit price";
-//        }
-//        else if(LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
-//            error = "Expiry date is before current date";
-//        }
+        StockCollection stockCollection = stockCollectionRepository.findByName(stock.getCafeId(), stock.getStockCollectionName());
+        if (stockCollection == null) {
+            log.error("Stock Collection '{}' Not Found", stock.getStockCollectionName());
+            return ResponseEntity.status(404).body(stock);
+        }
+        else {
+            stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() + stock.getInitialAmount());
+            stockCollectionRepository.save(stockCollection);
 
-//        if (error == null) {
-            StockCollection stockCollection = stockCollectionRepository.findByName(stock.getCafeId(), stock.getStockCollectionName());
-            if (stockCollection == null) {
-                log.error("Stock Collection '{}' Not Found", stock.getStockCollectionName());
-                return ResponseEntity.status(404).body(stock);
-            }
-            else {
-                stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() + stock.getInitialAmount());
-                stockCollectionRepository.save(stockCollection);
+            newStock.setDeleted(0);
+            newStock.setUnit(stockCollection.getUnit().toLowerCase());
+        }
 
-                newStock.setDeleted(0);
-                newStock.setUnit(stockCollection.getUnit().toLowerCase());
-            }
+        newStock.setStockCollectionName(stock.getStockCollectionName());
+        newStock.setBatchId(stock.getBatchId());
+        newStock.setInitialAmount(stock.getInitialAmount());
+        newStock.setSupplierName(stock.getSupplierName());
+        newStock.setExpiryDate(stock.getExpiryDate());
+        newStock.setCafeId(stock.getCafeId());
+        newStock.setUnitPrice(stock.getUnitPrice());
+        newStock.setImage(stock.getImage());
 
-            newStock.setStockCollectionName(stock.getStockCollectionName());
-            newStock.setBatchId(stock.getBatchId());
-            newStock.setInitialAmount(stock.getInitialAmount());
-            newStock.setSupplierName(stock.getSupplierName());
-            newStock.setExpiryDate(stock.getExpiryDate());
-            newStock.setCafeId(stock.getCafeId());
-            newStock.setUnitPrice(stock.getUnitPrice());
-            newStock.setImage(stock.getImage());
-
-            stockRepository.save(newStock);
-            log.info("Stock Added Successfully");
-//        }
+        stockRepository.save(newStock);
+        log.info("Stock Added Successfully");
 
         return ResponseEntity.status(201).body(stock);
     }
