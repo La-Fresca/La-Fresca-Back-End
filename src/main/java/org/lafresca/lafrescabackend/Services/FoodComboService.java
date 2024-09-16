@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.FoodComboDTO;
 import org.lafresca.lafrescabackend.DTO.FoodComboDTOMapper;
 import org.lafresca.lafrescabackend.DTO.Request.FoodComboRequestDTO;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class FoodComboService {
     private final FoodComboRepository foodComboRepository;
     private final FoodItemRepository foodItemRepository;
@@ -58,7 +60,7 @@ public class FoodComboService {
         newFoodCombo.setFoodIds(foodCombo.getFoodIds());
 
         foodComboRepository.save(newFoodCombo);
-
+        log.info("Food combo '{}' created successfully", foodCombo.getName());
         return foodCombo;
     }
 
