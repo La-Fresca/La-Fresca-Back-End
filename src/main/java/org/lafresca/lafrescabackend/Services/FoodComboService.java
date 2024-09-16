@@ -1,8 +1,11 @@
 package org.lafresca.lafrescabackend.Services;
 
+import jakarta.validation.Valid;
 import org.lafresca.lafrescabackend.DTO.FoodComboDTO;
 import org.lafresca.lafrescabackend.DTO.FoodComboDTOMapper;
+import org.lafresca.lafrescabackend.DTO.Request.FoodComboRequestDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
+import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Repositories.FoodComboRepository;
@@ -31,48 +34,32 @@ public class FoodComboService {
     }
 
     // Add new food combo
-    public String addNewFoodCombo(FoodCombo foodCombo) {
-        String error = null;
-        LocalDate now = LocalDate.now();
+    public FoodComboRequestDTO addNewFoodCombo(@Valid FoodComboRequestDTO foodCombo) {
+        FoodCombo newFoodCombo = new FoodCombo();
 
-        if (foodCombo.getName() == null || foodCombo.getName().isEmpty()) {
-            error = "Please enter name";
-        }
-        else if (foodCombo.getDescription() == null || foodCombo.getDescription().isEmpty()) {
-            error = "Please enter description";
-        }
-        else if (foodCombo.getPrice() <= 0) {
-            error = "Please enter a valid price";
-        }
-        else if (foodCombo.getImage() == null || foodCombo.getImage().isEmpty()) {
-            error = "Please upload image";
-        }
-        else if (foodCombo.getCafeId() == null || foodCombo.getCafeId().isEmpty()) {
-            error = "Please enter cafe id";
-        }
-        else if (foodCombo.getDiscountStatus() == null) {
-            foodCombo.setDiscountStatus(0);
-        }
-        else if (foodCombo.getAvailable() < 0 || foodCombo.getAvailable() > 1) {
-            error = "Invalid value for availability";
-        }
-        else if (foodCombo.getDeleted() < 0 || foodCombo.getDeleted() > 1) {
-            error = "Invalid value for deleted status";
-        }
-        else if (foodCombo.getFoodIds() == null || foodCombo.getFoodIds().isEmpty()) {
-            error = "Please enter at least one food ID";
-        }
+        newFoodCombo.setName(foodCombo.getName());
+        newFoodCombo.setDescription(foodCombo.getDescription());
+        newFoodCombo.setPrice(foodCombo.getPrice());
+        newFoodCombo.setImage(foodCombo.getImage());
+        newFoodCombo.setCafeId(foodCombo.getCafeId());
+        newFoodCombo.setCost(foodCombo.getCost());
+        newFoodCombo.setFoodIds(foodCombo.getFoodIds());
 
-        if (error == null) {
-            foodCombo.setDeleted(0);
-            foodCombo.setRating(0.0);
-            foodCombo.setRatingCount(0);
-            foodCombo.setPostedDate(now);
-            foodCombo.setWeeklySellingCount(0);
-            foodCombo.setTotalSellingCount(0);
-            foodComboRepository.save(foodCombo);
-        }
-        return error;
+        newFoodCombo.setFoodNames(null);
+        newFoodCombo.setDiscountDetails(null);
+        newFoodCombo.setDiscountStatus(0);
+        newFoodCombo.setAvailable(1);
+        newFoodCombo.setDeleted(0);
+        newFoodCombo.setRating(0.0);
+        newFoodCombo.setRatingCount(0);
+        newFoodCombo.setPostedDate(LocalDate.now());
+        newFoodCombo.setWeeklySellingCount(0);
+        newFoodCombo.setTotalSellingCount(0);
+        newFoodCombo.setFoodIds(foodCombo.getFoodIds());
+
+        foodComboRepository.save(newFoodCombo);
+
+        return foodCombo;
     }
 
     // Retrieve all food combos

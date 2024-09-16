@@ -3,10 +3,17 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.FoodComboDTO;
+import org.lafresca.lafrescabackend.DTO.Request.FoodComboRequestDTO;
+import org.lafresca.lafrescabackend.DTO.Request.FoodItemRequestDTO;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
 import org.lafresca.lafrescabackend.Services.FoodComboService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +22,8 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @RequestMapping(path = "api/lafresca/foodCombo")
+@Validated
+@Slf4j
 @Tag(name="Food Combo Controller")
 public class FoodComboController {
     private final FoodComboService foodComboService;
@@ -38,8 +47,8 @@ public class FoodComboController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public String addNewFoodCombo(@RequestBody FoodCombo foodCombo) {
-        return foodComboService.addNewFoodCombo(foodCombo);
+    public ResponseEntity<FoodComboRequestDTO> addNewFoodCombo(@Valid @RequestBody FoodComboRequestDTO foodCombo) {
+        return ResponseEntity.status(201).body(foodComboService.addNewFoodCombo(foodCombo));
     }
 
     // Retrieve all food combos

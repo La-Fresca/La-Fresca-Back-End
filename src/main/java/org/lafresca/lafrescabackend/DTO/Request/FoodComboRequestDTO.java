@@ -1,8 +1,6 @@
 package org.lafresca.lafrescabackend.DTO.Request;
 
 import jakarta.validation.constraints.NotNull;
-import org.lafresca.lafrescabackend.Models.CustomFeature;
-
 import java.util.List;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -13,29 +11,25 @@ import org.lafresca.lafrescabackend.Validations.ValidPrice;
 
 @Getter
 @Setter
-public class FoodItemRequestDTO {
+public class FoodComboRequestDTO {
     @NotEmpty(message = "Name cannot be empty")
-    @NotNull(message = "Name cannot be null")
-    private String name;
-
-    @ValidPrice
-    private Double price;
+    private String Name;
 
     @NotEmpty(message = "Description cannot be empty")
-    @NotNull(message = "Description cannot be null")
     private String Description;
 
+    @NotEmpty(message = "Image cannot be empty")
+    private String Image;
+
     @NotEmpty(message = "CafeId cannot be empty")
-    @NotNull(message = "CafeId cannot be null")
     private String CafeId;
+
+    @ValidPrice
+    private Double Price;
+
+    @NotNull(message = "Available cannot be empty")
+    private List<String> FoodIds;
 
     @ValidCost
     private Double Cost;
-
-    @NotEmpty(message = "Image cannot be empty")
-    @NotNull(message = "Image cannot be null")
-    private String Image;
-
-    private List<CustomFeature> features;
-    private List<String> categories;
 }
