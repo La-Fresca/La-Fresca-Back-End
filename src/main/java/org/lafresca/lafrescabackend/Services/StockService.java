@@ -1,5 +1,8 @@
 package org.lafresca.lafrescabackend.Services;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.lafresca.lafrescabackend.DTO.Request.StockRequestDTO;
 import org.lafresca.lafrescabackend.DTO.StockDTO;
 import org.lafresca.lafrescabackend.DTO.StockDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
@@ -8,6 +11,7 @@ import org.lafresca.lafrescabackend.Models.StockCollection;
 import org.lafresca.lafrescabackend.Repositories.StockCollectionRepository;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,75 +21,64 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StockService {
     private final StockRepository stockRepository;
     private final StockCollectionRepository stockCollectionRepository;
     private final StockDTOMapper stockDTOMapper;
 
     @Autowired
-    public StockService(StockRepository stockRepository, StockCollectionRepository stockCollectionRepository, StockDTOMapper stockDTOMapper) { this.stockRepository = stockRepository;
+    public StockService(StockRepository stockRepository, StockCollectionRepository stockCollectionRepository, StockDTOMapper stockDTOMapper) {
+        this.stockRepository = stockRepository;
         this.stockCollectionRepository = stockCollectionRepository;
         this.stockDTOMapper = stockDTOMapper;
     }
 
     // Add new stock
     @Transactional
-    public String addNewStock(Stock stock) {
-        String error = null;
-        LocalDate now = LocalDate.now();
+    public ResponseEntity<StockRequestDTO> addNewStock(@Valid StockRequestDTO stock) {
+        Stock newStock = new Stock();
+//        String error = null;
+//        LocalDate now = LocalDate.now();
+//
+//        if (stock.getInitialAmount() < 0) {
+//            error = "Invalid value for initial amount";
+//        }
+//        else if (stock.getUnitPrice() < 0) {
+//            error = "Invalid value for unit price";
+//        }
+//        else if(LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
+//            error = "Expiry date is before current date";
+//        }
 
-        if (stock.getStockCollectionName() == null || stock.getStockCollectionName().isEmpty()) {
-            error = "Stock collection name cannot be empty";
-        }
-        else if (stock.getBatchId() == null || stock.getBatchId().isEmpty()) {
-            error = "Batch id cannot be empty";
-        }
-        else if (stock.getInitialAmount() < 0) {
-            error = "Invalid value for initial amount";
-        }
-        else if (stock.getUnitPrice() == null) {
-            error = "Unit price cannot be null";
-        }
-        else if (stock.getUnitPrice() < 0) {
-            error = "Invalid value for unit price";
-        }
-        else if (stock.getCafeId() == null || stock.getCafeId().isEmpty()) {
-            error = "Cafe id cannot be empty";
-        }
-        else if (stock.getDeleted() == null) {
-            stock.setDeleted(0);
-        }
-        else if(LocalDate.parse(stock.getExpiryDate().toString()).isBefore(now)) {
-            error = "Expiry date is before current date";
-        }
-        else if (stock.getSupplierName() == null || stock.getSupplierName().isEmpty()) {
-            error = "Supplier name cannot be empty";
-        }
-
-        if (error == null) {
+//        if (error == null) {
             StockCollection stockCollection = stockCollectionRepository.findByName(stock.getCafeId(), stock.getStockCollectionName());
             if (stockCollection == null) {
-                StockCollection newStockCollection = new StockCollection();
-                newStockCollection.setName(stock.getStockCollectionName());
-                newStockCollection.setDeleted(0);
-                newStockCollection.setLowerLimit(0.0);
-                newStockCollection.setAvailableAmount(stock.getInitialAmount());
-
-                stockCollectionRepository.save(newStockCollection);
+                log.error("Stock Collection '{}' Not Found", stock.getStockCollectionName());
+                return ResponseEntity.status(404).body(stock);
             }
             else {
-//                stockCollection.setName(stockCollection.getId());
                 stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() + stock.getInitialAmount());
                 stockCollectionRepository.save(stockCollection);
 
-                stock.setImage(stockCollection.getImage());
-                stock.setUnit(stockCollection.getUnit());
+                newStock.setDeleted(0);
+                newStock.setUnit(stockCollection.getUnit().toLowerCase());
             }
 
-            stockRepository.save(stock);
-        }
+            newStock.setStockCollectionName(stock.getStockCollectionName());
+            newStock.setBatchId(stock.getBatchId());
+            newStock.setInitialAmount(stock.getInitialAmount());
+            newStock.setSupplierName(stock.getSupplierName());
+            newStock.setExpiryDate(stock.getExpiryDate());
+            newStock.setCafeId(stock.getCafeId());
+            newStock.setUnitPrice(stock.getUnitPrice());
+            newStock.setImage(stock.getImage());
 
-        return error;
+            stockRepository.save(newStock);
+            log.info("Stock Added Successfully");
+//        }
+
+        return ResponseEntity.status(201).body(stock);
     }
 
     // Get all stocks by Cafe Id

@@ -3,10 +3,13 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.Request.StockRequestDTO;
 import org.lafresca.lafrescabackend.DTO.StockDTO;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Services.StockService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,8 +38,9 @@ public class StockController {
                             responseCode = "403"
                     )
             })
-
-    public String addNewStock(@RequestBody Stock stock) { return stockService.addNewStock(stock); }
+    public ResponseEntity<StockRequestDTO> addNewStock(@Valid @RequestBody StockRequestDTO stock) {
+        return stockService.addNewStock(stock);
+    }
 
     // Get all stock
     @GetMapping(path = "{cafeId}")
@@ -53,7 +57,6 @@ public class StockController {
                             responseCode = "403"
                     )
             })
-
     public List<StockDTO> getStocks(@PathVariable("cafeId") String cafeId) { return stockService.getStocks(cafeId); }
 
     // Search stock by id
