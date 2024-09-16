@@ -146,6 +146,7 @@ public class StockService {
 
     // Get stock by stock collection name
     public List<Stock> getStockByCollectionName(String cafeId, String stockCollectionName) {
-        return stockRepository.findByName(cafeId, stockCollectionName);
+        List<Stock> list = stockRepository.findByName(cafeId, stockCollectionName);
+        return list;
     }
 }
