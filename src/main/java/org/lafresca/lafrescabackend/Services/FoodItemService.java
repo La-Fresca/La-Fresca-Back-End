@@ -1,10 +1,10 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.FoodItemDTO;
 import org.lafresca.lafrescabackend.DTO.FoodItemDTOMapper;
 import org.lafresca.lafrescabackend.DTO.Request.FoodItemRequestDTO;
-import org.lafresca.lafrescabackend.DTO.cafeDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class FoodItemService {
     private final FoodItemRepository foodItemRepository;
     private final FoodItemDTOMapper foodItemDTOMapper;
@@ -31,13 +32,7 @@ public class FoodItemService {
     public FoodItemRequestDTO addNewFoodItem(@Valid FoodItemRequestDTO foodItem) {
         LocalDate now = LocalDate.now();
 
-        FoodItem newFoodItem = new FoodItem();
-        newFoodItem.setName(foodItem.getName());
-        newFoodItem.setDescription(foodItem.getDescription());
-        newFoodItem.setPrice(foodItem.getPrice());
-        newFoodItem.setImage(foodItem.getImage());
-        newFoodItem.setFeatures(foodItem.getFeatures());
-        newFoodItem.setCategories(foodItem.getCategories());
+        FoodItem newFoodItem = foodItemRequestDTOToFoodItem(foodItem);
 
         newFoodItem.setDeleted(0);
         newFoodItem.setRating(0.0);
@@ -47,8 +42,8 @@ public class FoodItemService {
         newFoodItem.setTotalSellingCount(0);
         newFoodItem.setDiscountStatus(0);
 
-
         foodItemRepository.save(newFoodItem);
+        log.info("Food item '{}' created successfully", foodItem.getName());
         return foodItem;
     }
 
@@ -61,43 +56,22 @@ public class FoodItemService {
     }
 
     // Update food item
-    public void updateFoodItem(String id, FoodItem foodItem) {
+    public FoodItemRequestDTO updateFoodItem(String id, @Valid FoodItemRequestDTO foodItem) {
         FoodItem existingFoodItem = foodItemRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Food item not found with id " + id));
 
-        if (foodItem.getName() != null && !foodItem.getName().isEmpty()) {
-            existingFoodItem.setName(foodItem.getName());
-        }
-        if (foodItem.getDescription() != null && !foodItem.getDescription().isEmpty()) {
-            existingFoodItem.setDescription(foodItem.getDescription());
-        }
-        if (foodItem.getPrice() != null && foodItem.getPrice() >= 0) {
-            existingFoodItem.setPrice(foodItem.getPrice());
-        }
-        if (foodItem.getImage() != null && !foodItem.getImage().isEmpty()) {
-            existingFoodItem.setImage(foodItem.getImage());
-        }
-        if (foodItem.getCafeId() != null && !foodItem.getCafeId().isEmpty()) {
-            existingFoodItem.setCafeId(foodItem.getCafeId());
-        }
-        if (foodItem.getAvailable() == 0 || foodItem.getAvailable() == 1) {
-            existingFoodItem.setAvailable(foodItem.getAvailable());
-        }
-        if (foodItem.getCost() != null && foodItem.getCost() > 0) {
-            existingFoodItem.setCost(foodItem.getCost());
-        }
-        if (foodItem.getDiscountStatus() != null && (foodItem.getDiscountStatus() == 0 || foodItem.getDiscountStatus() == 1)) {
-            existingFoodItem.setDiscountStatus(foodItem.getDiscountStatus());
-        }
-        if (foodItem.getRating() != null && foodItem.getRating() != 0){
-            existingFoodItem.setRating(foodItem.getRating());
-        }
-
+        existingFoodItem.setName(foodItem.getName());
+        existingFoodItem.setDescription(foodItem.getDescription());
+        existingFoodItem.setPrice(foodItem.getPrice());
+        existingFoodItem.setImage(foodItem.getImage());
+        existingFoodItem.setCafeId(foodItem.getCafeId());
+        existingFoodItem.setCost(foodItem.getCost());
         existingFoodItem.setCategories(foodItem.getCategories());
-
         existingFoodItem.setFeatures(foodItem.getFeatures());
 
         foodItemRepository.save(existingFoodItem);
+        log.info("Food item '{}' updated successfully", foodItem.getName());
+        return foodItem;
     }
 
     // Delete food item by id
@@ -122,11 +96,26 @@ public class FoodItemService {
         foodItemRepository.save(existingFoodItem);
     }
 
-    public cafeDTO createCafe(@Valid cafeDTO restaurantDto) {
+    // FoodItemRequestDTo to FoodItem mapping
+    public FoodItem foodItemRequestDTOToFoodItem(FoodItemRequestDTO foodItemRequestDTO) {
         FoodItem foodItem = new FoodItem();
-        foodItem.setName(restaurantDto.getName());
-        foodItemRepository.save(foodItem);
+        foodItem.setName(foodItemRequestDTO.getName());
+        foodItem.setDescription(foodItemRequestDTO.getDescription());
+        foodItem.setPrice(foodItemRequestDTO.getPrice());
+        foodItem.setImage(foodItemRequestDTO.getImage());
+        foodItem.setFeatures(foodItemRequestDTO.getFeatures());
+        foodItem.setCategories(foodItemRequestDTO.getCategories());
+        return foodItem;
+    }
 
-        return restaurantDto;
+    public FoodItem changeAvailability(String id, Integer value) {
+        FoodItem existingFoodItem = foodItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
+
+        existingFoodItem.setAvailable(value);
+
+        foodItemRepository.save(existingFoodItem);
+        log.info("Food item '{}' availability changed successfully", existingFoodItem.getName());
+        return existingFoodItem;
     }
 }
