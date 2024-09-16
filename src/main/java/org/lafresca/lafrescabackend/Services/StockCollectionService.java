@@ -70,6 +70,7 @@ public class StockCollectionService {
 
         if (error == null) {
             stockCollection.setDeleted(0);
+            stockCollection.setUnit(stockCollection.getUnit().toLowerCase());
             stockCollectionRepository.save(stockCollection);
         }
 

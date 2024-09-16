@@ -9,6 +9,7 @@ import org.lafresca.lafrescabackend.Repositories.StockCollectionRepository;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,6 +29,7 @@ public class StockService {
     }
 
     // Add new stock
+    @Transactional
     public String addNewStock(Stock stock) {
         String error = null;
         LocalDate now = LocalDate.now();
@@ -77,6 +79,7 @@ public class StockService {
                 stockCollectionRepository.save(stockCollection);
 
                 stock.setImage(stockCollection.getImage());
+                stock.setUnit(stockCollection.getUnit());
             }
 
             stockRepository.save(stock);

@@ -20,4 +20,5 @@ public class Stock {
     private Double UnitPrice;
     private Integer Deleted;
     private String Image;
+    private String Unit;
 }
