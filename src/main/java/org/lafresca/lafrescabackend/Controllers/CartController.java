@@ -33,7 +33,6 @@ public class CartController {
                             responseCode = "403"
                     )
             })
-
     public String addNewItemToCart(@RequestBody Cart cart) { return cartService.addNewItemToCart(cart); }
 
     // Get all cart items

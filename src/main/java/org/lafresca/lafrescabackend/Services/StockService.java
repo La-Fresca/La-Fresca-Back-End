@@ -58,7 +58,7 @@ public class StockService {
         newStock.setExpiryDate(stock.getExpiryDate());
         newStock.setCafeId(stock.getCafeId());
         newStock.setUnitPrice(stock.getUnitPrice());
-        newStock.setImage(stock.getImage());
+        newStock.setImage(stockCollection.getImage());
 
         stockRepository.save(newStock);
         log.info("Stock Added Successfully");
@@ -113,12 +113,16 @@ public class StockService {
     }
 
     // Logical Delete
+    @Transactional
     public void logicallyDeleteStock(String id, Stock stock) {
         Stock existingStock = stockRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Stock not found with id " + id));
 
-        existingStock.setDeleted(stock.getDeleted());
+        StockCollection stockCollection = stockCollectionRepository.findByName(existingStock.getCafeId(), existingStock.getStockCollectionName());
+        stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() - existingStock.getInitialAmount());
+        stockCollectionRepository.save(stockCollection);
 
+        existingStock.setDeleted(stock.getDeleted());
         stockRepository.save(existingStock);
     }
 

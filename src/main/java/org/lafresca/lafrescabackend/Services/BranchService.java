@@ -1,17 +1,22 @@
 package org.lafresca.lafrescabackend.Services;
 
+import jakarta.validation.Valid;
+import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Branch;
 import org.lafresca.lafrescabackend.Models.IncomeCost;
 import org.lafresca.lafrescabackend.Repositories.BranchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Validated
 public class BranchService {
     private final BranchRepository branchRepository;
 
@@ -19,44 +24,40 @@ public class BranchService {
     public BranchService(BranchRepository branchRepository) { this.branchRepository = branchRepository; }
 
     // Add new branch
-    public String addNewBranch(Branch branch) {
-        String error = null;
+    public BranchRequestDTO addNewBranch(@Valid BranchRequestDTO branch) {
+        Branch newBranch = new Branch();
+        newBranch.setAddress(branch.getAddress());
+        newBranch.setContactNo(branch.getContactNo());
+        newBranch.setLatitude(branch.getLatitude());
+        newBranch.setLongitude(branch.getLongitude());
+        newBranch.setBranchManager(branch.getBranchManager());
 
-        if (branch.getAddress() == null || branch.getAddress().isEmpty()) {
-            error = "Address cannot be empty";
-        }
-        else if (branch.getContactNo() == null || branch.getContactNo().isEmpty()) {
-            error = "Contact No cannot be empty";
-        }
-        else if (branch.getLongitude() < -180 || branch.getLongitude() > 180) {
-            error = "Invalid value for longitude";
-        }
-        else if (branch.getLatitude() < -90 || branch.getLatitude() > 90) {
-            error = "Invalid value for latitude";
-        }
-        else if (branch.getDeleted() == null) {
-            branch.setDeleted(0);
-        }
-        else if (branch.getBranchManager() == null || branch.getBranchManager().isEmpty()) {
-            error = "Branch manager cannot be empty";
-        }
+        IncomeCost income = new IncomeCost();
+        List<IncomeCost> incomeList = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        income.setYear(now.getYear());
+        income.setMonth(now.getMonthValue());
+        income.setAmount(0.0);
+        incomeList.add(income);
 
-        if (error == null) {
-            IncomeCost income = new IncomeCost();
-            LocalDate now = LocalDate.now();
-            income.setYear(now.getYear());
-            income.setMonth(now.getMonthValue());
-            income.setAmount(0.0);
+        newBranch.setIncome(incomeList);
+        newBranch.setCost(incomeList);
+        newBranch.setDeleted(0);
+        newBranch.setDailyCost(0.0);
+        newBranch.setDailyIncome(0.0);
 
-            branch.getIncome().add(income);
-            branch.getCost().add(income);
+        branchRepository.save(newBranch);
 
-            branch.setDailyCost(0.0);
-            branch.setDailyIncome(0.0);
-            branchRepository.save(branch);
-        }
+//        else if (branch.getLongitude() < -180 || branch.getLongitude() > 180) {
+//            error = "Invalid value for longitude";
+//        }
+//        else if (branch.getLatitude() < -90 || branch.getLatitude() > 90) {
+//            error = "Invalid value for latitude";
+//        }
 
-        return error;
+
+
+        return branch;
     }
 
     // Retrieve all branches
