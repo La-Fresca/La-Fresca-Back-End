@@ -3,9 +3,13 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Models.Branch;
 import org.lafresca.lafrescabackend.Services.BranchService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping(path = "api/lafresca/branch")
 @AllArgsConstructor
+@Validated
 @Tag(name = "Branch Controller")
 public class BranchController {
     private final BranchService branchService;
@@ -35,7 +40,9 @@ public class BranchController {
                     )
             })
 
-    public String addNewBranch(@RequestBody Branch branch) { return branchService.addNewBranch(branch); }
+    public ResponseEntity<BranchRequestDTO> addNewBranch(@Valid @RequestBody BranchRequestDTO branch) {
+        return ResponseEntity.status(201).body(branchService.addNewBranch(branch));
+    }
 
     // Get all branches
     @GetMapping

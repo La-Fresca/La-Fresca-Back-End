@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
+import org.lafresca.lafrescabackend.Validations.ValidAmount;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class StockCollectionRequestDTO {
     @NotEmpty(message = "Unit cannot be empty")
     private String Unit;
 
-    @NotNull(message = "Lower limit cannot be null")
+    @ValidAmount
     private Double LowerLimit;
 
     @NotEmpty(message = "Cafe ID cannot be empty")
