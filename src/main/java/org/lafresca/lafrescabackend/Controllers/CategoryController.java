@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.CategoryDTO;
 import org.lafresca.lafrescabackend.Models.Category;
 import org.lafresca.lafrescabackend.Services.CategoryService;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class CategoryController {
     public String addNewCategory(@RequestBody Category category) { return categoryService.addNewCategory(category); }
 
     // Get all categories
-    @GetMapping
+    @GetMapping(path = "{cafeId}")
     @Operation(
             description = "Get all categories",
             summary = "Retrieve all categories",
@@ -53,10 +54,10 @@ public class CategoryController {
                     )
             })
 
-    public List<Category> getCategories() { return categoryService.getCategories(); }
+    public List<CategoryDTO> getCategories(@PathVariable("cafeId") String cafeId) { return categoryService.getCategories(cafeId); }
 
     // Search Category
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "view/{id}")
     @Operation(
             description = "Search category by id",
             summary = "Retrieve categories by using the id",
