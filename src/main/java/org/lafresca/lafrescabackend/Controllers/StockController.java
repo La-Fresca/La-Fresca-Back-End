@@ -5,7 +5,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+
 import org.lafresca.lafrescabackend.DTO.Request.StockRequestDTO;
+
 import org.lafresca.lafrescabackend.DTO.StockDTO;
 import org.lafresca.lafrescabackend.Models.Stock;
 import org.lafresca.lafrescabackend.Services.StockService;
@@ -57,6 +59,7 @@ public class StockController {
                             responseCode = "403"
                     )
             })
+
     public List<StockDTO> getStocks(@PathVariable("cafeId") String cafeId) { return stockService.getStocks(cafeId); }
 
     // Search stock by id

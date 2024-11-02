@@ -49,7 +49,7 @@ public class FoodItemService {
 
     // Retrieve all food items
     public List<FoodItemDTO> getFoodItems(String cafeId) {
-        return foodItemRepository.findByCafeId(cafeId, 0)
+        return foodItemRepository.findByCafeId(cafeId)
                 .stream()
                 .map(foodItemDTOMapper)
                 .collect(Collectors.toList());
