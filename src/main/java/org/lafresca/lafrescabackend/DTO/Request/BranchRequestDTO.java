@@ -12,6 +12,10 @@ public class BranchRequestDTO {
     @NotNull(message = "Address cannot be null")
     private String Address;
 
+    @NotEmpty(message = "Name cannot be empty")
+    @NotNull(message = "Name cannot be null")
+    private String Name;
+
     @NotEmpty(message = "Contact Number cannot be empty")
     @NotNull(message = "Contact Number cannot be null")
     private String ContactNo;
