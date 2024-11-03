@@ -131,5 +131,10 @@ public class OrderController {
         orderService.deliveryOrderStatus(itemStatusChangeDTO);
     }
 
+    @GetMapping(value = "/getSalesInThisWeek/{cafeId}")
+    public List<Order> getSalesInThisWeek(@PathVariable("cafeId") Long cafeId) {
+        return orderService.getSalesInThisWeek(cafeId);
+    }
+
 
 }

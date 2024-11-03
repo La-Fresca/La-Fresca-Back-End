@@ -66,7 +66,7 @@ public class FoodComboService {
 
     // Retrieve all food combos
     public List<FoodComboDTO> getFoodCombos(String cafeId) {
-        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId, 0);
+        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId);
 
         for (FoodCombo foodCombo : foodComboList) {
             List<String> foodNames = new ArrayList<>();

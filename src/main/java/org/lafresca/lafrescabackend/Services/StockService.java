@@ -3,6 +3,7 @@ package org.lafresca.lafrescabackend.Services;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.Request.StockRequestDTO;
+
 import org.lafresca.lafrescabackend.DTO.StockDTO;
 import org.lafresca.lafrescabackend.DTO.StockDTOMapper;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
@@ -28,8 +29,10 @@ public class StockService {
     private final StockDTOMapper stockDTOMapper;
 
     @Autowired
+
     public StockService(StockRepository stockRepository, StockCollectionRepository stockCollectionRepository, StockDTOMapper stockDTOMapper) {
         this.stockRepository = stockRepository;
+
         this.stockCollectionRepository = stockCollectionRepository;
         this.stockDTOMapper = stockDTOMapper;
     }
@@ -64,6 +67,7 @@ public class StockService {
         log.info("Stock Added Successfully");
 
         return ResponseEntity.status(201).body(stock);
+
     }
 
     // Get all stocks by Cafe Id
@@ -130,5 +134,6 @@ public class StockService {
     public List<Stock> getStockByCollectionName(String cafeId, String stockCollectionName) {
         List<Stock> list = stockRepository.findByName(cafeId, stockCollectionName);
         return list;
+
     }
 }
