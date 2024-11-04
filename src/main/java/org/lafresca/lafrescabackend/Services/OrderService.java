@@ -306,7 +306,7 @@ public class OrderService {
         return orderRepository.findByCashierId(userId);
     }
 
-    public List<Order> getOrdersByCafeId(Long cafeId) {
+    public List<Order> getOrdersByCafeId(String cafeId) {
         return orderRepository.findByCafeId(cafeId);
     }
 
@@ -499,7 +499,7 @@ public class OrderService {
         return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.DELIVERING);
     }
 
-    public List<Order> getSalesInThisWeek(Long cafeId) {
+    public List<Order> getSalesInThisWeek(String cafeId) {
         List<Order> orders = orderRepository.findByCafeId(cafeId);
         List<Order> salesInThisWeek = new ArrayList<>();
         for(Order order : orders) {
@@ -510,7 +510,7 @@ public class OrderService {
         return salesInThisWeek;
     }
 
-    public List<Order> getSalesInLastWeek(Long cafeId) {
+    public List<Order> getSalesInLastWeek(String cafeId) {
         List<Order> orders = orderRepository.findByCafeId(cafeId);
         List<Order> salesInLastWeek = new ArrayList<>();
         for(Order order : orders) {
@@ -562,7 +562,7 @@ public class OrderService {
         }
     }
 
-    public BranchStat getBranchStatistics(Long cafeId) {
+    public BranchStat getBranchStatistics(String cafeId) {
         BranchStat branchStat = new BranchStat();
         List<Order> orders = orderRepository.findByCafeId(cafeId);
         List<Order> salesInThisWeek = new ArrayList<>();

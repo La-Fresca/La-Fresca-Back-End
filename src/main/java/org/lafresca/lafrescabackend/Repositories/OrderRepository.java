@@ -23,7 +23,7 @@ public interface OrderRepository extends MongoRepository<Order, String> {
     List<Order> findByCashierId(String userId);
 
     @Query("{ 'cafeId' : ?0 }")
-    List<Order> findByCafeId(Long cafeId);
+    List<Order> findByCafeId(String cafeId);
 
     @Query("{ 'deliveryPersonId' : ?0 }")
     List<Order> findByDeliveryPersonId(String userId);
