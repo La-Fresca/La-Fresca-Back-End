@@ -507,6 +507,17 @@ public class OrderService {
         return salesInThisWeek;
     }
 
+    public List<Order> getSalesInLastWeek(Long cafeId) {
+        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> salesInLastWeek = new ArrayList<>();
+        for(Order order : orders) {
+            if(isInLastWeek(order.getCreatedAt())) {
+                salesInLastWeek.add(order);
+            }
+        }
+        return salesInLastWeek;
+    }
+
     public boolean isInThisWeek(String createdAt) {
         SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         try {
@@ -526,4 +537,55 @@ public class OrderService {
             return false; // Return false if there's a parsing error
         }
     }
+    public boolean isInLastWeek(String createdAt) {
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            // Parse the createdAt string to a Date object
+            Date createdAtDate = dateTimeFormatter.parse(createdAt);
+
+            // Get the current date and time
+            Date now = new Date() ;
+
+            // Calculate the date and time exactly one week ago from now
+            Date oneWeekAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
+
+            Date twoWeekAgo = new Date(now.getTime() - 14 * 24 * 3600 * 1000);
+
+            // Check if createdAtDate is within the last week
+            return createdAtDate.after(twoWeekAgo) && createdAtDate.before(oneWeekAgo);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false; // Return false if there's a parsing error
+        }
+    }
+
+    public BranchStat getBranchStatistics(Long cafeId) {
+        BranchStat branchStat = new BranchStat();
+        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> salesInThisWeek = new ArrayList<>();
+        List<Order> salesInLastWeek = new ArrayList<>();
+        Map<String,Integer> foodSalesThisWeek = new HashMap<>();
+        Map<String,Integer> foodSalesLastWeek = new HashMap<>();
+
+        for(Order order : orders) {
+            if(isInThisWeek(order.getCreatedAt())) {
+                salesInThisWeek.add(order);
+                for(OrderFood orderFood : order.getOrderItems()) {
+                    if(foodSalesThisWeek.containsKey(orderFood.getFoodId())) {
+                        foodSalesThisWeek.put(orderFood.getFoodId(), foodSalesThisWeek.get(orderFood.getFoodId()) + orderFood.getQuantity());
+                    }
+                    else {
+                        foodSalesThisWeek.put(orderFood.getFoodId(), orderFood.getQuantity());
+                    }
+                }
+            }
+            if(isInLastWeek(order.getCreatedAt())) {
+                salesInLastWeek.add(order);
+            }
+        }
+
+        return branchStat;
+
+    }
+
 }

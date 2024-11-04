@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Branch;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -123,5 +125,11 @@ public class BranchService {
         existingBranch.setDeleted(branch.getDeleted());
 
         branchRepository.save(existingBranch);
+    }
+
+    //branch statistics
+    public BranchStat getBranchStat(String id) {
+        Date today  = new Date();
+
     }
 }
