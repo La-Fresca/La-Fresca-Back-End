@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -567,25 +570,71 @@ public class OrderService {
         Map<String,Integer> foodSalesThisWeek = new HashMap<>();
         Map<String,Integer> foodSalesLastWeek = new HashMap<>();
 
+        float totalIncomeThisWeek = 0;
+        float totalIncomeLastWeek = 0;
+
+        int morningSessionCount = 0;
+        int afternoonSessionCount = 0;
+        int eveningSessionCount = 0;
+
         for(Order order : orders) {
             if(isInThisWeek(order.getCreatedAt())) {
                 salesInThisWeek.add(order);
-                for(OrderFood orderFood : order.getOrderItems()) {
-                    if(foodSalesThisWeek.containsKey(orderFood.getFoodId())) {
-                        foodSalesThisWeek.put(orderFood.getFoodId(), foodSalesThisWeek.get(orderFood.getFoodId()) + orderFood.getQuantity());
-                    }
-                    else {
-                        foodSalesThisWeek.put(orderFood.getFoodId(), orderFood.getQuantity());
-                    }
+                totalIncomeThisWeek += order.getTotalAmount();
+                for (OrderFood item : order.getOrderItems()) {
+                    foodSalesThisWeek.put(
+                            item.getFoodId(),
+                            foodSalesThisWeek.getOrDefault(item.getFoodId(), 0) + item.getQuantity()
+                    );
+                }
+                if (isInSession(order.getCreatedAt(), "morning")) {
+                    morningSessionCount++;
+                } else if (isInSession(order.getCreatedAt(), "afternoon")) {
+                    afternoonSessionCount++;
+                } else if (isInSession(order.getCreatedAt(), "evening")) {
+                    eveningSessionCount++;
                 }
             }
             if(isInLastWeek(order.getCreatedAt())) {
                 salesInLastWeek.add(order);
+                totalIncomeLastWeek += order.getTotalAmount();
             }
         }
+
+        List<FoodItem> topFoodsThisWeek = foodItemRepository.findAllById(findTopFoods(foodSalesThisWeek));
+
+        branchStat.setMorningSessionCount(morningSessionCount);
+        branchStat.setAfternoonSessionCount(afternoonSessionCount);
+        branchStat.setEveningSessionCount(eveningSessionCount);
+        branchStat.setTopSellingItems(topFoodsThisWeek);
+        branchStat.setTotalIncomeThisWeek(totalIncomeThisWeek);
+        branchStat.setTotalIncomeLastWeek(totalIncomeLastWeek);
 
         return branchStat;
 
     }
+
+    private boolean isInSession(String createdAt, String session) {
+        LocalTime orderTime = LocalTime.parse(createdAt, DateTimeFormatter.ISO_LOCAL_TIME);
+        switch (session.toLowerCase()) {
+            case "morning":
+                return orderTime.isAfter(LocalTime.of(6, 0)) && orderTime.isBefore(LocalTime.of(12, 0));
+            case "afternoon":
+                return orderTime.isAfter(LocalTime.of(12, 0)) && orderTime.isBefore(LocalTime.of(18, 0));
+            case "evening":
+                return orderTime.isAfter(LocalTime.of(18, 0)) && orderTime.isBefore(LocalTime.of(23, 59));
+            default:
+                return false;
+        }
+    }
+
+    private List<String> findTopFoods(Map<String, Integer> foodSales) {
+        return foodSales.entrySet().stream()
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())) // Sort by quantity sold in descending order
+                .limit(5) // Adjust this number to return more or fewer top items
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
 
 }
