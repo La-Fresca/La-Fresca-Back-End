@@ -11,14 +11,12 @@ import java.util.List;
 public class Branch {
     @Id
     private String id;
+    private String Name;
     private String Address;
     private String ContactNo;
     private Double Longitude;
     private Double Latitude;
     private String BranchManager;
     private Integer Deleted;
-    private List<IncomeCost> Income;
-    private Double DailyIncome;
-    private List<IncomeCost> Cost;
-    private Double DailyCost;
+    private BranchStatus Status;
 }
