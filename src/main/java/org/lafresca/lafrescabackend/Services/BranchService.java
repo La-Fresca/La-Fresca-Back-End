@@ -1,17 +1,21 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Branch;
 import org.lafresca.lafrescabackend.Models.IncomeCost;
+import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.BranchRepository;
+import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +23,12 @@ import java.util.Optional;
 @Validated
 public class BranchService {
     private final BranchRepository branchRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public BranchService(BranchRepository branchRepository) { this.branchRepository = branchRepository; }
+    public BranchService(BranchRepository branchRepository, UserRepository userRepository) { this.branchRepository = branchRepository;
+        this.userRepository = userRepository;
+    }
 
     // Add new branch
     public BranchRequestDTO addNewBranch(@Valid BranchRequestDTO branch) {
@@ -46,7 +53,11 @@ public class BranchService {
         newBranch.setDailyCost(0.0);
         newBranch.setDailyIncome(0.0);
 
-        branchRepository.save(newBranch);
+        User branchManager = userRepository.findById(branch.getBranchManager()).get();;
+        Branch savedBranch = branchRepository.save(newBranch);
+
+        branchManager.setCafeId(savedBranch.getId());
+        userRepository.save(branchManager);
 
 //        else if (branch.getLongitude() < -180 || branch.getLongitude() > 180) {
 //            error = "Invalid value for longitude";
@@ -114,5 +125,11 @@ public class BranchService {
         existingBranch.setDeleted(branch.getDeleted());
 
         branchRepository.save(existingBranch);
+    }
+
+    //branch statistics
+    public BranchStat getBranchStat(String id) {
+        Date today  = new Date();
+
     }
 }

@@ -5,9 +5,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Models.Branch;
 import org.lafresca.lafrescabackend.Services.BranchService;
+import org.lafresca.lafrescabackend.Services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Tag(name = "Branch Controller")
 public class BranchController {
     private final BranchService branchService;
+    private final OrderService orderService;
 
     // Add new branch
     @PostMapping
@@ -136,4 +139,23 @@ public class BranchController {
     public void logicallyDeleteBranch(@PathVariable("id") String id, @RequestBody Branch branch){
         branchService.logicallyDeleteBranch(id, branch);
     }
+
+    @GetMapping(value = "/branchStatistics/{id}")
+    @Operation(
+            description = "Get branch statistics",
+            summary = "Get statistics of a branch by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public BranchStat getBranchStatistics(@PathVariable("id") String id) {
+        return orderService.getBranchStatistics(id);
+    }
+
+
 }

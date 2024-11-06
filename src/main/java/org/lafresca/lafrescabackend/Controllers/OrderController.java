@@ -64,7 +64,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "/specificorderbycafeid/{cafeId}")
-    public List<Order> getOrdersByCafeId(@PathVariable("cafeId") Long cafeId) {
+    public List<Order> getOrdersByCafeId(@PathVariable("cafeId") String cafeId) {
         return orderService.getOrdersByCafeId(cafeId);
     }
 
@@ -132,7 +132,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "/getSalesInThisWeek/{cafeId}")
-    public List<Order> getSalesInThisWeek(@PathVariable("cafeId") Long cafeId) {
+    public List<Order> getSalesInThisWeek(@PathVariable("cafeId") String cafeId) {
         return orderService.getSalesInThisWeek(cafeId);
     }
 
