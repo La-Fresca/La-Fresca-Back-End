@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Branch;
@@ -11,11 +12,11 @@ import org.lafresca.lafrescabackend.Repositories.BranchRepository;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,6 @@ public class BranchService {
     }
 
     // Add new branch
-    @Transactional
     public BranchRequestDTO addNewBranch(@Valid BranchRequestDTO branch) {
         Branch newBranch = new Branch();
         newBranch.setAddress(branch.getAddress());
@@ -39,26 +39,14 @@ public class BranchService {
         newBranch.setLatitude(branch.getLatitude());
         newBranch.setLongitude(branch.getLongitude());
         newBranch.setBranchManager(branch.getBranchManager());
-        newBranch.setName(branch.getName());
-        newBranch.setDeleted(0);
-
         newBranch.setStatus(BranchStatus.CLOSE);
 
         User branchManager =  userRepository.findById(branch.getBranchManager()).orElseThrow(() -> new ResourceNotFoundException("Branch manager not found with id " + branch.getBranchManager()));
 
-        branchRepository.save(newBranch);
-
-        branchManager.setCafeId(newBranch.getId());
+        newBranch.setDeleted(0);
+        Branch savedBranch = branchRepository.save(newBranch);
+        branchManager.setCafeId(savedBranch.getId());
         userRepository.save(branchManager);
-
-//        else if (branch.getLongitude() < -180 || branch.getLongitude() > 180) {
-//            error = "Invalid value for longitude";
-//        }
-//        else if (branch.getLatitude() < -90 || branch.getLatitude() > 90) {
-//            error = "Invalid value for latitude";
-//        }
-
-
 
         return branch;
     }
@@ -87,9 +75,6 @@ public class BranchService {
         if (branch.getAddress() != null && !branch.getAddress().isEmpty()) {
             existingBranch.setAddress(branch.getAddress());
         }
-        if (branch.getName() != null && !branch.getName().isEmpty()) {
-            existingBranch.setName(branch.getName());
-        }
         if (branch.getContactNo() != null && !branch.getContactNo().isEmpty()) {
             existingBranch.setContactNo(branch.getContactNo());
         }
@@ -115,4 +100,10 @@ public class BranchService {
 
         branchRepository.save(existingBranch);
     }
+
+    //branch statistics
+//    public BranchStat getBranchStat(String id) {
+//        Date today  = new Date();
+//
+//    }
 }

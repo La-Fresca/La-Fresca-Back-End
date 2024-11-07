@@ -80,6 +80,9 @@ public class UserController {
         userService.updateUser(user);
     }
 
-
-
+    @GetMapping(value = "/availableBranchManagers")
+    public List<UserDTO> getAvailableBranchManagers() {
+        List<UserDTO> avaliableBranchManagers = userService.getAvaliableBranchManagers();
+        return avaliableBranchManagers;
+    }
 }
