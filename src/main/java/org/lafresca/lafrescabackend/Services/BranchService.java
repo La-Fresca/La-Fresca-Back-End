@@ -53,7 +53,7 @@ public class BranchService {
         newBranch.setDailyCost(0.0);
         newBranch.setDailyIncome(0.0);
 
-        User branchManager = userRepository.findById(branch.getBranchManager()).get();;
+        User branchManager = userRepository.findByUserId(branch.getBranchManager());
         Branch savedBranch = branchRepository.save(newBranch);
 
         branchManager.setCafeId(savedBranch.getId());
@@ -128,8 +128,8 @@ public class BranchService {
     }
 
     //branch statistics
-    public BranchStat getBranchStat(String id) {
-        Date today  = new Date();
-
-    }
+//    public BranchStat getBranchStat(String id) {
+//        Date today  = new Date();
+//
+//    }
 }
