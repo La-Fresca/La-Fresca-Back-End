@@ -34,7 +34,7 @@ public class FoodItemService {
 
         FoodItem newFoodItem = foodItemRequestDTOToFoodItem(foodItem);
 
-        newFoodItem.setDeleted(0);
+        newFoodItem.setStatus(2);
         newFoodItem.setRating(0.0);
         newFoodItem.setRatingCount(0);
         newFoodItem.setPostedDate(now);
@@ -50,6 +50,14 @@ public class FoodItemService {
     // Retrieve all food items
     public List<FoodItemDTO> getFoodItems(String cafeId) {
         return foodItemRepository.findByCafeId(cafeId)
+                .stream()
+                .map(foodItemDTOMapper)
+                .collect(Collectors.toList());
+    }
+
+    // Retrieve all food items for top-level manager
+    public List<FoodItemDTO> getFoodItemsForTLM(String cafeId) {
+        return foodItemRepository.findByCafeIdAndStatus(cafeId)
                 .stream()
                 .map(foodItemDTOMapper)
                 .collect(Collectors.toList());
@@ -91,7 +99,7 @@ public class FoodItemService {
         FoodItem existingFoodItem = foodItemRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("FoodItem not found with id " + id));
 
-        existingFoodItem.setDeleted(foodItem.getDeleted());
+        existingFoodItem.setStatus(foodItem.getStatus());
 
         foodItemRepository.save(existingFoodItem);
     }
@@ -108,6 +116,7 @@ public class FoodItemService {
         return foodItem;
     }
 
+    // Change FoodItem availability
     public FoodItem changeAvailability(String id, Integer value) {
         FoodItem existingFoodItem = foodItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
@@ -116,6 +125,34 @@ public class FoodItemService {
 
         foodItemRepository.save(existingFoodItem);
         log.info("Food item '{}' availability changed successfully", existingFoodItem.getName());
+        return existingFoodItem;
+    }
+
+    // Approve FoodItem
+    public FoodItem approveFoodItem(String id){
+        FoodItem existingFoodItem = foodItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
+
+        existingFoodItem.setStatus(0);
+
+        System.out.println(existingFoodItem);
+
+        foodItemRepository.save(existingFoodItem);
+        log.info("Food item '{}' approved successfully", existingFoodItem.getName());
+        return existingFoodItem;
+    }
+
+    // Reject FoodItem
+    public FoodItem rejectFoodItem(String id){
+        FoodItem existingFoodItem = foodItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("FoodItem not found with id " + id));
+
+        existingFoodItem.setStatus(3);
+
+        System.out.println(existingFoodItem);
+
+        foodItemRepository.save(existingFoodItem);
+        log.info("Food item '{}' rejected successfully", existingFoodItem.getName());
         return existingFoodItem;
     }
 }

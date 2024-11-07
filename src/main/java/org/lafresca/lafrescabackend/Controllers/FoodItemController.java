@@ -49,7 +49,7 @@ public class FoodItemController {
     @GetMapping(path = "getAll/{cafeId}")
     @Operation(
             description = "Get all food items",
-            summary = "Retrieve all food items in the branch",
+            summary = "Retrieve all active food items in the branch",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -61,6 +61,24 @@ public class FoodItemController {
             })
     public List<FoodItemDTO> getFoodItems(@PathVariable("cafeId") String cafeId) {
         return foodItemService.getFoodItems(cafeId);
+    }
+
+    // Retrieve all food items for top-level manager
+    @GetMapping(path = "getAllForTLM/{cafeId}")
+    @Operation(
+            description = "Get all food items for top level manager",
+            summary = "Retrieve all food items in the branch",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public List<FoodItemDTO> getFoodItemsForTLM(@PathVariable("cafeId") String cafeId) {
+        return foodItemService.getFoodItemsForTLM(cafeId);
     }
 
     // Search food item
@@ -151,5 +169,41 @@ public class FoodItemController {
             })
     public ResponseEntity<FoodItem> changeAvailability(@PathVariable("id") String id, @RequestBody Integer value){
         return ResponseEntity.status(201).body(foodItemService.changeAvailability(id, value));
+    }
+
+    // Approve Food Item
+    @PutMapping(path = "approve/{id}")
+    @Operation(
+            description = "Approve food item by id",
+            summary = "Approve food items by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public ResponseEntity<FoodItem> approveFoodItem(@PathVariable("id") String id){
+        return ResponseEntity.status(201).body(foodItemService.approveFoodItem(id));
+    }
+
+    // ApproRejectve Food Item
+    @PutMapping(path = "reject/{id}")
+    @Operation(
+            description = "Reject food item by id",
+            summary = "Reject food items by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public ResponseEntity<FoodItem> rejectFoodItem(@PathVariable("id") String id){
+        return ResponseEntity.status(201).body(foodItemService.rejectFoodItem(id));
     }
 }
