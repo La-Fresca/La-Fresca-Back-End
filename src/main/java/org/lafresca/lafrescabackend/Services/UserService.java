@@ -8,6 +8,7 @@ import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +121,7 @@ public class UserService {
         if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty() && !userToUpdate.getPhoneNumber().equals(user.getPhoneNumber()) && user.getPhoneNumber().length() == 10){
             userToUpdate.setPhoneNumber(user.getPhoneNumber());
         }
-        if (user.getRole() != null && !user.getRole().isEmpty() && !userToUpdate.getRole().equals(user.getRole()) && ((user.getRole()=="ADMIN" || user.getRole()=="CUSOTMER" || user.getRole()=="TOP_LEVEL_MANAGER" || user.getRole()=="CAFE_MANAGER" || user.getRole()=="CASHIER" || user.getRole()=="KITCHEN_MANAGER" || user.getRole()=="WAITER" || user.getRole()=="DELIVERY_PERSON" || user.getRole()=="STOCKKEEPER"))) {
+        if (user.getRole() != null && !user.getRole().isEmpty() && !userToUpdate.getRole().equals(user.getRole()) && ((user.getRole()=="ADMIN" || user.getRole()=="CUSOTMER" || user.getRole()=="TOP_LEVEL_MANAGER" || user.getRole()=="BRANCH_MANAGER" || user.getRole()=="CASHIER" || user.getRole()=="KITCHEN_MANAGER" || user.getRole()=="WAITER" || user.getRole()=="DELIVERY_PERSON" || user.getRole()=="STOCKKEEPER"))) {
             userToUpdate.setRole(user.getRole());
         }
         if (user.getPassword() != null && !user.getPassword().isEmpty() && !userToUpdate.getPassword().equals(user.getPassword())) {
@@ -206,5 +207,26 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public List<UserDTO> getAvaliableBranchManagers(){
+        List<User> users = userRepository.findUserByCafeIdAndRole("","BRANCH_MANAGER");
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for (User user: users) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getUserId());
+            userDTO.setFirstName(user.getFirstName());
+            userDTO.setLastName(user.getLastName());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+            userDTO.setAddress(user.getAddress());
+            userDTO.setRole(user.getRole());
+            userDTO.setCafeId(user.getCafeId());
+            userDTO.setStatus(user.getStatus());
+            userDTOS.add(userDTO);
+        }
+
+        return userDTOS;
+
     }
 }

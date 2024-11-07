@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping(path = "api/lafresca/user")
 @Tag(name="User Controller")
 @AllArgsConstructor
+@CrossOrigin
 public class UserController {
     private final UserService userService;
 
@@ -80,6 +81,9 @@ public class UserController {
         userService.updateUser(user);
     }
 
-
-
+    @GetMapping(value = "/availableBranchManagers")
+    public List<UserDTO> getAvailableBranchManagers() {
+        List<UserDTO> avaliableBranchManagers = userService.getAvaliableBranchManagers();
+        return avaliableBranchManagers;
+    }
 }

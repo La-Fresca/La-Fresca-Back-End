@@ -90,6 +90,8 @@ public class JwtService {
                 .claim("role", user.getRole())
                 .claim("userId", user.getId())
                 .claim("username", user.getUsername())
+                .claim("name",user.getFirstName() + " " + user.getLastName())
+                .claim("cafeId", user.getCafeId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigninKey())

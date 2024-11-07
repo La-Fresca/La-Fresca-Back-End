@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static io.jsonwebtoken.lang.Collections.size;
 
@@ -47,7 +46,7 @@ public class CartService {
             FoodItem foodItem = foodItemRepository.findById(cart.getMenuItemId()).orElse(null);
 
             if (foodItem != null) {
-                if (foodItem.getDeleted() == 1) {
+                if (foodItem.getStatus() == 1) {
                     error = "Food Item not found";
                 }
                 else {

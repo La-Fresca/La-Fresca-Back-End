@@ -2,27 +2,36 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.DTO.*;
 import org.lafresca.lafrescabackend.Models.*;
-import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
-import org.lafresca.lafrescabackend.Repositories.OrderRepository;
-import org.lafresca.lafrescabackend.Repositories.UserRepository;
+import org.lafresca.lafrescabackend.Repositories.*;
 import org.lafresca.lafrescabackend.Validations.FoodAmountValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final FoodItemRepository foodItemRepository;
-//    private final UserValidation userValidation;
+    private final BranchRepository branchRepository;
+    private final FoodComboRepository foodComboRepository;
+    private final StockCollectionRepository stockCollectionRepository;
+
+    //    private final UserValidation userValidation;
     @Autowired
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository, BranchRepository branchRepository, FoodComboRepository foodComboRepository, StockCollectionRepository stockCollectionRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.foodItemRepository = foodItemRepository;
+        this.branchRepository = branchRepository;
+        this.foodComboRepository = foodComboRepository;
+        this.stockCollectionRepository = stockCollectionRepository;
     }
 
 
@@ -302,7 +311,7 @@ public class OrderService {
         return orderRepository.findByCashierId(userId);
     }
 
-    public List<Order> getOrdersByCafeId(Long cafeId) {
+    public List<Order> getOrdersByCafeId(String cafeId) {
         return orderRepository.findByCafeId(cafeId);
     }
 
@@ -420,19 +429,33 @@ public class OrderService {
             }
         }
 
-        if(queueItems == 0 && processingItems != 0 && readyItems != 0 && deliveringItems != 0 && deliveredItems != 0) {
+        if(processingItems != 0) {
             orderToUpdate.setOrderStatus(OrderStatus.PREPARING);
+            orderToUpdate.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
         }
-        else if(queueItems == 0 && processingItems == 0 && readyItems != 0 && deliveringItems != 0 && deliveredItems != 0){
+        else if(queueItems == 0 && processingItems == 0 && readyItems != 0 ){
             orderToUpdate.setOrderStatus(OrderStatus.READY);
             orderToUpdate.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            if(orderToUpdate.getOrderType().equals("ONLINE")) {
+                orderToUpdate.setDeliveryPersonId(findDeliveryPerson(orderToUpdate.getCafeId()));
+                if(orderToUpdate.getDeliveryPersonId().equals("No delivery person available")) {
+                    throw new IllegalStateException("No delivery person available");
+                }
+            }
+            else {
+                orderToUpdate.setWaiterId(findWaiter(orderToUpdate.getCafeId()));
+                if(orderToUpdate.getWaiterId().equals("No waiter available")) {
+                    throw new IllegalStateException("No waiter available");
+                }
+            }
         }
         else if(readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveringItems != 0 && deliveredItems != 0){
             orderToUpdate.setOrderStatus(OrderStatus.DELIVERING);
+            orderToUpdate.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
         }
-        else if(deliveringItems == 0 && readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveredItems != 0){
-            orderToUpdate.setOrderStatus(OrderStatus.DELIVERED);
-        }
+//        else if(deliveringItems == 0 && readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveredItems != 0){
+//            orderToUpdate.setOrderStatus(OrderStatus.DELIVERED);
+//        }
 
         orderRepository.save(orderToUpdate);
     }
@@ -480,4 +503,152 @@ public class OrderService {
     public List<Order> ondeliveryordersbydeliverypersonid(String userId) {
         return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.DELIVERING);
     }
+
+    public List<Order> getSalesInThisWeek(String cafeId) {
+        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> salesInThisWeek = new ArrayList<>();
+        for(Order order : orders) {
+            if(isInThisWeek(order.getCreatedAt())) {
+                salesInThisWeek.add(order);
+            }
+        }
+        return salesInThisWeek;
+    }
+
+    public List<Order> getSalesInLastWeek(String cafeId) {
+        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> salesInLastWeek = new ArrayList<>();
+        for(Order order : orders) {
+            if(isInLastWeek(order.getCreatedAt())) {
+                salesInLastWeek.add(order);
+            }
+        }
+        return salesInLastWeek;
+    }
+
+    public boolean isInThisWeek(String createdAt) {
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            // Parse the createdAt string to a Date object
+            Date createdAtDate = dateTimeFormatter.parse(createdAt);
+
+            // Get the current date and time
+            Date now = new Date();
+
+            // Calculate the date and time exactly one week ago from now
+            Date oneWeekAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
+
+            // Check if createdAtDate is within the last week
+            return createdAtDate.after(oneWeekAgo) && createdAtDate.before(now);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false; // Return false if there's a parsing error
+        }
+    }
+    public boolean isInLastWeek(String createdAt) {
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            // Parse the createdAt string to a Date object
+            Date createdAtDate = dateTimeFormatter.parse(createdAt);
+
+            // Get the current date and time
+            Date now = new Date() ;
+
+            // Calculate the date and time exactly one week ago from now
+            Date oneWeekAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
+
+            Date twoWeekAgo = new Date(now.getTime() - 14 * 24 * 3600 * 1000);
+
+            // Check if createdAtDate is within the last week
+            return createdAtDate.after(twoWeekAgo) && createdAtDate.before(oneWeekAgo);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false; // Return false if there's a parsing error
+        }
+    }
+
+    public BranchStat getBranchStatistics(String cafeId) {
+        BranchStat branchStat = new BranchStat();
+        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> salesInThisWeek = new ArrayList<>();
+        List<Order> salesInLastWeek = new ArrayList<>();
+        Map<String,Integer> foodSalesThisWeek = new HashMap<>();
+        Map<String,Integer> foodSalesLastWeek = new HashMap<>();
+
+        float totalIncomeThisWeek = 0;
+        float totalIncomeLastWeek = 0;
+
+        int morningSessionCount = 0;
+        int afternoonSessionCount = 0;
+        int eveningSessionCount = 0;
+
+        for(Order order : orders) {
+            if(isInThisWeek(order.getCreatedAt())) {
+                salesInThisWeek.add(order);
+                totalIncomeThisWeek += order.getTotalAmount();
+                for (OrderFood item : order.getOrderItems()) {
+                    foodSalesThisWeek.put(
+                            item.getFoodId(),
+                            foodSalesThisWeek.getOrDefault(item.getFoodId(), 0) + item.getQuantity()
+                    );
+                }
+                if (isInSession(order.getCreatedAt(), "morning")) {
+                    morningSessionCount++;
+                } else if (isInSession(order.getCreatedAt(), "afternoon")) {
+                    afternoonSessionCount++;
+                } else if (isInSession(order.getCreatedAt(), "evening")) {
+                    eveningSessionCount++;
+                }
+            }
+            if(isInLastWeek(order.getCreatedAt())) {
+                salesInLastWeek.add(order);
+                totalIncomeLastWeek += order.getTotalAmount();
+            }
+        }
+
+        List<FoodItem> topFoodsThisWeek = foodItemRepository.findAllById(findTopFoods(foodSalesThisWeek));
+
+        branchStat.setMorningSessionCount(morningSessionCount);
+        branchStat.setAfternoonSessionCount(afternoonSessionCount);
+        branchStat.setEveningSessionCount(eveningSessionCount);
+        branchStat.setTopSellingItems(topFoodsThisWeek);
+        branchStat.setTotalIncomeThisWeek(totalIncomeThisWeek);
+        branchStat.setTotalIncomeLastWeek(totalIncomeLastWeek);
+
+        List<FoodItem> foodItemList = foodItemRepository.findByCafeId(cafeId);
+        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId);
+        List<StockCollection> stockCollectionList = stockCollectionRepository.findByCafeId(cafeId);
+
+        System.out.println(stockCollectionList);
+        branchStat.setEmployeeCount(0);
+        branchStat.setMenuItemCount(foodItemList.size() + foodComboList.size());
+        branchStat.setStockCollectionCount(stockCollectionList.size());
+
+        return branchStat;
+
+    }
+
+    private boolean isInSession(String createdAt, String session) {
+        LocalTime orderTime = LocalTime.parse(createdAt, DateTimeFormatter.ISO_LOCAL_TIME);
+        switch (session.toLowerCase()) {
+            case "morning":
+                return orderTime.isAfter(LocalTime.of(6, 0)) && orderTime.isBefore(LocalTime.of(12, 0));
+            case "afternoon":
+                return orderTime.isAfter(LocalTime.of(12, 0)) && orderTime.isBefore(LocalTime.of(18, 0));
+            case "evening":
+                return orderTime.isAfter(LocalTime.of(18, 0)) && orderTime.isBefore(LocalTime.of(23, 59));
+            default:
+                return false;
+        }
+    }
+
+    private List<String> findTopFoods(Map<String, Integer> foodSales) {
+        return foodSales.entrySet().stream()
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())) // Sort by quantity sold in descending order
+                .limit(5) // Adjust this number to return more or fewer top items
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+
 }

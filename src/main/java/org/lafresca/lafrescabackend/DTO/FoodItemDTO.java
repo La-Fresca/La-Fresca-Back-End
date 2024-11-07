@@ -14,6 +14,7 @@ public record FoodItemDTO(
         Integer discountStatus,
         List<String> categories,
         Double rating,
-        Integer ratingCount
+        Integer ratingCount,
+        Integer status
 ) {
 }

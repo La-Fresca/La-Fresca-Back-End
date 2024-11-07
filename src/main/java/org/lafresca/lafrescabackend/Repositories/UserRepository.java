@@ -25,4 +25,7 @@ public interface UserRepository extends MongoRepository<User,String> {
 
     @Query("{ 'CafeId' : ?0, 'Role' : ?1 }")
     List<User> findUserByCafeIdAndRole(String cafeId, String role);
+
+    @Query("{ 'UserId' : ?0 }")
+    User findByUserId(String userId);
 }

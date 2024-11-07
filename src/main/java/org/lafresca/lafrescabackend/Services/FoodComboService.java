@@ -47,6 +47,7 @@ public class FoodComboService {
         newFoodCombo.setCost(foodCombo.getCost());
         newFoodCombo.setFoodIds(foodCombo.getFoodIds());
 
+        newFoodCombo.setStatus(2);
         newFoodCombo.setFoodNames(null);
         newFoodCombo.setDiscountDetails(null);
         newFoodCombo.setDiscountStatus(0);
@@ -66,7 +67,7 @@ public class FoodComboService {
 
     // Retrieve all food combos
     public List<FoodComboDTO> getFoodCombos(String cafeId) {
-        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId, 0);
+        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId);
 
         for (FoodCombo foodCombo : foodComboList) {
             List<String> foodNames = new ArrayList<>();
@@ -139,5 +140,50 @@ public class FoodComboService {
         existingFoodCombo.setDeleted(foodCombo.getDeleted());
 
         foodComboRepository.save(existingFoodCombo);
+    }
+
+    // Retrieve all food combos for top-level manager
+    public List<FoodCombo> getFoodCombosForTLM() {
+        return foodComboRepository.findByStatus();
+    }
+
+    // Change FoodCombo availability
+    public FoodCombo changeAvailability(String id, Integer value) {
+        FoodCombo existingFoodCombo = foodComboRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Food Combo not found with id " + id));
+
+        existingFoodCombo.setAvailable(value);
+
+        foodComboRepository.save(existingFoodCombo);
+        log.info("Food combo '{}' availability changed successfully", existingFoodCombo.getName());
+        return existingFoodCombo;
+    }
+
+    // Approve FoodCombo
+    public FoodCombo approveFoodCombo(String id){
+        FoodCombo existingFoodCombo = foodComboRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("FoodCombo not found with id " + id));
+
+        existingFoodCombo.setStatus(0);
+
+        System.out.println(existingFoodCombo);
+
+        foodComboRepository.save(existingFoodCombo);
+        log.info("Food combo '{}' approved successfully", existingFoodCombo.getName());
+        return existingFoodCombo;
+    }
+
+    // Reject FoodCombo
+    public FoodCombo rejectFoodCombo(String id){
+        FoodCombo existingFoodCombo = foodComboRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("FoodCombo not found with id " + id));
+
+        existingFoodCombo.setStatus(3);
+
+        System.out.println(existingFoodCombo);
+
+        foodComboRepository.save(existingFoodCombo);
+        log.info("Food combo '{}' rejected successfully", existingFoodCombo.getName());
+        return existingFoodCombo;
     }
 }

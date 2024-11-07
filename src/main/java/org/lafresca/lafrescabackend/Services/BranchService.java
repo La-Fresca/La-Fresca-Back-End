@@ -1,17 +1,22 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Branch;
+import org.lafresca.lafrescabackend.Models.BranchStatus;
 import org.lafresca.lafrescabackend.Models.IncomeCost;
+import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.BranchRepository;
+import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +24,12 @@ import java.util.Optional;
 @Validated
 public class BranchService {
     private final BranchRepository branchRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public BranchService(BranchRepository branchRepository) { this.branchRepository = branchRepository; }
+    public BranchService(BranchRepository branchRepository, UserRepository userRepository) { this.branchRepository = branchRepository;
+        this.userRepository = userRepository;
+    }
 
     // Add new branch
     public BranchRequestDTO addNewBranch(@Valid BranchRequestDTO branch) {
@@ -31,31 +39,15 @@ public class BranchService {
         newBranch.setLatitude(branch.getLatitude());
         newBranch.setLongitude(branch.getLongitude());
         newBranch.setBranchManager(branch.getBranchManager());
+        newBranch.setName(branch.getName());
+        newBranch.setStatus(BranchStatus.CLOSED);
 
-        IncomeCost income = new IncomeCost();
-        List<IncomeCost> incomeList = new ArrayList<>();
-        LocalDate now = LocalDate.now();
-        income.setYear(now.getYear());
-        income.setMonth(now.getMonthValue());
-        income.setAmount(0.0);
-        incomeList.add(income);
+        User branchManager =  userRepository.findById(branch.getBranchManager()).orElseThrow(() -> new ResourceNotFoundException("Branch manager not found with id " + branch.getBranchManager()));
 
-        newBranch.setIncome(incomeList);
-        newBranch.setCost(incomeList);
         newBranch.setDeleted(0);
-        newBranch.setDailyCost(0.0);
-        newBranch.setDailyIncome(0.0);
-
-        branchRepository.save(newBranch);
-
-//        else if (branch.getLongitude() < -180 || branch.getLongitude() > 180) {
-//            error = "Invalid value for longitude";
-//        }
-//        else if (branch.getLatitude() < -90 || branch.getLatitude() > 90) {
-//            error = "Invalid value for latitude";
-//        }
-
-
+        Branch savedBranch = branchRepository.save(newBranch);
+        branchManager.setCafeId(savedBranch.getId());
+        userRepository.save(branchManager);
 
         return branch;
     }
@@ -96,12 +88,6 @@ public class BranchService {
         if (branch.getBranchManager() != null && !branch.getBranchManager().isEmpty()) {
             existingBranch.setBranchManager(branch.getBranchManager());
         }
-        if (branch.getDailyIncome() != null) {
-            existingBranch.setDailyIncome(existingBranch.getDailyIncome() + branch.getDailyIncome());
-        }
-        if (branch.getDailyCost() != null) {
-            existingBranch.setDailyCost(existingBranch.getDailyCost() + branch.getDailyCost());
-        }
 
         branchRepository.save(existingBranch);
     }
@@ -115,4 +101,10 @@ public class BranchService {
 
         branchRepository.save(existingBranch);
     }
+
+    //branch statistics
+//    public BranchStat getBranchStat(String id) {
+//        Date today  = new Date();
+//
+//    }
 }
