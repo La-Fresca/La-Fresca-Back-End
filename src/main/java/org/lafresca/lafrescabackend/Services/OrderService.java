@@ -2,9 +2,7 @@ package org.lafresca.lafrescabackend.Services;
 
 import org.lafresca.lafrescabackend.DTO.*;
 import org.lafresca.lafrescabackend.Models.*;
-import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
-import org.lafresca.lafrescabackend.Repositories.OrderRepository;
-import org.lafresca.lafrescabackend.Repositories.UserRepository;
+import org.lafresca.lafrescabackend.Repositories.*;
 import org.lafresca.lafrescabackend.Validations.FoodAmountValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +19,19 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final FoodItemRepository foodItemRepository;
+    private final BranchRepository branchRepository;
+    private final FoodComboRepository foodComboRepository;
+    private final StockCollectionRepository stockCollectionRepository;
+
     //    private final UserValidation userValidation;
     @Autowired
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository, BranchRepository branchRepository, FoodComboRepository foodComboRepository, StockCollectionRepository stockCollectionRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.foodItemRepository = foodItemRepository;
+        this.branchRepository = branchRepository;
+        this.foodComboRepository = foodComboRepository;
+        this.stockCollectionRepository = stockCollectionRepository;
     }
 
 
@@ -609,6 +614,15 @@ public class OrderService {
         branchStat.setTopSellingItems(topFoodsThisWeek);
         branchStat.setTotalIncomeThisWeek(totalIncomeThisWeek);
         branchStat.setTotalIncomeLastWeek(totalIncomeLastWeek);
+
+        List<FoodItem> foodItemList = foodItemRepository.findByCafeId(cafeId);
+        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId);
+        List<StockCollection> stockCollectionList = stockCollectionRepository.findByCafeId(cafeId);
+
+        System.out.println(stockCollectionList);
+        branchStat.setEmployeeCount(0);
+        branchStat.setMenuItemCount(foodItemList.size() + foodComboList.size());
+        branchStat.setStockCollectionCount(stockCollectionList.size());
 
         return branchStat;
 

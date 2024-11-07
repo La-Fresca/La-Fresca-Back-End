@@ -29,4 +29,5 @@ public class FoodCombo {
     private Integer TotalSellingCount;
     private Integer DiscountStatus;
     private Discount DiscountDetails;
+    private Integer Status;
 }

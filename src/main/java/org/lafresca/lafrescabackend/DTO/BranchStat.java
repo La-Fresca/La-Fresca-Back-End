@@ -15,4 +15,7 @@ public class BranchStat {
     private float totalIncomeThisWeek = 0;
     private float totalIncomeLastWeek = 0;
 
+    private int employeeCount;
+    private int menuItemCount;
+    private int stockCollectionCount;
 }

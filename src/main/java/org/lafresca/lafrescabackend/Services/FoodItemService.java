@@ -56,11 +56,8 @@ public class FoodItemService {
     }
 
     // Retrieve all food items for top-level manager
-    public List<FoodItemDTO> getFoodItemsForTLM(String cafeId) {
-        return foodItemRepository.findByCafeIdAndStatus(cafeId)
-                .stream()
-                .map(foodItemDTOMapper)
-                .collect(Collectors.toList());
+    public List<FoodItem> getFoodItemsForTLM() {
+        return foodItemRepository.findByStatus();
     }
 
     // Update food item

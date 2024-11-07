@@ -10,6 +10,7 @@ import org.lafresca.lafrescabackend.DTO.FoodComboDTO;
 import org.lafresca.lafrescabackend.DTO.Request.FoodComboRequestDTO;
 import org.lafresca.lafrescabackend.DTO.Request.FoodItemRequestDTO;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
+import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Services.FoodComboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +68,24 @@ public class FoodComboController {
             })
     public List<FoodComboDTO> getFoodCombos(@PathVariable("cafeId") String cafeId){
         return foodComboService.getFoodCombos(cafeId);
+    }
+
+    // Retrieve all food combos for top-level manager
+    @GetMapping(path = "getAllForTLM")
+    @Operation(
+            description = "Get all food combos for top level manager",
+            summary = "Retrieve all food combos in the branch",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public List<FoodCombo> getFoodItemsForTLM() {
+        return foodComboService.getFoodCombosForTLM();
     }
 
     // Search food combo
@@ -140,5 +159,59 @@ public class FoodComboController {
 
     public void logicallyDeleteFoodCombo(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
         foodComboService.logicallyDeleteFoodCombo(id, foodCombo);
+    }
+
+    // Change availability
+    @PutMapping(path = "availability/{id}")
+    @Operation(
+            description = "Change availability of food combo by id",
+            summary = "Change availability of food combos by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public ResponseEntity<FoodCombo> changeAvailability(@PathVariable("id") String id, @RequestBody Integer value){
+        return ResponseEntity.status(201).body(foodComboService.changeAvailability(id, value));
+    }
+
+    // Approve Food Combo
+    @PutMapping(path = "approve/{id}")
+    @Operation(
+            description = "Approve food combo by id",
+            summary = "Approve food combos by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public ResponseEntity<FoodCombo> approveComboItem(@PathVariable("id") String id){
+        return ResponseEntity.status(201).body(foodComboService.approveFoodCombo(id));
+    }
+
+    // Reject Food Combo
+    @PutMapping(path = "reject/{id}")
+    @Operation(
+            description = "Reject food combo by id",
+            summary = "Reject food combos by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public ResponseEntity<FoodCombo> rejectComboItem(@PathVariable("id") String id){
+        return ResponseEntity.status(201).body(foodComboService.rejectFoodCombo(id));
     }
 }

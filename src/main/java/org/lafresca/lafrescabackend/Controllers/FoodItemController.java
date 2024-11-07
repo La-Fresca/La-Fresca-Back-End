@@ -64,7 +64,7 @@ public class FoodItemController {
     }
 
     // Retrieve all food items for top-level manager
-    @GetMapping(path = "getAllForTLM/{cafeId}")
+    @GetMapping(path = "getAllForTLM")
     @Operation(
             description = "Get all food items for top level manager",
             summary = "Retrieve all food items in the branch",
@@ -77,8 +77,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<FoodItemDTO> getFoodItemsForTLM(@PathVariable("cafeId") String cafeId) {
-        return foodItemService.getFoodItemsForTLM(cafeId);
+    public List<FoodItem> getFoodItemsForTLM() {
+        return foodItemService.getFoodItemsForTLM();
     }
 
     // Search food item
@@ -189,7 +189,7 @@ public class FoodItemController {
         return ResponseEntity.status(201).body(foodItemService.approveFoodItem(id));
     }
 
-    // ApproRejectve Food Item
+    // Reject Food Item
     @PutMapping(path = "reject/{id}")
     @Operation(
             description = "Reject food item by id",
