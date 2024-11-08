@@ -628,6 +628,60 @@ public class OrderService {
 
     }
 
+    public BranchStat getBranchStatisticsMonthly(String cafeId) {
+        BranchStat branchStat = new BranchStat();
+        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> salesInThisMonth = new ArrayList<>();
+        Map<String,Integer> foodSalesThisWeek = new HashMap<>();
+
+        float totalIncomeThisMonth = 0;
+
+        int morningSessionCount = 0;
+        int afternoonSessionCount = 0;
+        int eveningSessionCount = 0;
+
+        for(Order order : orders) {
+            if(isInThisMonth(order.getCreatedAt())) {
+                salesInThisMonth.add(order);
+                totalIncomeThisMonth += order.getTotalAmount();
+                for (OrderFood item : order.getOrderItems()) {
+                    foodSalesThisWeek.put(
+                            item.getFoodId(),
+                            foodSalesThisWeek.getOrDefault(item.getFoodId(), 0) + item.getQuantity()
+                    );
+                }
+                if (isInSession(order.getCreatedAt(), "morning")) {
+                    morningSessionCount++;
+                } else if (isInSession(order.getCreatedAt(), "afternoon")) {
+                    afternoonSessionCount++;
+                } else if (isInSession(order.getCreatedAt(), "evening")) {
+                    eveningSessionCount++;
+                }
+            }
+        }
+
+        List<FoodItem> topFoodsThisWeek = foodItemRepository.findAllById(findTopFoods(foodSalesThisWeek));
+
+        branchStat.setMorningSessionCount(morningSessionCount);
+        branchStat.setAfternoonSessionCount(afternoonSessionCount);
+        branchStat.setEveningSessionCount(eveningSessionCount);
+        branchStat.setTopSellingItems(topFoodsThisWeek);
+        branchStat.setTotalIncomeThisWeek(totalIncomeThisWeek);
+        branchStat.setTotalIncomeLastWeek(totalIncomeLastWeek);
+
+        List<FoodItem> foodItemList = foodItemRepository.findByCafeId(cafeId);
+        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId);
+        List<StockCollection> stockCollectionList = stockCollectionRepository.findByCafeId(cafeId);
+
+        System.out.println(stockCollectionList);
+        branchStat.setEmployeeCount(0);
+        branchStat.setMenuItemCount(foodItemList.size() + foodComboList.size());
+        branchStat.setStockCollectionCount(stockCollectionList.size());
+
+        return branchStat;
+
+    }
+
     private boolean isInSession(String createdAt, String session) {
         LocalTime orderTime = LocalTime.parse(createdAt, DateTimeFormatter.ISO_LOCAL_TIME);
         switch (session.toLowerCase()) {
@@ -648,6 +702,26 @@ public class OrderService {
                 .limit(5) // Adjust this number to return more or fewer top items
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+    }
+
+    public boolean isInThisMonth(String createdAt) {
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            // Parse the createdAt string to a Date object
+            Date createdAtDate = dateTimeFormatter.parse(createdAt);
+
+            // Get the current date and time
+            Date now = new Date();
+
+            // Calculate the date and time exactly one week ago from now
+            Date oneMonthAgo = new Date(now.getTime() - 30 * 24 * 3600 * 1000);
+
+            // Check if createdAtDate is within the last week
+            return createdAtDate.after(oneMonthAgo) && createdAtDate.before(now);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false; // Return false if there's a parsing error
+        }
     }
 
 
