@@ -149,8 +149,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void logicallyDeleteFoodItem(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
-        foodItemService.logicallyDeleteFoodItem(id, foodItem);
+    public void logicallyDeleteFoodItem(@PathVariable("id") String id){
+        foodItemService.logicallyDeleteFoodItem(id);
     }
 
     // Change availability

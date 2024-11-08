@@ -136,7 +136,7 @@ public class StockCollectionService {
         StockCollection existingStockCollection = stockCollectionRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Stock Collection not found with id " + id));
 
-        existingStockCollection.setDeleted(stockCollection.getDeleted());
+        existingStockCollection.setDeleted(1);
         String collectionName = existingStockCollection.getName();
         String cafeId = existingStockCollection.getCafeId();
         List<Stock> StockList = stockRepository.findByName(cafeId, collectionName);
