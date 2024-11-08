@@ -134,7 +134,7 @@ public class StockService {
         stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() - existingStock.getInitialAmount());
         stockCollectionRepository.save(stockCollection);
 
-        existingStock.setDeleted(stock.getDeleted());
+        existingStock.setDeleted(1);
         stockRepository.save(existingStock);
     }
 

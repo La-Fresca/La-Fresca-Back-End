@@ -157,8 +157,8 @@ public class FoodComboController {
                             responseCode = "403")
             })
 
-    public void logicallyDeleteFoodCombo(@PathVariable("id") String id, @RequestBody FoodCombo foodCombo){
-        foodComboService.logicallyDeleteFoodCombo(id, foodCombo);
+    public void logicallyDeleteFoodCombo(@PathVariable("id") String id){
+        foodComboService.logicallyDeleteFoodCombo(id);
     }
 
     // Change availability

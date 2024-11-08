@@ -50,6 +50,20 @@ public class DiscountService {
                 error = "Amount not valid";
             }
         }
+//        else if (discount.getDiscountType().equals("Price Offer")) {
+//            if (discount.getDiscountAmount() == null) {
+//                error = "Discount Amount cannot be empty";
+//            }
+//
+//            else {
+//                FoodItem foodItem = foodItemRepository.findOneById(discount.getMenuItemId());
+//
+//                if (discount.getDiscountAmount() < foodItem.getCost()) {
+//
+//                }
+//            }
+//
+//        }
         else if (discount.getDiscountAmount() < 0 ) {
             error = "Discount amount not valid";
         }
