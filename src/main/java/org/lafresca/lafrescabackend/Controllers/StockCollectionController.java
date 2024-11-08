@@ -49,7 +49,7 @@ public class StockCollectionController {
         return ResponseEntity.status(201).body(stockCollectionService.addNewStockCollection(stockCollection));
     }
 
-    // Get all stock collections
+    // Get all stock collections by cafeId
     @GetMapping(path = "{cafeId}")
     @Operation(
             description = "Get all stock collections by CafeId",

@@ -70,6 +70,14 @@ public class StockService {
 
     }
 
+    // Get all stocks
+    public List<StockDTO> getStocks() {
+        return stockRepository.findByDeleted()
+                .stream()
+                .map(stockDTOMapper)
+                .collect(Collectors.toList());
+    }
+
     // Get all stocks by Cafe Id
     public List<StockDTO> getStocks(String cafeId) {
         return stockRepository.findByCafeId(cafeId)

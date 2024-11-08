@@ -14,4 +14,7 @@ public interface StockRepository extends MongoRepository<Stock, String> {
 
     @Query("{ 'CafeId' :  ?0, 'Deleted' : 0 }")
     List<Stock> findByCafeId(String CafeId);
+
+    @Query("{ 'Deleted' : 0 }")
+    List<Stock> findByDeleted();
 }
