@@ -14,4 +14,7 @@ public interface StockCollectionRepository extends MongoRepository<StockCollecti
 
     @Query("{ 'CafeId' : ?0, 'Deleted' : 0 }")
     List<StockCollection> findByCafeId(String CafeId);
+
+    @Query("{ 'Deleted' : 0 }")
+    List<StockCollection> findByDeleted();
 }
