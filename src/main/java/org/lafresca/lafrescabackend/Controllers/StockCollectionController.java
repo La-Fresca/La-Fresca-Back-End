@@ -49,6 +49,24 @@ public class StockCollectionController {
         return ResponseEntity.status(201).body(stockCollectionService.addNewStockCollection(stockCollection));
     }
 
+    // Get all stock collections
+    @GetMapping(path = "getAll")
+    @Operation(
+            description = "Get all stock collections",
+            summary = "Retrieve all stock collections from inventory",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public List<StockCollectionDTO> getStockCollections() { return stockCollectionService.getStockCollections(); }
+
     // Get all stock collections by cafeId
     @GetMapping(path = "{cafeId}")
     @Operation(

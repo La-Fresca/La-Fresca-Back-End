@@ -52,6 +52,28 @@ public class StockCollectionService {
     }
 
     // Get all stock collections
+    public List<StockCollectionDTO> getStockCollections() {
+        List<StockCollection> stockCollections = stockCollectionRepository.findByDeleted();
+        for (StockCollection stockCollection : stockCollections) {
+            if (stockCollection.getLowerLimit() < stockCollection.getAvailableAmount()){
+                stockCollection.setStatus("High stock");
+            }
+            else if (stockCollection.getLowerLimit().equals(stockCollection.getAvailableAmount())){
+                stockCollection.setStatus("Low stock");
+            }
+            else {
+                stockCollection.setStatus("Out of stock");
+            }
+
+            stockCollection.setPredictedStockoutDate(LocalDate.now());
+        }
+        return stockCollections
+                .stream()
+                .map(stockCollectionDTOMapper)
+                .collect(Collectors.toList());
+    }
+
+    // Get all stock collections by CafeId
     public List<StockCollectionDTO> getStockCollections(String cafeId) {
         List<StockCollection> stockCollections = stockCollectionRepository.findByCafeId(cafeId);
         for (StockCollection stockCollection : stockCollections) {
