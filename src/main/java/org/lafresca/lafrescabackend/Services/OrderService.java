@@ -9,11 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -86,6 +83,19 @@ public class OrderService {
                 }
                 orderFood.setAddedFeatures(addedFeatureList);
             }
+
+
+//            item.getAddedFeatures().forEach(itemfeature -> {
+//                if(itemfeature.getLevel() >= 0) {
+//                    CustomFeature customFeature = foodItem.getFeatures().get(itemfeature.getLevel());
+//                    AddedFeature addedFeature = new AddedFeature();
+//                    addedFeature.setLevel(itemfeature.getLevel());
+//                    addedFeature.setName(customFeature.getName());
+//
+//
+//                }
+//            });
+
 
 
             orderItems.add(orderFood);
@@ -302,7 +312,7 @@ public class OrderService {
     }
 
     public List<Order> getOrdersByCafeId(String cafeId) {
-        return orderRepository.findByCafeId(cafeId);
+        return orderRepository.findOrdersByCafeId(cafeId);
     }
 
     public List<Order> getOrdersByDeliveryPersonId(String userId) {
@@ -450,21 +460,21 @@ public class OrderService {
         orderRepository.save(orderToUpdate);
     }
 
-    public List<Order> getQueueItems(Long cafeId) {
+    public List<Order> getQueueItems(String cafeId) {
         if(cafeId == null) {
             throw new IllegalStateException("CafeId cannot be null");
         }
         return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.PENDING);
     }
 
-    public List<Order> getPreparingItems(Long cafeId) {
+    public List<Order> getPreparingItems(String cafeId) {
         if(cafeId == null) {
             throw new IllegalStateException("CafeId cannot be null");
         }
         return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.PREPARING);
     }
 
-    public List<Order> getReadyItems(Long cafeId) {
+    public List<Order> getReadyItems(String cafeId) {
         if(cafeId == null) {
             throw new IllegalStateException("CafeId cannot be null");
         }
@@ -495,7 +505,7 @@ public class OrderService {
     }
 
     public List<Order> getSalesInThisWeek(String cafeId) {
-        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> orders = orderRepository.findOrdersByCafeId(cafeId);
         List<Order> salesInThisWeek = new ArrayList<>();
         for(Order order : orders) {
             if(isInThisWeek(order.getCreatedAt())) {
@@ -506,7 +516,7 @@ public class OrderService {
     }
 
     public List<Order> getSalesInLastWeek(String cafeId) {
-        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> orders = orderRepository.findOrdersByCafeId(cafeId);
         List<Order> salesInLastWeek = new ArrayList<>();
         for(Order order : orders) {
             if(isInLastWeek(order.getCreatedAt())) {
@@ -559,7 +569,7 @@ public class OrderService {
 
     public BranchStat getBranchStatistics(String cafeId) {
         BranchStat branchStat = new BranchStat();
-        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> orders = orderRepository.findOrdersByCafeId(cafeId);
         List<Order> salesInThisWeek = new ArrayList<>();
         List<Order> salesInLastWeek = new ArrayList<>();
         Map<String,Integer> foodSalesThisWeek = new HashMap<>();
@@ -620,9 +630,9 @@ public class OrderService {
 
     public MonthlyBranchStat getBranchStatisticsMonthly(String cafeId) {
         MonthlyBranchStat branchStat = new MonthlyBranchStat();
-        List<Order> orders = orderRepository.findByCafeId(cafeId);
+        List<Order> orders = getOrdersByCafeId(cafeId);
         List<Order> salesInThisMonth = new ArrayList<>();
-        Map<String, Integer> foodSalesThisWeek = new HashMap<>();
+        Map<String,Integer> foodSalesThisWeek = new HashMap<>();
 
         float totalIncomeThisMonth = 0;
 
@@ -630,23 +640,16 @@ public class OrderService {
         int afternoonSessionCount = 0;
         int eveningSessionCount = 0;
 
-        // Get the previous month and year
-        YearMonth previousMonth = YearMonth.now().minusMonths(1);
-        String month = previousMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-        String year = String.valueOf(previousMonth.getYear());
-
-        for (Order order : orders) {
-            if (isInPreviousMonth(order.getCreatedAt(), previousMonth)) {
+        for(Order order : orders) {
+            if(isInThisMonth(order.getCreatedAt())) {
                 salesInThisMonth.add(order);
                 totalIncomeThisMonth += order.getTotalAmount();
-
                 for (OrderFood item : order.getOrderItems()) {
                     foodSalesThisWeek.put(
                             item.getFoodId(),
                             foodSalesThisWeek.getOrDefault(item.getFoodId(), 0) + item.getQuantity()
                     );
                 }
-
                 if (isInSession(order.getCreatedAt(), "morning")) {
                     morningSessionCount++;
                 } else if (isInSession(order.getCreatedAt(), "afternoon")) {
@@ -666,26 +669,22 @@ public class OrderService {
         branchStat.setTotalIncomeThisMonth(totalIncomeThisMonth);
 
         branchStat.setBranchId(cafeId);
-        branchStat.setMonth(month);
-        branchStat.setYear(year);
+        branchStat.setMonth(new SimpleDateFormat("MMMM").format(new Date()));
+        branchStat.setYear(new SimpleDateFormat("yyyy").format(new Date()));
         branchStat.setCreatedAt(new Date());
 
-        List<FoodItem> foodItemList = foodItemRepository.findByCafeId(cafeId);
-        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId);
-        List<StockCollection> stockCollectionList = stockCollectionRepository.findByCafeId(cafeId);
-
-        branchStat.setEmployeeCount(0);
-        branchStat.setMenuItemCount(foodItemList.size() + foodComboList.size());
-        branchStat.setStockCollectionCount(stockCollectionList.size());
+//        List<FoodItem> foodItemList = foodItemRepository.findByCafeId(cafeId);
+//        List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId);
+//        List<StockCollection> stockCollectionList = stockCollectionRepository.findByCafeId(cafeId);
+//
+//        System.out.println(stockCollectionList);
+//        branchStat.setEmployeeCount(0);
+//        branchStat.setMenuItemCount(foodItemList.size() + foodComboList.size());
+//        branchStat.setStockCollectionCount(stockCollectionList.size());
 
         return branchStat;
-    }
 
-    private boolean isInPreviousMonth(String createdAt, YearMonth previousMonth) {
-        LocalDate date = LocalDate.parse(createdAt, DateTimeFormatter.ISO_DATE);
-        return YearMonth.from(date).equals(previousMonth);
     }
-
 
     private boolean isInSession(String createdAt, String session) {
         LocalTime orderTime = LocalTime.parse(createdAt, DateTimeFormatter.ISO_LOCAL_TIME);

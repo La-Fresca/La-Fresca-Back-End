@@ -26,16 +26,12 @@ public class ScheduledTask {
     @Scheduled(cron = "0 0 0 1 * ?")
     public void runAfter31st() {
         System.out.println("Creating brach stats for the month");
-        List<MonthlyBranchStat> monthlyBranchStats = new ArrayList<>();
+//        List<MonthlyBranchStat> monthlyBranchStats = new ArrayList<>();
 
         //need to create branch stats for the month
         branchService.getBranches().forEach(branch -> {
             MonthlyBranchStat stat = orderService.getBranchStatisticsMonthly(branch.getId());
-            monthlyBranchStats.add(stat);
-        });
-
-        monthlyBranchStats.forEach(monthlyBranchStat -> {
-            monthlyBranchStatService.addMonthlyBranchStat(monthlyBranchStat);
+            monthlyBranchStatService.addMonthlyBranchStat(stat);
         });
 
     }
