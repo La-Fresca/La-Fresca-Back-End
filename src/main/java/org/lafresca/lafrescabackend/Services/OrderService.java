@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,19 +86,6 @@ public class OrderService {
                 }
                 orderFood.setAddedFeatures(addedFeatureList);
             }
-
-
-//            item.getAddedFeatures().forEach(itemfeature -> {
-//                if(itemfeature.getLevel() >= 0) {
-//                    CustomFeature customFeature = foodItem.getFeatures().get(itemfeature.getLevel());
-//                    AddedFeature addedFeature = new AddedFeature();
-//                    addedFeature.setLevel(itemfeature.getLevel());
-//                    addedFeature.setName(customFeature.getName());
-//
-//
-//                }
-//            });
-
 
 
             orderItems.add(orderFood);
@@ -628,11 +618,11 @@ public class OrderService {
 
     }
 
-    public BranchStat getBranchStatisticsMonthly(String cafeId) {
-        BranchStat branchStat = new BranchStat();
+    public MonthlyBranchStat getBranchStatisticsMonthly(String cafeId) {
+        MonthlyBranchStat branchStat = new MonthlyBranchStat();
         List<Order> orders = orderRepository.findByCafeId(cafeId);
         List<Order> salesInThisMonth = new ArrayList<>();
-        Map<String,Integer> foodSalesThisWeek = new HashMap<>();
+        Map<String, Integer> foodSalesThisWeek = new HashMap<>();
 
         float totalIncomeThisMonth = 0;
 
@@ -640,16 +630,23 @@ public class OrderService {
         int afternoonSessionCount = 0;
         int eveningSessionCount = 0;
 
-        for(Order order : orders) {
-            if(isInThisMonth(order.getCreatedAt())) {
+        // Get the previous month and year
+        YearMonth previousMonth = YearMonth.now().minusMonths(1);
+        String month = previousMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        String year = String.valueOf(previousMonth.getYear());
+
+        for (Order order : orders) {
+            if (isInPreviousMonth(order.getCreatedAt(), previousMonth)) {
                 salesInThisMonth.add(order);
                 totalIncomeThisMonth += order.getTotalAmount();
+
                 for (OrderFood item : order.getOrderItems()) {
                     foodSalesThisWeek.put(
                             item.getFoodId(),
                             foodSalesThisWeek.getOrDefault(item.getFoodId(), 0) + item.getQuantity()
                     );
                 }
+
                 if (isInSession(order.getCreatedAt(), "morning")) {
                     morningSessionCount++;
                 } else if (isInSession(order.getCreatedAt(), "afternoon")) {
@@ -666,21 +663,29 @@ public class OrderService {
         branchStat.setAfternoonSessionCount(afternoonSessionCount);
         branchStat.setEveningSessionCount(eveningSessionCount);
         branchStat.setTopSellingItems(topFoodsThisWeek);
-        branchStat.setTotalIncomeThisWeek(totalIncomeThisWeek);
-        branchStat.setTotalIncomeLastWeek(totalIncomeLastWeek);
+        branchStat.setTotalIncomeThisMonth(totalIncomeThisMonth);
+
+        branchStat.setBranchId(cafeId);
+        branchStat.setMonth(month);
+        branchStat.setYear(year);
+        branchStat.setCreatedAt(new Date());
 
         List<FoodItem> foodItemList = foodItemRepository.findByCafeId(cafeId);
         List<FoodCombo> foodComboList = foodComboRepository.findByCafeId(cafeId);
         List<StockCollection> stockCollectionList = stockCollectionRepository.findByCafeId(cafeId);
 
-        System.out.println(stockCollectionList);
         branchStat.setEmployeeCount(0);
         branchStat.setMenuItemCount(foodItemList.size() + foodComboList.size());
         branchStat.setStockCollectionCount(stockCollectionList.size());
 
         return branchStat;
-
     }
+
+    private boolean isInPreviousMonth(String createdAt, YearMonth previousMonth) {
+        LocalDate date = LocalDate.parse(createdAt, DateTimeFormatter.ISO_DATE);
+        return YearMonth.from(date).equals(previousMonth);
+    }
+
 
     private boolean isInSession(String createdAt, String session) {
         LocalTime orderTime = LocalTime.parse(createdAt, DateTimeFormatter.ISO_LOCAL_TIME);

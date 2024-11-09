@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Models.Branch;
+import org.lafresca.lafrescabackend.Models.MonthlyBranchStat;
 import org.lafresca.lafrescabackend.Services.BranchService;
 import org.lafresca.lafrescabackend.Services.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -155,5 +156,22 @@ public class BranchController {
             })
     public BranchStat getBranchStatistics(@PathVariable("id") String id) {
         return orderService.getBranchStatistics(id);
+    }
+
+    @GetMapping(value = "/branchStatistics/monthly/{id}")
+    @Operation(
+            description = "Get monthly branch statistics",
+            summary = "Get monthly statistics of a branch by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public MonthlyBranchStat getBranchStatisticsMonthly(@PathVariable("id") String id) {
+        return orderService.getBranchStatisticsMonthly(id);
     }
 }
