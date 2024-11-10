@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Month;
 import java.time.YearMonth;
+import java.time.format.TextStyle;
 import java.util.*;
 
 @Service
@@ -30,8 +31,13 @@ public class MonthlyBranchStatService {
         List<MonthlyBranchStat> monthlyBranchStats = new ArrayList<>();
 
         for (int i = 0; i < 12; i++) {
+            System.out.println("Current Month: " + currentMonth);
             YearMonth yearMonth = currentMonth.minusMonths(i);
-            MonthlyBranchStat monthlyBranchStat = monthlyBranchStatRepository.findByCafeIdAndMonth(id, yearMonth.getMonthValue(), yearMonth.getYear());
+            String monthText = yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            System.out.println("Month: " + monthText);
+            String year = String.valueOf(yearMonth.getYear());
+            System.out.println("Year: " + year);
+            MonthlyBranchStat monthlyBranchStat = monthlyBranchStatRepository.findByCafeIdAndMonth(id, monthText, year);
             if (monthlyBranchStat != null) {
                 monthlyBranchStats.add(monthlyBranchStat);
             }
@@ -47,9 +53,12 @@ public class MonthlyBranchStatService {
 
         for (int i = 0; i < 12; i++) {
             YearMonth yearMonth = currentMonth.minusMonths(i);
-            MonthlyBranchStat monthlyBranchStat = monthlyBranchStatRepository.findByMonth( yearMonth.getMonthValue(), yearMonth.getYear());
+            System.out.println("Year Month: " + yearMonth);
+            String year = String.valueOf(yearMonth.getYear());
+            String month = yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            List<MonthlyBranchStat> monthlyBranchStat = monthlyBranchStatRepository.findByMonth( month, year);
             if (monthlyBranchStat != null) {
-                monthlyBranchStats.add(monthlyBranchStat);
+                monthlyBranchStats.addAll(monthlyBranchStat);
             }
         }
 
