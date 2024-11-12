@@ -4,9 +4,7 @@ import jakarta.validation.Valid;
 import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
-import org.lafresca.lafrescabackend.Models.Branch;
-import org.lafresca.lafrescabackend.Models.IncomeCost;
-import org.lafresca.lafrescabackend.Models.User;
+import org.lafresca.lafrescabackend.Models.*;
 import org.lafresca.lafrescabackend.Repositories.BranchRepository;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,35 +36,15 @@ public class BranchService {
         newBranch.setLatitude(branch.getLatitude());
         newBranch.setLongitude(branch.getLongitude());
         newBranch.setBranchManager(branch.getBranchManager());
+        newBranch.setName(branch.getName());
+        newBranch.setStatus(BranchStatus.CLOSED);
 
-        IncomeCost income = new IncomeCost();
-        List<IncomeCost> incomeList = new ArrayList<>();
-        LocalDate now = LocalDate.now();
-        income.setYear(now.getYear());
-        income.setMonth(now.getMonthValue());
-        income.setAmount(0.0);
-        incomeList.add(income);
+        User branchManager =  userRepository.findById(branch.getBranchManager()).orElseThrow(() -> new ResourceNotFoundException("Branch manager not found with id " + branch.getBranchManager()));
 
-        newBranch.setIncome(incomeList);
-        newBranch.setCost(incomeList);
         newBranch.setDeleted(0);
-        newBranch.setDailyCost(0.0);
-        newBranch.setDailyIncome(0.0);
-
-        User branchManager = userRepository.findByUserId(branch.getBranchManager());
         Branch savedBranch = branchRepository.save(newBranch);
-
         branchManager.setCafeId(savedBranch.getId());
         userRepository.save(branchManager);
-
-//        else if (branch.getLongitude() < -180 || branch.getLongitude() > 180) {
-//            error = "Invalid value for longitude";
-//        }
-//        else if (branch.getLatitude() < -90 || branch.getLatitude() > 90) {
-//            error = "Invalid value for latitude";
-//        }
-
-
 
         return branch;
     }
@@ -107,12 +85,6 @@ public class BranchService {
         if (branch.getBranchManager() != null && !branch.getBranchManager().isEmpty()) {
             existingBranch.setBranchManager(branch.getBranchManager());
         }
-        if (branch.getDailyIncome() != null) {
-            existingBranch.setDailyIncome(existingBranch.getDailyIncome() + branch.getDailyIncome());
-        }
-        if (branch.getDailyCost() != null) {
-            existingBranch.setDailyCost(existingBranch.getDailyCost() + branch.getDailyCost());
-        }
 
         branchRepository.save(existingBranch);
     }
@@ -126,6 +98,8 @@ public class BranchService {
 
         branchRepository.save(existingBranch);
     }
+
+
 
     //branch statistics
 //    public BranchStat getBranchStat(String id) {

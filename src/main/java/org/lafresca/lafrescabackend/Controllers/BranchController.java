@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Models.Branch;
+import org.lafresca.lafrescabackend.Models.MonthlyBranchStat;
 import org.lafresca.lafrescabackend.Services.BranchService;
+import org.lafresca.lafrescabackend.Services.MonthlyBranchStatService;
 import org.lafresca.lafrescabackend.Services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +28,7 @@ import java.util.Optional;
 public class BranchController {
     private final BranchService branchService;
     private final OrderService orderService;
+    private final MonthlyBranchStatService monthlyBranchStatService;
 
     // Add new branch
     @PostMapping
@@ -157,5 +160,55 @@ public class BranchController {
         return orderService.getBranchStatistics(id);
     }
 
+    @GetMapping(value = "/branchStatistics/allTime/{id}")
+    @Operation(
+            description = "Get every monthly branch statistics",
+            summary = "Get monthly statistics of a branch by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public List<MonthlyBranchStat> getBranchStatisticsAllTime(@PathVariable("id") String id) {
+        return monthlyBranchStatService.getBranchStatisticsEveryMonth(id);
+    }
+
+    @GetMapping(value = "/branchStatistics/Yearly/{id}")
+    @Operation(
+            description = "Get this year branch statistics",
+            summary = "Get yearly statistics of a branch by using the id",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public List<MonthlyBranchStat> getBranchStatisticsYearly(@PathVariable("id") String id) {
+        return monthlyBranchStatService.getBranchStatisticsThisYear(id);
+    }
+
+    @GetMapping(value = "/branchStatistics/AllThisYear")
+    @Operation(
+            description = "Get all branches statistics for this year",
+            summary = "Get yearly statistics of all branches",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public List<MonthlyBranchStat> getBranchStatisticsAllThisYear() {
+        return monthlyBranchStatService.getBranchStatisticsAllThisYear();
+    }
 
 }

@@ -111,17 +111,17 @@ public class OrderController {
     }
 
     @GetMapping(value = "/queueItems/{cafeId}")
-    public List<Order> getQueueItems(@PathVariable("cafeId") Long cafeId) {
+    public List<Order> getQueueItems(@PathVariable("cafeId") String cafeId) {
         return orderService.getQueueItems(cafeId);
     }
 
     @GetMapping(value = "/preparingItems/{cafeId}")
-    public List<Order> getPreparingItems(@PathVariable("cafeId") Long cafeId) {
+    public List<Order> getPreparingItems(@PathVariable("cafeId") String cafeId) {
         return orderService.getPreparingItems(cafeId);
     }
 
     @GetMapping(value = "/readyItems/{cafeId}")
-    public List<Order> getReadyItems(@PathVariable("cafeId") Long cafeId) {
+    public List<Order> getReadyItems(@PathVariable("cafeId") String cafeId) {
         return orderService.getReadyItems(cafeId);
     }
 
@@ -135,6 +135,4 @@ public class OrderController {
     public List<Order> getSalesInThisWeek(@PathVariable("cafeId") String cafeId) {
         return orderService.getSalesInThisWeek(cafeId);
     }
-
-
 }
