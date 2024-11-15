@@ -126,7 +126,7 @@ public class StockService {
 
     // Logical Delete
     @Transactional
-    public void logicallyDeleteStock(String id, Stock stock) {
+    public void logicallyDeleteStock(String id) {
         Stock existingStock = stockRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Stock not found with id " + id));
 
