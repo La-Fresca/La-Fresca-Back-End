@@ -20,11 +20,26 @@ public class ComplaintService {
     }
 
     public String addNewComplaint(Complaint complaint) {
-        return null;
+        try {
+            complaint.setDate(LocalDateTime.now());
+
+            Complaint newComplaint = complaintRepository.save(complaint);
+
+            return newComplaint.toString();
+        } catch (Exception e) {
+            // Log the exception
+            throw new RuntimeException("Error saving complaint", e);
+        }
     }
 
     // Retrieve all complaints
     public List<Complaint> getComplaints() {
         return complaintRepository.findAll();
+    }
+
+    public String deleteComplaint(String id) {
+        complaintRepository.deleteById(id);
+
+        return "Complaint deleted";
     }
 }

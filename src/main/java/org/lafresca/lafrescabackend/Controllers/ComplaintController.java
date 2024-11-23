@@ -19,7 +19,7 @@ import java.util.List;
 public class ComplaintController {
     private final ComplaintService complaintService;
 
-    // Add new item
+    // Add new Complaint
     @PostMapping
     @Operation(
             description = "Add to complaint",
@@ -36,6 +36,8 @@ public class ComplaintController {
             })
     public String addNewComplaint(@RequestBody Complaint complaint) { return complaintService.addNewComplaint(complaint); }
 
+
+    //Get All complaints
     @GetMapping
     @Operation(
             description = "Get all Complaints",
@@ -53,4 +55,24 @@ public class ComplaintController {
 
     public List<Complaint> getComplaints() {
         return complaintService.getComplaints(); }
+
+    //Delete Complaints
+    @DeleteMapping(path = "/{complaintId}")
+    @Operation(
+            description = "Delete complaint",
+            summary = "Delete complaint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+    public String deleteComplaint(@PathVariable("complaintId") String id) {
+         return complaintService.deleteComplaint(id);
+    }
+
 }
