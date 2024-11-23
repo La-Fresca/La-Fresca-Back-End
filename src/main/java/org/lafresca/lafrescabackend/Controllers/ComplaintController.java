@@ -4,9 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.Models.Branch;
 import org.lafresca.lafrescabackend.Models.Complaint;
 import org.lafresca.lafrescabackend.Services.ComplaintService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -33,4 +36,21 @@ public class ComplaintController {
             })
     public String addNewComplaint(@RequestBody Complaint complaint) { return complaintService.addNewComplaint(complaint); }
 
+    @GetMapping
+    @Operation(
+            description = "Get all Complaints",
+            summary = "Retrieve all complaints",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public List<Complaint> getComplaints() {
+        return complaintService.getComplaints(); }
 }
