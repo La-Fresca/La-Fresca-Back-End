@@ -67,7 +67,7 @@ public class FoodItemController {
     @GetMapping(path = "getAllForTLM")
     @Operation(
             description = "Get all food items for top level manager",
-            summary = "Retrieve all food items in the branch",
+            summary = "Retrieve all food items",
             responses = {
                     @ApiResponse(
                             description = "Success",
