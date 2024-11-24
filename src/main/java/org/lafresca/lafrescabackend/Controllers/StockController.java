@@ -151,8 +151,8 @@ public class StockController {
                             responseCode = "403")
             })
 
-    public void logicallyDeleteStock(@PathVariable("id") String id, @RequestBody Stock stock){
-        stockService.logicallyDeleteStock(id, stock);
+    public void logicallyDeleteStock(@PathVariable("id") String id){
+        stockService.logicallyDeleteStock(id);
     }
 
     // Get stock by stock collection

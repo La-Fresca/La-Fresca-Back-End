@@ -38,9 +38,27 @@ public class DiscountController {
     public String addNewDiscount(@RequestBody Discount discount) { return discountService.addNewDiscount(discount); }
 
     // Retrieve all discounts
-    @GetMapping(path = "{cafeId}")
+    @GetMapping
     @Operation(
             description = "Get all discounts",
+            summary = "Retrieve all discounts",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public List<List<Discount>> getDiscounts() { return discountService.getDiscounts(); }
+
+    // Retrieve all discounts by CafeId
+    @GetMapping(path = "{cafeId}")
+    @Operation(
+            description = "Get all discounts in the branch",
             summary = "Retrieve all discounts in the branch",
             responses = {
                     @ApiResponse(

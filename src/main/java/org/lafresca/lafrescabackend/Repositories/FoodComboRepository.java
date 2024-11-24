@@ -19,6 +19,9 @@ public interface FoodComboRepository extends MongoRepository<FoodCombo,String> {
     @Query("{ 'id' :  ?0 }")
     FoodCombo findOneById(String id);
 
+    @Query("{ 'DiscountStatus' : 1, 'Deleted' : 0 }")
+    List<FoodCombo> findAllByDiscountStatus();
+
     @Query("{ 'CafeId' :  ?0, 'DiscountStatus' : 1, 'Deleted' : 0 }")
     List<FoodCombo> findDiscountByStatus(String CafeId);
 }

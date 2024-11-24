@@ -160,7 +160,7 @@ public class StockCollectionController {
                             responseCode = "403")
             })
 
-    public void logicallyDeleteStockCollection(@PathVariable("id") String id, @RequestBody StockCollection stockCollection){
-        stockCollectionService.logicallyDeleteStockCollection(id, stockCollection);
+    public void logicallyDeleteStockCollection(@PathVariable("id") String id){
+        stockCollectionService.logicallyDeleteStockCollection(id);
     }
 }
