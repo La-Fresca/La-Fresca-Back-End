@@ -4,6 +4,7 @@ import org.lafresca.lafrescabackend.Models.MonthlyBranchStat;
 import org.lafresca.lafrescabackend.Repositories.MonthlyBranchStatRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
@@ -63,5 +64,33 @@ public class MonthlyBranchStatService {
         }
 
         return monthlyBranchStats;
+    }
+
+    public List<MonthlyBranchStat> getBranchStatisticsPreviousMonths(String id) {
+        return monthlyBranchStatRepository.findByCafeId(id);
+    }
+
+    public List<MonthlyBranchStat> getBranchStatisticsPrevious12Months(String id) {
+        List<MonthlyBranchStat> branchStatList = new ArrayList<>();
+
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM"); // Format for the month
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");  // Format for the year
+        Calendar calendar = Calendar.getInstance();
+
+        MonthlyBranchStat monthlyBranchStat = new MonthlyBranchStat();
+
+        for (int i = 0; i < 12; i++) {
+            String month = monthFormat.format(calendar.getTime()); // Get the month
+            String year = yearFormat.format(calendar.getTime());
+            monthlyBranchStat = monthlyBranchStatRepository.findByCafeIdAndMonth(id, month,year);
+            if(monthlyBranchStat != null){
+                branchStatList.add(monthlyBranchStat);
+            }
+            calendar.add(Calendar.MONTH, -1); // Move to the previous month
+        }
+
+        System.out.println("length of branch Stat: "+ branchStatList.size());
+
+        return branchStatList;
     }
 }

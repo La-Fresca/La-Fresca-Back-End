@@ -9,12 +9,13 @@ import java.util.List;
 
 @Repository
 public interface MonthlyBranchStatRepository extends MongoRepository<MonthlyBranchStat,String> {
-    @Query("{ 'BranchId' : ?0 }")
+    @Query("{ 'branchId' : ?0 }")
     List<MonthlyBranchStat> findByCafeId(String id);
 
-    @Query("{ 'BranchId' : ?0, 'Month' : ?1, 'Year' : ?2 }")
+    @Query("{ 'branchId' : ?0, 'Month' : ?1, 'Year' : ?2 }")
     MonthlyBranchStat findByCafeIdAndMonth(String id, String month, String year);
 
     @Query("{ 'Month' : ?0, 'Year' : ?1 }")
     List<MonthlyBranchStat> findByMonth(String month, String year);
+
 }
