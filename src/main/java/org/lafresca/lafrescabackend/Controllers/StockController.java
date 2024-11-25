@@ -45,10 +45,28 @@ public class StockController {
     }
 
     // Get all stock
-    @GetMapping(path = "{cafeId}")
+    @GetMapping(path = "getAll")
     @Operation(
             description = "Get all stocks",
             summary = "Retrieve all stocks in inventory",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+
+    public List<StockDTO> getStocks() { return stockService.getStocks(); }
+
+    // Get all stock by cafeId
+    @GetMapping(path = "{cafeId}")
+    @Operation(
+            description = "Get all stocks by cafeId",
+            summary = "Retrieve all stocks in inventory by using cafeId",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -133,8 +151,8 @@ public class StockController {
                             responseCode = "403")
             })
 
-    public void logicallyDeleteStock(@PathVariable("id") String id, @RequestBody Stock stock){
-        stockService.logicallyDeleteStock(id, stock);
+    public void logicallyDeleteStock(@PathVariable("id") String id){
+        stockService.logicallyDeleteStock(id);
     }
 
     // Get stock by stock collection

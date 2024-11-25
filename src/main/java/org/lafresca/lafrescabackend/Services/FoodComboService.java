@@ -133,11 +133,11 @@ public class FoodComboService {
     }
 
     // Logical Delete
-    public void logicallyDeleteFoodCombo(String id, FoodCombo foodCombo) {
+    public void logicallyDeleteFoodCombo(String id) {
         FoodCombo existingFoodCombo = foodComboRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Food Combo not found with id " + id));
 
-        existingFoodCombo.setDeleted(foodCombo.getDeleted());
+        existingFoodCombo.setDeleted(1);
 
         foodComboRepository.save(existingFoodCombo);
     }

@@ -67,7 +67,7 @@ public class FoodItemController {
     @GetMapping(path = "getAllForTLM")
     @Operation(
             description = "Get all food items for top level manager",
-            summary = "Retrieve all food items in the branch",
+            summary = "Retrieve all food items",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -149,8 +149,8 @@ public class FoodItemController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public void logicallyDeleteFoodItem(@PathVariable("id") String id, @RequestBody FoodItem foodItem){
-        foodItemService.logicallyDeleteFoodItem(id, foodItem);
+    public void logicallyDeleteFoodItem(@PathVariable("id") String id){
+        foodItemService.logicallyDeleteFoodItem(id);
     }
 
     // Change availability

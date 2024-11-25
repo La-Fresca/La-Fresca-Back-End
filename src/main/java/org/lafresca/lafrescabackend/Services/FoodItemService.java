@@ -92,11 +92,11 @@ public class FoodItemService {
     }
 
     // Logical Delete
-    public void logicallyDeleteFoodItem(String id, FoodItem foodItem) {
+    public void logicallyDeleteFoodItem(String id) {
         FoodItem existingFoodItem = foodItemRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("FoodItem not found with id " + id));
 
-        existingFoodItem.setStatus(foodItem.getStatus());
+        existingFoodItem.setStatus(1);
 
         foodItemRepository.save(existingFoodItem);
     }

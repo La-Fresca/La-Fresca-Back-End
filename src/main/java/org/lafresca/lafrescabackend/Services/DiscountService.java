@@ -50,6 +50,20 @@ public class DiscountService {
                 error = "Amount not valid";
             }
         }
+//        else if (discount.getDiscountType().equals("Price Offer")) {
+//            if (discount.getDiscountAmount() == null) {
+//                error = "Discount Amount cannot be empty";
+//            }
+//
+//            else {
+//                FoodItem foodItem = foodItemRepository.findOneById(discount.getMenuItemId());
+//
+//                if (discount.getDiscountAmount() < foodItem.getCost()) {
+//
+//                }
+//            }
+//
+//        }
         else if (discount.getDiscountAmount() < 0 ) {
             error = "Discount amount not valid";
         }
@@ -113,8 +127,31 @@ public class DiscountService {
         return error;
     }
 
-
     // Retrieve all discounts
+    public List<List<Discount>> getDiscounts() {
+        List<FoodItem> foodItemList = foodItemRepository.findAllByDiscountStatus();
+        List<FoodCombo> foodComboList = foodComboRepository.findAllByDiscountStatus();
+
+        List<Discount> foodItemDiscount = new ArrayList<>();
+        List<Discount> foodComboDiscount = new ArrayList<>();
+
+        for (FoodItem foodItem : foodItemList) {
+            foodItemDiscount.add(foodItem.getDiscountDetails());
+        }
+
+        for (FoodCombo foodCombo : foodComboList) {
+            foodComboDiscount.add(foodCombo.getDiscountDetails());
+        }
+
+        List<List<Discount>> discounts = new ArrayList<>();
+        discounts.add(foodItemDiscount);
+        discounts.add(foodComboDiscount);
+
+        return discounts;
+    }
+
+
+    // Retrieve all discounts by CafeId
     public List<List<Discount>> getDiscounts(String cafeId) {
         List<FoodItem> foodItemList = foodItemRepository.findDiscountByStatus(cafeId);
         List<FoodCombo> foodComboList = foodComboRepository.findDiscountByStatus(cafeId);

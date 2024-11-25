@@ -139,8 +139,8 @@ public class BranchController {
                             responseCode = "403")
             })
 
-    public void logicallyDeleteBranch(@PathVariable("id") String id, @RequestBody Branch branch){
-        branchService.logicallyDeleteBranch(id, branch);
+    public void logicallyDeleteBranch(@PathVariable("id") String id){
+        branchService.logicallyDeleteBranch(id);
     }
 
     @GetMapping(value = "/branchStatistics/{id}")

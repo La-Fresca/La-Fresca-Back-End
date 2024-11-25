@@ -70,6 +70,14 @@ public class StockService {
 
     }
 
+    // Get all stocks
+    public List<StockDTO> getStocks() {
+        return stockRepository.findByDeleted()
+                .stream()
+                .map(stockDTOMapper)
+                .collect(Collectors.toList());
+    }
+
     // Get all stocks by Cafe Id
     public List<StockDTO> getStocks(String cafeId) {
         return stockRepository.findByCafeId(cafeId)
@@ -118,7 +126,7 @@ public class StockService {
 
     // Logical Delete
     @Transactional
-    public void logicallyDeleteStock(String id, Stock stock) {
+    public void logicallyDeleteStock(String id) {
         Stock existingStock = stockRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Stock not found with id " + id));
 
@@ -126,7 +134,7 @@ public class StockService {
         stockCollection.setAvailableAmount(stockCollection.getAvailableAmount() - existingStock.getInitialAmount());
         stockCollectionRepository.save(stockCollection);
 
-        existingStock.setDeleted(stock.getDeleted());
+        existingStock.setDeleted(1);
         stockRepository.save(existingStock);
     }
 

@@ -51,7 +51,7 @@ public class BranchService {
 
     // Retrieve all branches
     public List<Branch> getBranches() {
-        return branchRepository.findAll();
+        return branchRepository.findByDeleted();
     }
 
     // Search branch by id
@@ -90,11 +90,11 @@ public class BranchService {
     }
 
     // Logical Delete
-    public void logicallyDeleteBranch(String id, Branch branch) {
+    public void logicallyDeleteBranch(String id) {
         Branch existingBranch = branchRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Branch not found with id " + id));
 
-        existingBranch.setDeleted(branch.getDeleted());
+        existingBranch.setDeleted(1);
 
         branchRepository.save(existingBranch);
     }
