@@ -1,5 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
+import jakarta.validation.Valid;
+import org.lafresca.lafrescabackend.DTO.Request.ChangePasswordDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.ForgotPassword;
 import org.lafresca.lafrescabackend.Models.User;
@@ -49,7 +51,7 @@ public class ForgotPasswordService {
                 "\n" +
                 "This link will expire in [time duration, e.g., 24 hours]. If you did not request to reset your password, please ignore this email, and your account will remain secure.\n" +
                 "\n" +
-                "If you have any questions or need assistance, feel free to contact us at [support email/contact details].\n" +
+                "If you have any questions or need assistance, feel free to contact us at thecafe.lafresca@gmail.com.\n" +
                 "\n" +
                 "Thank you,  \n" +
                 "Lafresca  \n");
@@ -58,5 +60,9 @@ public class ForgotPasswordService {
         javaMailSender.send(message);
 
         return "Email sent sucessfully";
+    }
+
+    public String changePassword(@Valid ChangePasswordDTO changePasswordDTO) {
+        return "Password Changed";
     }
 }
