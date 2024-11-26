@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.lafresca.lafrescabackend.Models.Branch;
 import org.lafresca.lafrescabackend.Models.Complaint;
 import org.lafresca.lafrescabackend.Services.ComplaintService;
 import org.springframework.web.bind.annotation.*;
@@ -74,5 +73,26 @@ public class ComplaintController {
     public String deleteComplaint(@PathVariable("complaintId") String id) {
          return complaintService.deleteComplaint(id);
     }
+
+    //get  by complaneeId
+    @GetMapping(path = "/{complainerId}")
+    @Operation(
+            description = "Search by complainerId",
+            summary = "GetComplaints By Complainer",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+    public List<Complaint> GetComplaintsByComplainer(@PathVariable("complainerId") String id) {
+        return complaintService.GetComplaintsByComplainer(id);
+    }
+
+
 
 }

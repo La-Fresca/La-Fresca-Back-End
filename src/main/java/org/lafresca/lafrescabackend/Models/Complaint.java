@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class Complaint {
     @Id
     private String id;
-    private String Complainee;
+    private String Complainee;  //branch id
     private String Complainer;
     private String Topic;
     private String Description;

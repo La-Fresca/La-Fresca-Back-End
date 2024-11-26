@@ -37,9 +37,15 @@ public class ComplaintService {
         return complaintRepository.findAll();
     }
 
+    //delete complaint
     public String deleteComplaint(String id) {
         complaintRepository.deleteById(id);
 
         return "Complaint deleted";
+    }
+
+    public List<Complaint> GetComplaintsByComplainer(String id) {
+        System.out.println("Id " + id);
+        return complaintRepository.findAllByComplainerId(id);
     }
 }
