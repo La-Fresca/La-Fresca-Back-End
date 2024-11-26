@@ -28,6 +28,9 @@ public class ServiceOrchestrator {
         return salesPredictionService.getSalesPredictionDataByCafe(cafeId);
     }
 
+    public Map<String, Float> getStockPredictionDataByCafe(String cafeId){
+        return stockPredictionService.getStockPredictionDataByCafe(cafeId);
+    }
 
 
 }

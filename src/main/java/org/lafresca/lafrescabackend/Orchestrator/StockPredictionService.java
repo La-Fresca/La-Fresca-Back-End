@@ -22,4 +22,11 @@ public class StockPredictionService {
                 .block(); // Block to get the result directly
     }
 
+    public Map<String, Float> getStockPredictionDataByCafe(String cafeId) {
+        return webClient.get()
+                .uri("/endpoint/" + cafeId) // need to change
+                .retrieve()
+                .bodyToMono(Map.class) // Specify the type as Map.class
+                .block(); // Block to get the result directly
+    }
 }
