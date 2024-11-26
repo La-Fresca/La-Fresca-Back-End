@@ -5,11 +5,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.lafresca.lafrescabackend.Models.Branch;
+import org.lafresca.lafrescabackend.Services.ForgotPasswordService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,7 +18,9 @@ import java.util.List;
 @Validated
 @Tag(name = "Forgot Password Controller")
 public class ForgotPasswordController {
-    @GetMapping
+    private final ForgotPasswordService forgotPasswordService;
+
+    @GetMapping(path = "{email}")
     @Operation(
             description = "Get email",
             summary = "Get email to change password",
@@ -35,5 +35,7 @@ public class ForgotPasswordController {
                     )
             })
 
-    public String getBranches() { return branchService.getBranches(); }
+    public String getEmail(@PathVariable("email") String email) {
+        return forgotPasswordService.sendEmail(email);
+    }
 }
