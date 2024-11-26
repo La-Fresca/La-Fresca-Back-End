@@ -13,31 +13,31 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends MongoRepository<Order, String> {
-    @Query("{ 'customerId' : ?0 }")
+    @Query("{ 'CustomerId' : ?0 }")
     List<Order> findByCustomerId(String userId);
 
-    @Query("{ 'waiterId' : ?0 }")
+    @Query("{ 'WaiterId' : ?0 }")
     List<Order> findByWaiterId(String userId);
 
-    @Query("{ 'cashierId' : ?0 }")
+    @Query("{ 'CashierId' : ?0 }")
     List<Order> findByCashierId(String userId);
 
-    @Query("{ 'cafeId' : ?0 }")
-    List<Order> findByCafeId(String cafeId);
+    @Query("{ 'CafeId' : ?0 }")
+    List<Order> findOrdersByCafeId(String cafeId);
 
-    @Query("{ 'deliveryPersonId' : ?0 }")
+    @Query("{ 'DeliveryPersonId' : ?0 }")
     List<Order> findByDeliveryPersonId(String userId);
 
-    @Query("{ 'waiterId' : ?0, 'OrderStatus' : ?1 }")
+    @Query("{ 'WaiterId' : ?0, 'OrderStatus' : ?1 }")
     List<Order> findByWaiterIdAndOrderStatus(String userId, OrderStatus orderStatus);
 
-    @Query("{ 'deliveryPersonId' : ?0, 'OrderStatus' : ?1 }")
+    @Query("{ 'DeliveryPersonId' : ?0, 'OrderStatus' : ?1 }")
     List<Order> findByDeliveryPersonIdAndOrderStatus(String userId, OrderStatus orderStatus);
 
     List<User> findDeliveryPersonsByCafeId(String cafeId);
 
-    @Query("{ 'cafeId' : ?0, 'OrderStatus' : ?1 }")
-    List<Order> findByCafeIdAndOrderStatus(Long cafeId, OrderStatus orderStatus);
+    @Query("{ 'CafeId' : ?0, 'OrderStatus' : ?1 }")
+    List<Order> findByCafeIdAndOrderStatus(String cafeId, OrderStatus orderStatus);
 
     @Query("{ 'CreatedAt' : { $gte: ?0, $lt: ?1 } }")
     List<Order> findOrdersByDateRange(LocalDateTime start, LocalDateTime end);
