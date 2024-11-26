@@ -2,7 +2,11 @@ package org.lafresca.lafrescabackend.DTO.Request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ChangePasswordDTO {
     @NotEmpty(message = "email cannot be empty")
     @NotNull(message = "email cannot be null")
@@ -14,6 +18,6 @@ public class ChangePasswordDTO {
 
     @NotEmpty(message = "random no cannot be empty")
     @NotNull(message = "random no cannot be null")
-    private String randomNo;
+    private Integer randomNo;
 
 }

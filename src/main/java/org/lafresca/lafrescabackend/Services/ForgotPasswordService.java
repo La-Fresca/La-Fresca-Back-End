@@ -63,6 +63,31 @@ public class ForgotPasswordService {
     }
 
     public String changePassword(@Valid ChangePasswordDTO changePasswordDTO) {
-        return "Password Changed";
+        Optional<ForgotPassword> forgotPasswordOptional = forgotPasswordRepository.findTopByEmailOrderByIdDesc(changePasswordDTO.getEmail());
+
+        // Check if the record exists
+        if (forgotPasswordOptional.isEmpty()) {
+            return "No password reset request found for this email.";
+        }
+
+        // Get the ForgotPassword object
+        ForgotPassword forgotPassword = forgotPasswordOptional.get();
+
+        if(forgotPassword.getRandomNo() == changePasswordDTO.getRandomNo()){
+            Optional<User> userOptional = userRepository.findTopByEmailOrderByIdDesc(changePasswordDTO.getEmail());
+
+            if(userOptional == null){
+                throw new ResourceNotFoundException("User not found");
+            }
+
+            User user  = userOptional.get();
+            user.setPassword(changePasswordDTO.getNewPassword());
+            userRepository.save(user);
+            return "Password Changed";
+        }
+        else {
+            return "Invalid request";
+        }
+
     }
 }
