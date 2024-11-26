@@ -14,7 +14,7 @@ public class StockPredictionService {
         this.webClient = webClientBuilder.baseUrl(url).build(); // Set the base URL
     }
 
-    public Map<String, Map<String, Float>> getBranchData() {
+    public Map<String, Map<String, Float>> getStockPredictionData() {
         return webClient.get()
                 .uri("/endpoint") // need to change
                 .retrieve()

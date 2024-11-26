@@ -16,5 +16,11 @@ public class ServiceOrchestrator {
         this.stockPredictionService = stockPredictionService;
     }
 
+    public Map<String, Map<String, Integer>> getSalesPredictionData(){
+        return salesPredictionService.getSalesPredictionData();
+    }
 
+    public Map<String, Map<String, Float>> getStockPredictionData(){
+        return stockPredictionService.getStockPredictionData();
+    }
 }
