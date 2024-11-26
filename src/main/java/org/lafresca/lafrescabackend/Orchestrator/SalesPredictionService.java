@@ -8,7 +8,7 @@ import java.util.Map;
 @Service
 public class SalesPredictionService {
     private final WebClient webClient;
-    private final String url = "http://external-api-url.com";
+    private final String url = "http://external-api-url.com"; // need to change
 
     public SalesPredictionService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl(url).build(); // Set the base URL
@@ -16,7 +16,7 @@ public class SalesPredictionService {
 
     public Map<String, Map<String, Integer>> getBranchData() {
         return webClient.get()
-                .uri("/endpoint")
+                .uri("/endpoint") // need to change
                 .retrieve()
                 .bodyToMono(Map.class) // Specify the type as Map.class
                 .block(); // Block to get the result directly
