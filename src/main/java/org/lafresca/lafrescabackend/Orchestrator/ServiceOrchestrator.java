@@ -23,4 +23,11 @@ public class ServiceOrchestrator {
     public Map<String, Map<String, Float>> getStockPredictionData(){
         return stockPredictionService.getStockPredictionData();
     }
+
+    public Map<String, Integer> getSalesPredictionDataByCafe(String cafeId){
+        return salesPredictionService.getSalesPredictionDataByCafe(cafeId);
+    }
+
+
+
 }
