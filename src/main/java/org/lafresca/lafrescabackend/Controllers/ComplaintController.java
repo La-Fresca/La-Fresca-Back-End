@@ -3,6 +3,7 @@ package org.lafresca.lafrescabackend.Controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.lafresca.lafrescabackend.Models.Complaint;
 import org.lafresca.lafrescabackend.Services.ComplaintService;
@@ -33,7 +34,7 @@ public class ComplaintController {
                             responseCode = "403"
                     )
             })
-    public String addNewComplaint(@RequestBody Complaint complaint) { return complaintService.addNewComplaint(complaint); }
+    public String addNewComplaint(@Valid @RequestBody Complaint complaint) { return complaintService.addNewComplaint(complaint); }
 
 
     //Get All complaints
