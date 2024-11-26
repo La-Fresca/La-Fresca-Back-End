@@ -74,8 +74,8 @@ public class ComplaintController {
          return complaintService.deleteComplaint(id);
     }
 
-    //get  by complaneeId
-    @GetMapping(path = "/{complainerId}")
+    //find All by complainer Id
+    @GetMapping(path = "findComplainByComplainer/{complainerId}")
     @Operation(
             description = "Search by complainerId",
             summary = "GetComplaints By Complainer",
@@ -91,6 +91,25 @@ public class ComplaintController {
             })
     public List<Complaint> GetComplaintsByComplainer(@PathVariable("complainerId") String id) {
         return complaintService.GetComplaintsByComplainer(id);
+    }
+
+    //Find All by comlainee Id
+    @GetMapping(path = "findComplainByComplainee/{complaineeId}")
+    @Operation(
+            description = "Search by complaineeId",
+            summary = "Get Complaints By Complainee",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            })
+    public List<Complaint> GetComplaintsByComplainee(@PathVariable("complaineeId") String id) {
+        return complaintService.GetComplaintsByComplainee(id);
     }
 
 

@@ -45,7 +45,11 @@ public class ComplaintService {
     }
 
     public List<Complaint> GetComplaintsByComplainer(String id) {
-        System.out.println("Id " + id);
+//        System.out.println("Id " + id);
         return complaintRepository.findAllByComplainerId(id);
+    }
+
+    public List<Complaint> GetComplaintsByComplainee(String id) {
+        return complaintRepository.findAllByComplaineeId(id);
     }
 }

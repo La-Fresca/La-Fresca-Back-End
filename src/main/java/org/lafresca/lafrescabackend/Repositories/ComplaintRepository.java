@@ -9,4 +9,7 @@ import java.util.List;
 public interface ComplaintRepository extends MongoRepository<Complaint, String> {
     @Query("{'Complainer': ?0}")
     List<Complaint> findAllByComplainerId(String id);
+
+    @Query("{'Complainee': ?0}")
+    List<Complaint> findAllByComplaineeId(String id);
 }
