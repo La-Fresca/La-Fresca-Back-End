@@ -110,6 +110,7 @@ public class FoodItemService {
         foodItem.setImage(foodItemRequestDTO.getImage());
         foodItem.setFeatures(foodItemRequestDTO.getFeatures());
         foodItem.setCategories(foodItemRequestDTO.getCategories());
+        foodItem.setCafeId(foodItemRequestDTO.getCafeId());
         return foodItem;
     }
 
