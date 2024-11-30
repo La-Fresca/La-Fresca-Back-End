@@ -56,6 +56,7 @@ public class EmailService {
 
         String logmessage = now + " " + username + " " + "Sent email for one time password when registration" ;
         systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         return "Email sent successfully";
     }
@@ -91,6 +92,7 @@ public class EmailService {
 
         String logmessage = now + " " + username + " " + "Sent email for monthly income statement"  ;
         systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         return "Email sent successfully";
     }
@@ -145,6 +147,7 @@ public class EmailService {
 
         String logmessage = now + " " + username + " " + "Email sent for Order reciept"  ;
         systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         return "Email sent successfully";
     }
@@ -183,6 +186,7 @@ public class EmailService {
 
         String logmessage = now + " " + username + " " + "Email sent for announce discount";
         systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         return "Email sent successfully";
     }

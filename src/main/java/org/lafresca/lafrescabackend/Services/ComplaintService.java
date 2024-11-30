@@ -53,6 +53,7 @@ public class ComplaintService {
 
             String message = now + " " + user + " " + "Created new complaint (id: " + newComplaint.getId() + ")" ;
             systemLogService.writeToFile(message);
+            log.info(message);
 
             return newComplaint.toString();
         } catch (Exception e) {
@@ -60,8 +61,9 @@ public class ComplaintService {
             String user = SecurityContextHolder.getContext().getAuthentication().getName();
             LocalDateTime now = LocalDateTime.now();
 
-            String message = now + " " + user + " " + "Tried to make complaint but failed due to " + e ;
+            String message = now + " " + user + " " + "Error: Tried to make complaint but failed due to " + e ;
             systemLogService.writeToFile(message);
+            log.error(message);
 
             throw new RuntimeException("Error saving complaint", e);
         }
@@ -74,6 +76,8 @@ public class ComplaintService {
 
         String message = now + " " + user + " " + "Get all complaints" ;
         systemLogService.writeToFile(message);
+        log.info(message);
+
         return complaintRepository.findAll();
     }
 
@@ -86,6 +90,7 @@ public class ComplaintService {
 
         String message = now + " " + user + " " + "Deleted complaint (id: " + id + ")" ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return "Complaint deleted";
     }
@@ -97,6 +102,7 @@ public class ComplaintService {
 
         String message = now + " " + user + " " + "Get complaints complained created by complainer (id: " + id + ")" ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return complaintRepository.findAllByComplainerId(id);
     }
@@ -107,6 +113,7 @@ public class ComplaintService {
 
         String message = now + " " + user + " " + "Get complaints complained to complainee (id: " + id + ")" ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return complaintRepository.findAllByComplaineeId(id);
     }

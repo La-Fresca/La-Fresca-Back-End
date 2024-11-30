@@ -131,6 +131,7 @@ public class DiscountService {
 
                 String message = now + " " + user + " " + "Created new discount (id: " + newFoodCombo.getId()  ;
                 systemLogService.writeToFile(message);
+                log.info(message);
             }
         }
 
@@ -162,6 +163,7 @@ public class DiscountService {
 
         String message = now + " " + user + " " + "Get all discounts" ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return discounts;
     }
@@ -192,6 +194,7 @@ public class DiscountService {
 
         String message = now + " " + user + " " + "Retrieve all discounts by cafe id - " + cafeId ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return discounts;
     }
@@ -207,6 +210,7 @@ public class DiscountService {
 
         String message = now + " " + user + " " + "Retrieve discount by id - " + menuItemId ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         if (foodItem != null) {
             return foodItem.getDiscountDetails();
@@ -234,6 +238,7 @@ public class DiscountService {
 
             String message = now + " " + user + " " + "Deleted discount (id - " + menuItemId + ")" ;
             systemLogService.writeToFile(message);
+            log.info(message);
 
             return "Discount successfully deleted";
         }
@@ -246,6 +251,7 @@ public class DiscountService {
 
             String message = now + " " + user + " " + "Deleted discount (id - " + menuItemId + ")" ;
             systemLogService.writeToFile(message);
+            log.info(message);
 
             return "Discount successfully deleted";
         }
@@ -255,6 +261,7 @@ public class DiscountService {
 
             String message = now + " " + user + " " + "Falid to deleted discount (id - " + menuItemId +")";
             systemLogService.writeToFile(message);
+            log.info(message);
 
             return "Discount not found";
         }
@@ -323,6 +330,7 @@ public class DiscountService {
 
             String message = now + " " + user + " " + "Updated discount (id - " + menuItemId ;
             systemLogService.writeToFile(message);
+            log.info(message);
         }
     }
 }

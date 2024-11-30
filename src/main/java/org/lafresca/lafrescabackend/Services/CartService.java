@@ -103,13 +103,15 @@ public class CartService {
 
             String message = now + " " + user + " " + "New item added to the cart" ;
             systemLogService.writeToFile(message);
+            log.info(message);
         }
         else {
             String user = SecurityContextHolder.getContext().getAuthentication().getName();
             LocalDateTime now = LocalDateTime.now();
 
-            String message = now + " " + user + " " + "Tried to add to cart but failed due to " + error ;
+            String message = now + " " + user + " " + "Error: Tried to add to cart but failed due to " + error ;
             systemLogService.writeToFile(message);
+            log.error(message);
         }
         return error;
     }
@@ -162,6 +164,7 @@ public class CartService {
 
         String message = now + " " + user + " " + "Get all cart items" ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return cartList;
     }
@@ -176,6 +179,7 @@ public class CartService {
 
         String message = now + " " + user + " " + "Deleted cart item - " + id ;
         systemLogService.writeToFile(message);
+        log.info(message);
     }
 
     // Update cart item by id
@@ -193,5 +197,6 @@ public class CartService {
 
         String message = now + " " + user + " " + "Update cart item" ;
         systemLogService.writeToFile(message);
+        log.info(message);
     }
 }

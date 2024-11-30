@@ -57,6 +57,7 @@ public class BranchService {
 
         String message = now + " " + user + " " + "Created New Branch - " + savedBranch.getId();
         systemLogService.writeToFile(message);
+        log.info(message);
         return branch;
     }
 
@@ -67,6 +68,7 @@ public class BranchService {
 
         String message = now + " " + user + " " + "Retrieve all branches" ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return branchRepository.findByDeleted();
     }
@@ -80,6 +82,7 @@ public class BranchService {
 
         String message = now + " " + user + " " + "Retrieve branche by Id - " + id;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return branchRepository.findById(id);
     }
@@ -94,6 +97,7 @@ public class BranchService {
 
         String message = now + " " + user + " " + "Delete branch - " + id ;
         systemLogService.writeToFile(message);
+        log.info(message);
     }
 
     // Update branch by id
@@ -123,6 +127,7 @@ public class BranchService {
 
         String message = now + " " + user + " " + "Updated branch " + id ;
         systemLogService.writeToFile(message);
+        log.info(message);
     }
 
     // Logical Delete
@@ -132,13 +137,14 @@ public class BranchService {
 
         existingBranch.setDeleted(1);
 
+        branchRepository.save(existingBranch);
+
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
         LocalDateTime now = LocalDateTime.now();
 
         String message = now + " " + user + " " + "Deleted branch logically - " + id ;
         systemLogService.writeToFile(message);
-
-        branchRepository.save(existingBranch);
+        log.info(message);
     }
 
 }

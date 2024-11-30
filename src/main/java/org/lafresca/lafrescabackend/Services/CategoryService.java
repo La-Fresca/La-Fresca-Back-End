@@ -59,6 +59,7 @@ public class CategoryService {
 
             String message = now + " " + user + " " + "Created new category (id: " + newCategory.getId() + ") to cafe " + newCategory.getCafeId();
             systemLogService.writeToFile(message);
+            log.info(message);
         }
 
         return error;
@@ -71,6 +72,7 @@ public class CategoryService {
 
         String message = now + " " + user + " " + "Get all categories" ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return categoryRepository.findByCafeId(cafeId)
                 .stream()
@@ -87,6 +89,7 @@ public class CategoryService {
 
         String message = now + " " + user + " " + "Get category - " + id ;
         systemLogService.writeToFile(message);
+        log.info(message);
 
         return categoryRepository.findById(id);
     }
@@ -101,6 +104,7 @@ public class CategoryService {
 
         String message = now + " " + user + " " + "Deleted category - " + id ;
         systemLogService.writeToFile(message);
+        log.info(message);
     }
 
     // Update Category
@@ -125,5 +129,6 @@ public class CategoryService {
 
         String message = now + " " + user + " " + "Updated category (id: " + id + ")" ;
         systemLogService.writeToFile(message);
+        log.info(message);
     }
 }
