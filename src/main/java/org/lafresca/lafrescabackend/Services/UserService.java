@@ -7,6 +7,7 @@ import org.lafresca.lafrescabackend.DTO.UserDTO;
 import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -206,6 +207,8 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("User: "+ user);
         return userRepository.findAll();
     }
 
