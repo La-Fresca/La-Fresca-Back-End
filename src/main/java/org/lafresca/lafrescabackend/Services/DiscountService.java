@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class DiscountService {
     private final FoodItemRepository foodItemRepository;
     private final FoodComboRepository foodComboRepository;

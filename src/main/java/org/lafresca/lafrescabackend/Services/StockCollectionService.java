@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.Request.StockCollectionRequestDTO;
 
 import org.lafresca.lafrescabackend.DTO.StockCollectionDTO;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StockCollectionService {
     private final StockCollectionRepository stockCollectionRepository;
     private final StockRepository stockRepository;

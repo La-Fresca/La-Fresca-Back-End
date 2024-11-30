@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.*;
 import org.lafresca.lafrescabackend.Repositories.CartRepository;
@@ -16,6 +17,7 @@ import java.util.Objects;
 import static io.jsonwebtoken.lang.Collections.size;
 
 @Service
+@Slf4j
 public class CartService {
     private final CartRepository cartRepository;
     private final FoodComboRepository foodComboRepository;

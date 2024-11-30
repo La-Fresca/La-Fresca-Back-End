@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.*;
 import org.lafresca.lafrescabackend.Models.*;
 import org.lafresca.lafrescabackend.Repositories.*;
@@ -15,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;

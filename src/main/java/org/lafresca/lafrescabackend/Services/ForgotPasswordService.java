@@ -106,6 +106,12 @@ public class ForgotPasswordService {
             return "Password Changed";
         }
         else {
+            LocalDateTime now = LocalDateTime.now();
+
+            String logmessage = now + " Invalid change password request" ;
+            systemLogService.writeToFile(logmessage);
+            log.info(logmessage);
+
             return "Invalid request";
         }
 

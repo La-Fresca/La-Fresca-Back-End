@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.BranchStat;
 import org.lafresca.lafrescabackend.DTO.Request.BranchRequestDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @Service
 @Validated
+@Slf4j
 public class BranchService {
     private final BranchRepository branchRepository;
     private final UserRepository userRepository;

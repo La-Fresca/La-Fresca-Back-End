@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.CategoryDTO;
 
 import org.lafresca.lafrescabackend.DTO.CategoryDTOMapper;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;

@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.Models.Notification;
 import org.lafresca.lafrescabackend.Repositories.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import java.util.List;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @Service
+@Slf4j
 public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;

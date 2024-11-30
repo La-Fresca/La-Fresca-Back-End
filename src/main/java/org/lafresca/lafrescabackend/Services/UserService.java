@@ -3,6 +3,7 @@ package org.lafresca.lafrescabackend.Services;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.UserDTO;
 import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
@@ -21,6 +22,7 @@ import static org.lafresca.lafrescabackend.Validations.UserValidation.isValidEma
 @Service
 @Data
 @AllArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
 
