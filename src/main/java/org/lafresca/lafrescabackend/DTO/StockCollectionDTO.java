@@ -10,6 +10,7 @@ public record StockCollectionDTO(
         Double AvailableAmount,
         LocalDate PredictedStockoutDate,
         String Status,
+        String CafeId,
         String Image
 ) {
 }

@@ -18,6 +18,7 @@ public class StockDTOMapper implements Function<Stock, StockDTO> {
                 stock.getExpiryDate(),
                 stock.getUnitPrice(),
                 stock.getUnit(),
+                stock.getCafeId(),
                 stock.getImage()
         );
     }
