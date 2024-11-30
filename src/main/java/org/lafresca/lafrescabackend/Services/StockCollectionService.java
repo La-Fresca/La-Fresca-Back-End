@@ -12,9 +12,11 @@ import org.lafresca.lafrescabackend.Models.StockCollection;
 import org.lafresca.lafrescabackend.Repositories.StockCollectionRepository;
 import org.lafresca.lafrescabackend.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,12 +27,14 @@ public class StockCollectionService {
     private final StockCollectionRepository stockCollectionRepository;
     private final StockRepository stockRepository;
     private final StockCollectionDTOMapper stockCollectionDTOMapper;
+    private final SystemLogService systemLogService;
 
     @Autowired
-    private StockCollectionService(StockCollectionRepository stockCollectionRepository, StockRepository stockRepository, StockCollectionDTOMapper stockCollectionDTOMapper) {
+    private StockCollectionService(StockCollectionRepository stockCollectionRepository, StockRepository stockRepository, StockCollectionDTOMapper stockCollectionDTOMapper, SystemLogService systemLogService) {
         this.stockCollectionRepository = stockCollectionRepository;
         this.stockRepository = stockRepository;
         this.stockCollectionDTOMapper = stockCollectionDTOMapper;
+        this.systemLogService = systemLogService;
     }
 
     // Add New Stock Collection
@@ -48,7 +52,14 @@ public class StockCollectionService {
         newStockCollection.setStatus("");
         newStockCollection.setAvailableAmount(0.0);
 
-        stockCollectionRepository.save(newStockCollection);
+        StockCollection savedStockCollection = stockCollectionRepository.save(newStockCollection);
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Create new stock collection (id: " + savedStockCollection.getId() + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         return stockCollection;
     }
@@ -69,6 +80,14 @@ public class StockCollectionService {
 
             stockCollection.setPredictedStockoutDate(LocalDate.now());
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve all stock collections";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return stockCollections
                 .stream()
                 .map(stockCollectionDTOMapper)
@@ -91,6 +110,14 @@ public class StockCollectionService {
 
             stockCollection.setPredictedStockoutDate(LocalDate.now());
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve stock collections related to cafe id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return stockCollections
                 .stream()
                 .map(stockCollectionDTOMapper)
@@ -101,6 +128,13 @@ public class StockCollectionService {
     public Optional<StockCollection> getStockCollection(String id) {
         stockCollectionRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Stock collection with id " + id + " not found"));
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve specific stock collection (id: " + id + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return stockCollectionRepository.findById(id);
     }
 
@@ -108,6 +142,14 @@ public class StockCollectionService {
     public void deleteStockCollection(String id) {
         stockCollectionRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Stock collection with id " + id + " not found"));
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Delete stock collection (id: " + id + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         stockCollectionRepository.deleteById(id);
     }
 
@@ -129,6 +171,12 @@ public class StockCollectionService {
             existingStockCollection.setUnit(stockCollection.getUnit());
         }
 
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Update stock collection (id: " + id + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         stockCollectionRepository.save(existingStockCollection);
     }
@@ -147,6 +195,13 @@ public class StockCollectionService {
             stock.setDeleted(1);
             stockRepository.save(stock);
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Logically delete stock collection (id: " + id + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         stockCollectionRepository.save(existingStockCollection);
     }
