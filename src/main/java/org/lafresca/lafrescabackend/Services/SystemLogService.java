@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Service
-@Slf4j
 public class SystemLogService {
     private final String filePath = "./logs/log-detail.txt"; // Specify the file path here
 

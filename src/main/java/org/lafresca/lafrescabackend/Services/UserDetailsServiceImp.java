@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class UserDetailsServiceImp implements UserDetailsService {
 
     private final UserRepository repository;
