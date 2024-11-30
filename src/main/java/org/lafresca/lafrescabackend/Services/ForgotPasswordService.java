@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Services;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.Request.ChangePasswordDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.ForgotPassword;
@@ -10,21 +11,26 @@ import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class ForgotPasswordService {
     @Autowired
     private JavaMailSender javaMailSender;
     private final ForgotPasswordRepository forgotPasswordRepository;
     private final UserRepository userRepository;
+    private final SystemLogService systemLogService;
 
-    public ForgotPasswordService(ForgotPasswordRepository forgotPasswordRepository, UserRepository userRepository) {
+    public ForgotPasswordService(ForgotPasswordRepository forgotPasswordRepository, UserRepository userRepository, SystemLogService systemLogService) {
         this.forgotPasswordRepository = forgotPasswordRepository;
         this.userRepository = userRepository;
+        this.systemLogService = systemLogService;
     }
 
     public String sendEmail(String email) {
@@ -59,6 +65,13 @@ public class ForgotPasswordService {
 
         javaMailSender.send(message);
 
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + "Recovery email sent to " + email;
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return "Email sent sucessfully";
     }
 
@@ -83,6 +96,13 @@ public class ForgotPasswordService {
             User user  = userOptional.get();
             user.setPassword(changePasswordDTO.getNewPassword());
             userRepository.save(user);
+
+            LocalDateTime now = LocalDateTime.now();
+
+            String logmessage = now + " " + user.getId() + " " + "Password changed " ;
+            systemLogService.writeToFile(logmessage);
+            log.info(logmessage);
+
             return "Password Changed";
         }
         else {
