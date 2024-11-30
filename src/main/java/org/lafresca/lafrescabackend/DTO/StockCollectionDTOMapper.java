@@ -17,6 +17,7 @@ public class StockCollectionDTOMapper implements Function<StockCollection, Stock
                 stockCollection.getAvailableAmount(),
                 stockCollection.getPredictedStockoutDate(),
                 stockCollection.getStatus(),
+                stockCollection.getCafeId(),
                 stockCollection.getImage()
         );
     }
