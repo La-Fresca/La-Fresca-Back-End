@@ -21,10 +21,10 @@ import java.util.List;
 public class SystemLogController {
     private final SystemLogService systemLogService;
 
-    @GetMapping(value = "/allTime/{id}")
+    @GetMapping(value = "/readablelogs")
     @Operation(
-            description = "Get every monthly branch statistics",
-            summary = "Get full system log",
+            description = "Get all readable logs ",
+            summary = "Get full readable system log",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -34,8 +34,30 @@ public class SystemLogController {
                             description = "Unauthorized / Invalid Token",
                             responseCode = "403")
             })
-    public List<String> getSystemLogAllTime() {
+    public List<String> getReadableSystemLogAllTime() {
         List<String> syslogs = new ArrayList<>();
+        syslogs = systemLogService.readFromFile();
         return syslogs;
     }
+
+    @GetMapping(value = "/advancedlogs")
+    @Operation(
+            description = "Get all advanced logs ",
+            summary = "Get full advanced system log",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403")
+            })
+    public List<String> getAdvancedSystemLogAllTime() {
+        List<String> syslogs = new ArrayList<>();
+        syslogs = systemLogService.readAdvancedSystemLogs();
+        return syslogs;
+    }
+
+
 }
