@@ -7,7 +7,10 @@ import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class EmailService {
@@ -16,6 +19,11 @@ public class EmailService {
     private JavaMailSender javaMailSender;
     @Autowired
     private UserRepository userRepository;
+    private final  SystemLogService systemLogService;
+
+    public EmailService(SystemLogService systemLogService) {
+        this.systemLogService = systemLogService;
+    }
 
     public String sendOTP(String userId, String OTP) {
         User user = userRepository.findById(userId)
@@ -40,6 +48,13 @@ public class EmailService {
         message.setFrom("thecafe.lafresca@gmail.com");
 
         javaMailSender.send(message);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Sent email for one time password when registration" ;
+        systemLogService.writeToFile(logmessage);
+
         return "Email sent successfully";
     }
 
@@ -68,6 +83,13 @@ public class EmailService {
         message.setFrom("thecafe.lafresca@gmail.com");
 
         javaMailSender.send(message);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Sent email for monthly income statement"  ;
+        systemLogService.writeToFile(logmessage);
+
         return "Email sent successfully";
     }
 
@@ -115,6 +137,13 @@ public class EmailService {
         message.setFrom("thecafe.lafresca@gmail.com");
 
         javaMailSender.send(message);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Email sent for Order reciept"  ;
+        systemLogService.writeToFile(logmessage);
+
         return "Email sent successfully";
     }
 
@@ -146,6 +175,13 @@ public class EmailService {
         message.setFrom("thecafe.lafresca@gmail.com");
 
         javaMailSender.send(message);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Email sent for announce discount";
+        systemLogService.writeToFile(logmessage);
+
         return "Email sent successfully";
     }
 }

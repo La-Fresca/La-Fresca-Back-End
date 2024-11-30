@@ -12,6 +12,7 @@ import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Repositories.FoodComboRepository;
 import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,12 +28,14 @@ public class FoodComboService {
     private final FoodComboRepository foodComboRepository;
     private final FoodItemRepository foodItemRepository;
     private final FoodComboDTOMapper foodComboDTOMapper;
+    private final SystemLogService systemLogService;
 
     @Autowired
-    public FoodComboService(FoodComboRepository foodComboRepository, FoodItemRepository foodItemRepository, FoodComboDTOMapper foodComboDTOMapper) {
+    public FoodComboService(FoodComboRepository foodComboRepository, FoodItemRepository foodItemRepository, FoodComboDTOMapper foodComboDTOMapper, SystemLogService systemLogService) {
         this.foodComboRepository = foodComboRepository;
         this.foodItemRepository = foodItemRepository;
         this.foodComboDTOMapper = foodComboDTOMapper;
+        this.systemLogService = systemLogService;
     }
 
     // Add new food combo
@@ -60,8 +63,16 @@ public class FoodComboService {
         newFoodCombo.setTotalSellingCount(0);
         newFoodCombo.setFoodIds(foodCombo.getFoodIds());
 
-        foodComboRepository.save(newFoodCombo);
-        log.info("Food combo '{}' created successfully", foodCombo.getName());
+        FoodCombo savedCombo = foodComboRepository.save(newFoodCombo);
+//        log.info("Food combo '{}' created successfully", foodCombo.getName());
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Created new food combo (id - " + savedCombo.getId() + ")";
+        systemLogService.writeToFile(message);
+        log.info(message);
+
         return foodCombo;
     }
 
@@ -78,6 +89,13 @@ public class FoodComboService {
 
             foodCombo.setFoodNames(foodNames);
         }
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Retrived all food combos";
+        systemLogService.writeToFile(message);
+        log.info(message);
 
 //        return foodComboList;
         return foodComboList
@@ -118,17 +136,38 @@ public class FoodComboService {
         }
 
         foodComboRepository.save(existingFoodCombo);
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        String message = now + " " + user + " " + "Updated food combo (id - " + id + ")";
+        systemLogService.writeToFile(message);
+        log.info(message);
     }
 
     // Delete food combo item by id
     public void deleteFoodCombo(String id) {
         foodComboRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Food Combo not found with id " + id));
         foodComboRepository.deleteById(id);
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Deleted food combo (id - " + id + ")";
+        systemLogService.writeToFile(message);
+        log.info(message);
     }
 
     // Search food combo
     public Optional<FoodCombo> getFoodCombo(String id) {
         foodComboRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Food Combo not found with id " + id));
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Get specific food combo by id (id - " + id + ")";
+        systemLogService.writeToFile(message);
+        log.info(message);
+
         return foodComboRepository.findById(id);
     }
 
@@ -140,10 +179,24 @@ public class FoodComboService {
         existingFoodCombo.setDeleted(1);
 
         foodComboRepository.save(existingFoodCombo);
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Logically deleted food combo (id - " + id + ")";
+        systemLogService.writeToFile(message);
+        log.info(message);
     }
 
     // Retrieve all food combos for top-level manager
     public List<FoodCombo> getFoodCombosForTLM() {
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Get all food combos for top level manager";
+        systemLogService.writeToFile(message);
+        log.info(message);
+
         return foodComboRepository.findByStatus();
     }
 
@@ -155,7 +208,15 @@ public class FoodComboService {
         existingFoodCombo.setAvailable(value);
 
         foodComboRepository.save(existingFoodCombo);
-        log.info("Food combo '{}' availability changed successfully", existingFoodCombo.getName());
+//        log.info("Food combo '{}' availability changed successfully", existingFoodCombo.getName());
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Food combo availability change (id - " + id + ")";
+        systemLogService.writeToFile(message);
+        log.info(message);
+
         return existingFoodCombo;
     }
 
@@ -169,7 +230,15 @@ public class FoodComboService {
         System.out.println(existingFoodCombo);
 
         foodComboRepository.save(existingFoodCombo);
-        log.info("Food combo '{}' approved successfully", existingFoodCombo.getName());
+//        log.info("Food combo '{}' approved successfully", existingFoodCombo.getName());
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Food combo approved (id - " + id + ")";
+        systemLogService.writeToFile(message);
+        log.info(message);
+
         return existingFoodCombo;
     }
 
@@ -183,7 +252,15 @@ public class FoodComboService {
         System.out.println(existingFoodCombo);
 
         foodComboRepository.save(existingFoodCombo);
-        log.info("Food combo '{}' rejected successfully", existingFoodCombo.getName());
+//        log.info("Food combo '{}' rejected successfully", existingFoodCombo.getName());
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Food combo rejected" + id + ")";
+        systemLogService.writeToFile(message);
+        log.info(message);
+
         return existingFoodCombo;
     }
 }
