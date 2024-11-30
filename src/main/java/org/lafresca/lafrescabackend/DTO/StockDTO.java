@@ -11,7 +11,7 @@ public record StockDTO(
          LocalDate ExpiryDate,
          Double UnitPrice,
          String Unit,
-
+         String CafeId,
          String Image
 ) {
 }
