@@ -6,8 +6,10 @@ import org.lafresca.lafrescabackend.Repositories.CartRepository;
 import org.lafresca.lafrescabackend.Repositories.FoodComboRepository;
 import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,11 +20,13 @@ public class CartService {
     private final CartRepository cartRepository;
     private final FoodComboRepository foodComboRepository;
     private final FoodItemRepository foodItemRepository;
+    private final SystemLogService systemLogService;
 
     @Autowired
-    public CartService(CartRepository cartRepository, FoodComboRepository foodComboRepository, FoodItemRepository foodItemRepository) { this.cartRepository = cartRepository;
+    public CartService(CartRepository cartRepository, FoodComboRepository foodComboRepository, FoodItemRepository foodItemRepository, SystemLogService systemLogService) { this.cartRepository = cartRepository;
         this.foodComboRepository = foodComboRepository;
         this.foodItemRepository = foodItemRepository;
+        this.systemLogService = systemLogService;
     }
 
     // Add New Item
@@ -91,8 +95,20 @@ public class CartService {
 
         if (error == null) {
             cartRepository.save(cart);
-        }
 
+            String user = SecurityContextHolder.getContext().getAuthentication().getName();
+            LocalDateTime now = LocalDateTime.now();
+
+            String message = now + " " + user + " " + "New item added to the cart" ;
+            systemLogService.writeToFile(message);
+        }
+        else {
+            String user = SecurityContextHolder.getContext().getAuthentication().getName();
+            LocalDateTime now = LocalDateTime.now();
+
+            String message = now + " " + user + " " + "Tried to add to cart but failed due to " + error ;
+            systemLogService.writeToFile(message);
+        }
         return error;
     }
 
@@ -139,6 +155,12 @@ public class CartService {
             }
         }
 
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Get all cart items" ;
+        systemLogService.writeToFile(message);
+
         return cartList;
     }
 
@@ -146,6 +168,12 @@ public class CartService {
     public void deleteCartItem(String id) {
         cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart Item Not Found with Id: " + id));
         cartRepository.deleteById(id);
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Deleted cart item - " + id ;
+        systemLogService.writeToFile(message);
     }
 
     // Update cart item by id
@@ -157,5 +185,11 @@ public class CartService {
         }
 
         cartRepository.save(existingCart);
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Update cart item" ;
+        systemLogService.writeToFile(message);
     }
 }
