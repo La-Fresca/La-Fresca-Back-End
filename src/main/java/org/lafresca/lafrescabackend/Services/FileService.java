@@ -28,12 +28,12 @@ public class FileService {
         StringBuilder content = new StringBuilder();
         try {
             List<String> lines = Files.readAllLines(Path.of(filePath));
-            System.out.println("Reading Lines");
+//            System.out.println("Reading Lines");
             for (String line : lines) {
-                System.out.println(line);
+//                System.out.println(line);
                 content.append(line).append(System.lineSeparator());
             }
-            System.out.println("Lines read");
+//            System.out.println("Lines read");
 
         } catch (IOException e) {
             e.printStackTrace();
