@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import org.lafresca.lafrescabackend.DTO.DiscountDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
@@ -128,22 +129,52 @@ public class DiscountService {
     }
 
     // Retrieve all discounts
-    public List<List<Discount>> getDiscounts() {
+    public List<List<DiscountDTO>> getDiscounts() {
         List<FoodItem> foodItemList = foodItemRepository.findAllByDiscountStatus();
         List<FoodCombo> foodComboList = foodComboRepository.findAllByDiscountStatus();
 
-        List<Discount> foodItemDiscount = new ArrayList<>();
-        List<Discount> foodComboDiscount = new ArrayList<>();
+        List<DiscountDTO> foodItemDiscount = new ArrayList<>();
+        List<DiscountDTO> foodComboDiscount = new ArrayList<>();
+
+        DiscountDTO discount = new DiscountDTO();
 
         for (FoodItem foodItem : foodItemList) {
-            foodItemDiscount.add(foodItem.getDiscountDetails());
+            if (foodItem.getDiscountStatus() == 1) {
+                discount.setAmount(foodItem.getDiscountDetails().getAmount());
+                discount.setDiscountType(foodItem.getDiscountDetails().getDiscountType());
+                discount.setName(foodItem.getDiscountDetails().getName());
+                discount.setDescription(foodItem.getDiscountDetails().getDescription());
+                discount.setDiscountAmount(foodItem.getDiscountDetails().getDiscountAmount());
+                discount.setStartDate(foodItem.getDiscountDetails().getStartDate());
+                discount.setEndDate(foodItem.getDiscountDetails().getEndDate());
+                discount.setMenuItemId(foodItem.getDiscountDetails().getMenuItemId());
+                discount.setMenuItemType(foodItem.getDiscountDetails().getMenuItemType());
+                discount.setOfferDetails(foodItem.getDiscountDetails().getOfferDetails());
+                discount.setCafeID(foodItem.getCafeId());
+
+                foodItemDiscount.add(discount);
+            }
         }
 
         for (FoodCombo foodCombo : foodComboList) {
-            foodComboDiscount.add(foodCombo.getDiscountDetails());
+            if (foodCombo.getDiscountStatus() == 1) {
+                discount.setAmount(foodCombo.getDiscountDetails().getAmount());
+                discount.setDiscountType(foodCombo.getDiscountDetails().getDiscountType());
+                discount.setName(foodCombo.getDiscountDetails().getName());
+                discount.setDescription(foodCombo.getDiscountDetails().getDescription());
+                discount.setDiscountAmount(foodCombo.getDiscountDetails().getDiscountAmount());
+                discount.setStartDate(foodCombo.getDiscountDetails().getStartDate());
+                discount.setEndDate(foodCombo.getDiscountDetails().getEndDate());
+                discount.setMenuItemId(foodCombo.getDiscountDetails().getMenuItemId());
+                discount.setMenuItemType(foodCombo.getDiscountDetails().getMenuItemType());
+                discount.setOfferDetails(foodCombo.getDiscountDetails().getOfferDetails());
+                discount.setCafeID(foodCombo.getCafeId());
+
+                foodComboDiscount.add(discount);
+            }
         }
 
-        List<List<Discount>> discounts = new ArrayList<>();
+        List<List<DiscountDTO>> discounts = new ArrayList<>();
         discounts.add(foodItemDiscount);
         discounts.add(foodComboDiscount);
 
