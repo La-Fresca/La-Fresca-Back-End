@@ -32,5 +32,5 @@ jobs:
           platforms: "linux/amd64,linux/arm64"
           push: true
           tags: |
-            "${{ github.actor }}/wso2is:latest"
-            "${{ github.actor }}/wso2is:${{ github.ref_name }}"
+            "${{ github.actor }}/la-fresca-backend:latest"
+            "${{ github.actor }}/la-fresca-backend:${{ github.ref_name }}"
