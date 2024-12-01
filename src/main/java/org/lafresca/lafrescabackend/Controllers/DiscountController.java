@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.lafresca.lafrescabackend.DTO.DiscountDTO;
 import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Services.DiscountService;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class DiscountController {
                     )
             })
 
-    public List<List<Discount>> getDiscounts() { return discountService.getDiscounts(); }
+    public List<List<DiscountDTO>> getDiscounts() { return discountService.getDiscounts(); }
 
     // Retrieve all discounts by CafeId
     @GetMapping(path = "{cafeId}")
