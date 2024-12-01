@@ -14,6 +14,7 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DiscountService {
@@ -51,20 +52,27 @@ public class DiscountService {
                 error = "Amount not valid";
             }
         }
-//        else if (discount.getDiscountType().equals("Price Offer")) {
-//            if (discount.getDiscountAmount() == null) {
-//                error = "Discount Amount cannot be empty";
-//            }
-//
-//            else {
-//                FoodItem foodItem = foodItemRepository.findOneById(discount.getMenuItemId());
-//
-//                if (discount.getDiscountAmount() < foodItem.getCost()) {
-//
-//                }
-//            }
-//
-//        }
+        else if (discount.getDiscountType().equals("Price Offer")) {
+            if (discount.getDiscountAmount() == null) {
+                error = "Discount Amount cannot be empty";
+            }
+            else {
+                if (Objects.equals(discount.getMenuItemType(), "Food Item")) {
+                    FoodItem foodItem = foodItemRepository.findOneById(discount.getMenuItemId());
+
+                    if (discount.getDiscountAmount() > foodItem.getCost()) {
+                        error = "Discount Amount cannot be greater than cost";
+                    }
+                }
+                else {
+                    FoodCombo foodCombo = foodComboRepository.findOneById(discount.getMenuItemId());
+
+                    if (discount.getDiscountAmount() > foodCombo.getCost()) {
+                        error = "Discount Amount cannot be greater than cost";
+                    }
+                }
+            }
+        }
         else if (discount.getDiscountAmount() < 0 ) {
             error = "Discount amount not valid";
         }
@@ -181,7 +189,6 @@ public class DiscountService {
         return discounts;
     }
 
-
     // Retrieve all discounts by CafeId
     public List<List<Discount>> getDiscounts(String cafeId) {
         List<FoodItem> foodItemList = foodItemRepository.findDiscountByStatus(cafeId);
@@ -204,7 +211,6 @@ public class DiscountService {
 
         return discounts;
     }
-
 
     // Search discount by id
     public Discount getDiscount(String menuItemId) {
