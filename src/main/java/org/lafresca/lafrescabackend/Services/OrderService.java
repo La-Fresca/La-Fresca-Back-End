@@ -70,12 +70,14 @@ public class OrderService {
             orderFood.setOrderStatus(OrderStatus.PENDING);
             orderFood.setImage(foodItem.getImage());
 
+            System.out.println("Get added features" + item.getAddedFeatures().size());
             List<AddedFeatureDTO> addedFeatureDTOList = item.getAddedFeatures();
             List<AddedFeature> addedFeatureList = new ArrayList<>();
 
             Integer count = 0;
             if (Objects.equals(item.getMenuItemType(), "Food Item")) {
 //                FoodItem foodItemO = foodItemRepository.findOneById(item.getFoodId());
+                System.out.println("Added feature list count - " + addedFeatureDTOList.size());
                 for (AddedFeatureDTO addedFeatureDTO : addedFeatureDTOList) {
                     CustomFeature customFeature = foodItem.getFeatures().get(count);
                     if (addedFeatureDTO.getLevel() != -1) {
@@ -223,9 +225,9 @@ public class OrderService {
             throw new IllegalStateException("Total amount cannot be null or empty");
         }
 //        -----------------------------------------------------------------------------
-        if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
-            throw new IllegalStateException("Invalid total amount");
-        }
+//        if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
+//            throw new IllegalStateException("Invalid total amount");
+//        }
 //        ------------------------------------------------------------------------------
         //validate order status
         if(order.getDiscount() == null || order.getDiscount() == 0) {
