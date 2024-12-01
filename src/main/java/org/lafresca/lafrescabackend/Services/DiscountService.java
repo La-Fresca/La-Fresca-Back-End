@@ -1,6 +1,5 @@
 package org.lafresca.lafrescabackend.Services;
 
-import org.lafresca.lafrescabackend.DTO.DiscountDTO;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
@@ -14,7 +13,6 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class DiscountService {
@@ -52,27 +50,20 @@ public class DiscountService {
                 error = "Amount not valid";
             }
         }
-        else if (discount.getDiscountType().equals("Price Offer")) {
-            if (discount.getDiscountAmount() == null) {
-                error = "Discount Amount cannot be empty";
-            }
-            else {
-                if (Objects.equals(discount.getMenuItemType(), "Food Item")) {
-                    FoodItem foodItem = foodItemRepository.findOneById(discount.getMenuItemId());
-
-                    if (discount.getDiscountAmount() > foodItem.getCost()) {
-                        error = "Discount Amount cannot be greater than cost";
-                    }
-                }
-                else {
-                    FoodCombo foodCombo = foodComboRepository.findOneById(discount.getMenuItemId());
-
-                    if (discount.getDiscountAmount() > foodCombo.getCost()) {
-                        error = "Discount Amount cannot be greater than cost";
-                    }
-                }
-            }
-        }
+//        else if (discount.getDiscountType().equals("Price Offer")) {
+//            if (discount.getDiscountAmount() == null) {
+//                error = "Discount Amount cannot be empty";
+//            }
+//
+//            else {
+//                FoodItem foodItem = foodItemRepository.findOneById(discount.getMenuItemId());
+//
+//                if (discount.getDiscountAmount() < foodItem.getCost()) {
+//
+//                }
+//            }
+//
+//        }
         else if (discount.getDiscountAmount() < 0 ) {
             error = "Discount amount not valid";
         }
@@ -137,57 +128,28 @@ public class DiscountService {
     }
 
     // Retrieve all discounts
-    public List<List<DiscountDTO>> getDiscounts() {
+    public List<List<Discount>> getDiscounts() {
         List<FoodItem> foodItemList = foodItemRepository.findAllByDiscountStatus();
         List<FoodCombo> foodComboList = foodComboRepository.findAllByDiscountStatus();
 
-        List<DiscountDTO> foodItemDiscount = new ArrayList<>();
-        List<DiscountDTO> foodComboDiscount = new ArrayList<>();
-
-        DiscountDTO discount = new DiscountDTO();
+        List<Discount> foodItemDiscount = new ArrayList<>();
+        List<Discount> foodComboDiscount = new ArrayList<>();
 
         for (FoodItem foodItem : foodItemList) {
-            if (foodItem.getDiscountStatus() == 1) {
-                discount.setAmount(foodItem.getDiscountDetails().getAmount());
-                discount.setDiscountType(foodItem.getDiscountDetails().getDiscountType());
-                discount.setName(foodItem.getDiscountDetails().getName());
-                discount.setDescription(foodItem.getDiscountDetails().getDescription());
-                discount.setDiscountAmount(foodItem.getDiscountDetails().getDiscountAmount());
-                discount.setStartDate(foodItem.getDiscountDetails().getStartDate());
-                discount.setEndDate(foodItem.getDiscountDetails().getEndDate());
-                discount.setMenuItemId(foodItem.getDiscountDetails().getMenuItemId());
-                discount.setMenuItemType(foodItem.getDiscountDetails().getMenuItemType());
-                discount.setOfferDetails(foodItem.getDiscountDetails().getOfferDetails());
-                discount.setCafeID(foodItem.getCafeId());
-
-                foodItemDiscount.add(discount);
-            }
+            foodItemDiscount.add(foodItem.getDiscountDetails());
         }
 
         for (FoodCombo foodCombo : foodComboList) {
-            if (foodCombo.getDiscountStatus() == 1) {
-                discount.setAmount(foodCombo.getDiscountDetails().getAmount());
-                discount.setDiscountType(foodCombo.getDiscountDetails().getDiscountType());
-                discount.setName(foodCombo.getDiscountDetails().getName());
-                discount.setDescription(foodCombo.getDiscountDetails().getDescription());
-                discount.setDiscountAmount(foodCombo.getDiscountDetails().getDiscountAmount());
-                discount.setStartDate(foodCombo.getDiscountDetails().getStartDate());
-                discount.setEndDate(foodCombo.getDiscountDetails().getEndDate());
-                discount.setMenuItemId(foodCombo.getDiscountDetails().getMenuItemId());
-                discount.setMenuItemType(foodCombo.getDiscountDetails().getMenuItemType());
-                discount.setOfferDetails(foodCombo.getDiscountDetails().getOfferDetails());
-                discount.setCafeID(foodCombo.getCafeId());
-
-                foodComboDiscount.add(discount);
-            }
+            foodComboDiscount.add(foodCombo.getDiscountDetails());
         }
 
-        List<List<DiscountDTO>> discounts = new ArrayList<>();
+        List<List<Discount>> discounts = new ArrayList<>();
         discounts.add(foodItemDiscount);
         discounts.add(foodComboDiscount);
 
         return discounts;
     }
+
 
     // Retrieve all discounts by CafeId
     public List<List<Discount>> getDiscounts(String cafeId) {
@@ -211,6 +173,7 @@ public class DiscountService {
 
         return discounts;
     }
+
 
     // Search discount by id
     public Discount getDiscount(String menuItemId) {

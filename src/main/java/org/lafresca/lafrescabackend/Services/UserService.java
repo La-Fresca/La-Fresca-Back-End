@@ -3,13 +3,16 @@ package org.lafresca.lafrescabackend.Services;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.UserDTO;
 import org.lafresca.lafrescabackend.Models.User;
 import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +23,10 @@ import static org.lafresca.lafrescabackend.Validations.UserValidation.isValidEma
 @Service
 @Data
 @AllArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final SystemLogService systemLogService;
 
 //    @Autowired
 //    public UserService(UserRepository userRepository) {
@@ -46,6 +51,12 @@ public class UserService {
             userDTOS.add(userDTO);
         }
 
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve all users";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
         return userDTOS;
     }
 
@@ -96,12 +107,27 @@ public class UserService {
 //        if(!cafe.isPresent()) {
 //            throw new IllegalStateException("Cafe with id " + user.getCafeId() + " does not exist");
 //        }
-        userRepository.save(user);
+        User saveduser = userRepository.save(user);
+
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Created new user (id: " + saveduser.getId() + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
     }
 
     public void deleteUser(String userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("User with id " + userId + " does not exist"));
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Deleted user (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         userRepository.deleteById(userId);
     }
 
@@ -135,6 +161,13 @@ public class UserService {
 //            userToUpdate.setCafeId(user.getCafeId());
 //        }
         userRepository.save(userToUpdate);
+
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Updated user (id: " + user.getId() + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
     }
 
     public UserDTO getUserById(String userId) {
@@ -149,6 +182,14 @@ public class UserService {
         userDTO.setAddress(user.getAddress());
         userDTO.setRole(user.getRole());
         userDTO.setCafeId(user.getCafeId());
+
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Retrieve user details (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return userDTO;
     }
 
@@ -165,6 +206,14 @@ public class UserService {
         userDTO.setRole(user.getRole());
         userDTO.setCafeId(user.getCafeId());
         userDTO.setStatus(user.getStatus());
+
+        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve user by email (email: " + email + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return userDTO;
     }
 
@@ -183,6 +232,14 @@ public class UserService {
             userDTO.setCafeId(user.getCafeId());
             userDTOS.add(userDTO);
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve users related to cafe id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return userDTOS;
     }
 
@@ -202,10 +259,25 @@ public class UserService {
             userDTO.setCafeId(user.getCafeId());
             userDTOS.add(userDTO);
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve users have role " + role;
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return userDTOS;
     }
 
     public List<User> getAllUsers() {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve all users with passwords";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return userRepository.findAll();
     }
 
@@ -225,6 +297,13 @@ public class UserService {
             userDTO.setStatus(user.getStatus());
             userDTOS.add(userDTO);
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve available branch managers";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         return userDTOS;
 

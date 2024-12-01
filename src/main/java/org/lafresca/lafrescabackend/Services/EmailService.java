@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.EmailStructure;
 import org.lafresca.lafrescabackend.Models.User;
@@ -7,15 +8,24 @@ import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
+@Slf4j
 public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
     private UserRepository userRepository;
+    private final  SystemLogService systemLogService;
+
+    public EmailService(SystemLogService systemLogService) {
+        this.systemLogService = systemLogService;
+    }
 
     public String sendOTP(String userId, String OTP) {
         User user = userRepository.findById(userId)
@@ -40,6 +50,14 @@ public class EmailService {
         message.setFrom("thecafe.lafresca@gmail.com");
 
         javaMailSender.send(message);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Sent email for one time password when registration" ;
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return "Email sent successfully";
     }
 
@@ -68,6 +86,14 @@ public class EmailService {
         message.setFrom("thecafe.lafresca@gmail.com");
 
         javaMailSender.send(message);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Sent email for monthly income statement"  ;
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return "Email sent successfully";
     }
 
@@ -115,6 +141,14 @@ public class EmailService {
         message.setFrom("thecafe.lafresca@gmail.com");
 
         javaMailSender.send(message);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Email sent for Order reciept"  ;
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return "Email sent successfully";
     }
 
@@ -146,6 +180,14 @@ public class EmailService {
         message.setFrom("thecafe.lafresca@gmail.com");
 
         javaMailSender.send(message);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + username + " " + "Email sent for announce discount";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return "Email sent successfully";
     }
 }

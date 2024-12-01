@@ -6,5 +6,5 @@ import lombok.Data;
 public class AddedFeatureDTO {
     private String Name;
     private Integer Level;
-//    private Float AdditionalPrice;
+    private Float AdditionalPrice;
 }

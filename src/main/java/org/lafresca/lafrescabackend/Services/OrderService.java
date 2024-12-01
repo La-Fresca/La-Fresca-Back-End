@@ -1,20 +1,24 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.DTO.*;
 import org.lafresca.lafrescabackend.Models.*;
 import org.lafresca.lafrescabackend.Repositories.*;
 import org.lafresca.lafrescabackend.Validations.FoodAmountValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
@@ -22,16 +26,18 @@ public class OrderService {
     private final BranchRepository branchRepository;
     private final FoodComboRepository foodComboRepository;
     private final StockCollectionRepository stockCollectionRepository;
+    private final SystemLogService systemLogService;
 
     //    private final UserValidation userValidation;
     @Autowired
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository, BranchRepository branchRepository, FoodComboRepository foodComboRepository, StockCollectionRepository stockCollectionRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodItemRepository foodItemRepository, BranchRepository branchRepository, FoodComboRepository foodComboRepository, StockCollectionRepository stockCollectionRepository, SystemLogService systemLogService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.foodItemRepository = foodItemRepository;
         this.branchRepository = branchRepository;
         this.foodComboRepository = foodComboRepository;
         this.stockCollectionRepository = stockCollectionRepository;
+        this.systemLogService = systemLogService;
     }
 
 
@@ -64,12 +70,14 @@ public class OrderService {
             orderFood.setOrderStatus(OrderStatus.PENDING);
             orderFood.setImage(foodItem.getImage());
 
+            System.out.println("Get added features" + item.getAddedFeatures().size());
             List<AddedFeatureDTO> addedFeatureDTOList = item.getAddedFeatures();
             List<AddedFeature> addedFeatureList = new ArrayList<>();
 
             Integer count = 0;
             if (Objects.equals(item.getMenuItemType(), "Food Item")) {
 //                FoodItem foodItemO = foodItemRepository.findOneById(item.getFoodId());
+                System.out.println("Added feature list count - " + addedFeatureDTOList.size());
                 for (AddedFeatureDTO addedFeatureDTO : addedFeatureDTOList) {
                     CustomFeature customFeature = foodItem.getFeatures().get(count);
                     if (addedFeatureDTO.getLevel() != -1) {
@@ -217,9 +225,9 @@ public class OrderService {
             throw new IllegalStateException("Total amount cannot be null or empty");
         }
 //        -----------------------------------------------------------------------------
-        if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
-            throw new IllegalStateException("Invalid total amount");
-        }
+//        if(!FoodAmountValidation.isValidFoodAmount(order.getTotalAmount(), order.getOrderItems())){
+//            throw new IllegalStateException("Invalid total amount");
+//        }
 //        ------------------------------------------------------------------------------
         //validate order status
         if(order.getDiscount() == null || order.getDiscount() == 0) {
@@ -236,12 +244,25 @@ public class OrderService {
         //set order status in items
         order.getOrderItems().forEach(item -> item.setOrderStatus(OrderStatus.PENDING));
 
-        orderRepository.save(order);
+        Order createdOrder = orderRepository.save(order);
 
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Created new order (id: " + createdOrder.getId() + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
     }
 
 
     public List<Order> getOrders() {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve all orders";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findAll();
     }
 
@@ -250,6 +271,14 @@ public class OrderService {
         if (!exists) {
             throw new IllegalStateException("Order with id " + orderId + " does not exists");
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Deleted order (id: " + orderId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         orderRepository.deleteById(orderId);
     }
 
@@ -292,43 +321,113 @@ public class OrderService {
         }
 
         orderRepository.save(orderToUpdate);
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Updated order (id: " + order.getId() + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
     }
 
     public Order getOrderById(String orderId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve specific order (id: " + orderId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalStateException("Order with id " + orderId + " does not exist"));
     }
 
     public List<Order> getOrdersByCustomerId(String userId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve orders related to customer id (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByCustomerId(userId);
     }
 
     public List<Order> getOrdersByWaiterId(String userId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve orders related to waiter id (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByWaiterId(userId);
     }
 
     public List<Order> getOrdersByCashierId(String userId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve orders related to cashier id (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByCashierId(userId);
     }
 
     public List<Order> getOrdersByCafeId(String cafeId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve orders related to cafe id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findOrdersByCafeId(cafeId);
     }
 
     public List<Order> getOrdersByDeliveryPersonId(String userId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve orders related to delivery person (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByDeliveryPersonId(userId);
     }
 
     public List<Order> getPendingOrdersbywaiterId(String userId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve pending orders related to waiter id (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByWaiterIdAndOrderStatus(userId, OrderStatus.READY);
     }
 
     public List<Order> getPendingOrdersbydeliveryPersonId(String userId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve pending orders related to delivery person id (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.READY);
     }
 
     public void changeOrderStatus(OrderStatusChangeRequest orderStatusChangeRequest) {
         if(orderStatusChangeRequest == null || orderStatusChangeRequest.getId() == null || orderStatusChangeRequest.getOrderStatus() == null) {
+            String user= SecurityContextHolder.getContext().getAuthentication().getName();
+            LocalDateTime now = LocalDateTime.now();
+
+            String logmessage = now + " " + user + " " + "Error: Order status change request is null";
+            systemLogService.writeToFile(logmessage);
+            log.error(logmessage);
+
             throw new IllegalStateException("OrderStatusChangeRequest cannot be null");
         }
         else {
@@ -363,7 +462,22 @@ public class OrderService {
                     }
                 }
                 orderRepository.save(order);
+
+                String user= SecurityContextHolder.getContext().getAuthentication().getName();
+                LocalDateTime now = LocalDateTime.now();
+
+                String logmessage = now + " " + user + " " + "Order status changed to "+ orderStatusChangeRequest.getOrderStatus () + " (id: " + orderStatusChangeRequest.getId() + ")";
+                systemLogService.writeToFile(logmessage);
+                log.info(logmessage);
+
             } catch (Exception e) {
+                String user= SecurityContextHolder.getContext().getAuthentication().getName();
+                LocalDateTime now = LocalDateTime.now();
+
+                String logmessage = now + " " + user + " " + "Error: Order status change failed due to " + e ;
+                systemLogService.writeToFile(logmessage);
+                log.error(logmessage);
+
                 throw new IllegalStateException("OrderStatusChangeRequest cannot be null");
             }
         }
@@ -380,6 +494,7 @@ public class OrderService {
 
         waiters.sort(Comparator.comparingLong(User::getStatusUpdatedAt).reversed());
         System.out.println("Waiter found" + waiters.get(0).getUserId() + "waiter name" + waiters.get(0).getFirstName() + " " + waiters.get(0).getLastName());
+
         return waiters.get(0).getUserId();
     }
 
@@ -458,12 +573,27 @@ public class OrderService {
 //        }
 
         orderRepository.save(orderToUpdate);
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Order item status changed to " + itemStatusChangeDTO.getStatus() +" ( order id: " + itemStatusChangeDTO.getOrderId() + " , item id; " + itemStatusChangeDTO.getItemId() + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
     }
 
     public List<Order> getQueueItems(String cafeId) {
         if(cafeId == null) {
             throw new IllegalStateException("CafeId cannot be null");
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve queue orders related to cafe id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.PENDING);
     }
 
@@ -471,6 +601,13 @@ public class OrderService {
         if(cafeId == null) {
             throw new IllegalStateException("CafeId cannot be null");
         }
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve preparing orders related to cafe id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.PREPARING);
     }
 
@@ -478,6 +615,14 @@ public class OrderService {
         if(cafeId == null) {
             throw new IllegalStateException("CafeId cannot be null");
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve ready orders related to cafe id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByCafeIdAndOrderStatus(cafeId, OrderStatus.READY);
     }
 
@@ -493,14 +638,34 @@ public class OrderService {
 
         orderRepository.save(orderToUpdate);
 
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Change delivery order status to " + itemStatusChangeDTO.getStatus () + " (order id: " + itemStatusChangeDTO.getOrderId() + " , item id: " + itemStatusChangeDTO.getItemId() + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
     }
 
 
     public List<Order> getCompletedOrdersByDeliveryPersonId(String userId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve completed orders related to delivery person (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
         return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.DELIVERED);
     }
 
     public List<Order> ondeliveryordersbydeliverypersonid(String userId) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve on delivery orders related to delivery person (id: " + userId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return orderRepository.findByDeliveryPersonIdAndOrderStatus(userId, OrderStatus.DELIVERING);
     }
 
@@ -512,6 +677,14 @@ public class OrderService {
                 salesInThisWeek.add(order);
             }
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve sales in this week related to cafe id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return salesInThisWeek;
     }
 
@@ -523,6 +696,13 @@ public class OrderService {
                 salesInLastWeek.add(order);
             }
         }
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve sales in last week related to cafe id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
         return salesInLastWeek;
     }
 
@@ -624,6 +804,13 @@ public class OrderService {
         branchStat.setMenuItemCount(foodItemList.size() + foodComboList.size());
         branchStat.setStockCollectionCount(stockCollectionList.size());
 
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve branch statistics related to branch id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return branchStat;
 
     }
@@ -682,6 +869,13 @@ public class OrderService {
 //        branchStat.setMenuItemCount(foodItemList.size() + foodComboList.size());
 //        branchStat.setStockCollectionCount(stockCollectionList.size());
 
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve monthly branch statistics related to branch id (id: " + cafeId + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return branchStat;
 
     }
@@ -708,7 +902,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public boolean isInThisMonth(String createdAt) {
+    private boolean isInThisMonth(String createdAt) {
         SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         try {
             // Parse the createdAt string to a Date object
