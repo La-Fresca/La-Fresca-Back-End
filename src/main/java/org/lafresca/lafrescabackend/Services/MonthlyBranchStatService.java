@@ -1,28 +1,48 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.Models.MonthlyBranchStat;
 import org.lafresca.lafrescabackend.Repositories.MonthlyBranchStatRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.*;
 
 @Service
+@Slf4j
 public class MonthlyBranchStatService {
     private final MonthlyBranchStatRepository monthlyBranchStatRepository;
+    private final SystemLogService systemLogService;
 
-    public MonthlyBranchStatService(MonthlyBranchStatRepository monthlyBranchStatRepository) {
+    public MonthlyBranchStatService(MonthlyBranchStatRepository monthlyBranchStatRepository, SystemLogService systemLogService) {
         this.monthlyBranchStatRepository = monthlyBranchStatRepository;
+        this.systemLogService = systemLogService;
     }
 
     public void addMonthlyBranchStat(MonthlyBranchStat monthlyBranchStat) {
-        monthlyBranchStatRepository.save(monthlyBranchStat);
+        MonthlyBranchStat savedMonthlyBranchStat = monthlyBranchStatRepository.save(monthlyBranchStat);
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Monthly Branch Statistics added (id: " + savedMonthlyBranchStat.getId() + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
     }
 
     public List<MonthlyBranchStat> getBranchStatisticsEveryMonth(String id) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve Branch Statistics by branch id (id: " + id + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return monthlyBranchStatRepository.findByCafeId(id);
     }
 
@@ -44,6 +64,13 @@ public class MonthlyBranchStatService {
             }
         }
 
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve Branch Statistics in 12 months related to cafe id (id: " + id + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return monthlyBranchStats;
     }
 
@@ -63,10 +90,24 @@ public class MonthlyBranchStatService {
             }
         }
 
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve every Branch Statistics in 12 months ";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return monthlyBranchStats;
     }
 
     public List<MonthlyBranchStat> getBranchStatisticsPreviousMonths(String id) {
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve Branch Statistics of previous month related to cafe id (id: " + id + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
+
         return monthlyBranchStatRepository.findByCafeId(id);
     }
 
@@ -90,6 +131,13 @@ public class MonthlyBranchStatService {
         }
 
         System.out.println("length of branch Stat: "+ branchStatList.size());
+
+        String user= SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String logmessage = now + " " + user + " " + "Retrieve Branch Statistics in 12 months related to branch id (id: " + id + ")";
+        systemLogService.writeToFile(logmessage);
+        log.info(logmessage);
 
         return branchStatList;
     }

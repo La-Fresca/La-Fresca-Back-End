@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lafresca.lafrescabackend.Exceptions.ResourceNotFoundException;
 import org.lafresca.lafrescabackend.Models.Discount;
 import org.lafresca.lafrescabackend.Models.FoodCombo;
@@ -7,6 +8,7 @@ import org.lafresca.lafrescabackend.Models.FoodItem;
 import org.lafresca.lafrescabackend.Repositories.FoodComboRepository;
 import org.lafresca.lafrescabackend.Repositories.FoodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -15,14 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class DiscountService {
     private final FoodItemRepository foodItemRepository;
     private final FoodComboRepository foodComboRepository;
+    private final SystemLogService systemLogService;
 
     @Autowired
-    public DiscountService(FoodItemRepository foodItemRepository, FoodComboRepository foodComboRepository) {
+    public DiscountService(FoodItemRepository foodItemRepository, FoodComboRepository foodComboRepository, SystemLogService systemLogService) {
         this.foodItemRepository = foodItemRepository;
         this.foodComboRepository = foodComboRepository;
+        this.systemLogService = systemLogService;
     }
 
     // Add new discount
@@ -120,7 +125,13 @@ public class DiscountService {
                 foodCombo.setDiscountStatus(1);
                 foodCombo.setDiscountDetails(discount);
 
-                foodComboRepository.save(foodCombo);
+                FoodCombo newFoodCombo = foodComboRepository.save(foodCombo);
+
+                String user = SecurityContextHolder.getContext().getAuthentication().getName();
+
+                String message = now + " " + user + " " + "Created new discount (id: " + newFoodCombo.getId()  ;
+                systemLogService.writeToFile(message);
+                log.info(message);
             }
         }
 
@@ -147,6 +158,13 @@ public class DiscountService {
         discounts.add(foodItemDiscount);
         discounts.add(foodComboDiscount);
 
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Get all discounts" ;
+        systemLogService.writeToFile(message);
+        log.info(message);
+
         return discounts;
     }
 
@@ -171,6 +189,13 @@ public class DiscountService {
         discounts.add(foodItemDiscount);
         discounts.add(foodComboDiscount);
 
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Retrieve all discounts by cafe id - " + cafeId ;
+        systemLogService.writeToFile(message);
+        log.info(message);
+
         return discounts;
     }
 
@@ -179,6 +204,13 @@ public class DiscountService {
     public Discount getDiscount(String menuItemId) {
         FoodItem foodItem = foodItemRepository.findOneById(menuItemId);
         FoodCombo foodCombo = foodComboRepository.findOneById(menuItemId);
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDateTime now = LocalDateTime.now();
+
+        String message = now + " " + user + " " + "Retrieve discount by id - " + menuItemId ;
+        systemLogService.writeToFile(message);
+        log.info(message);
 
         if (foodItem != null) {
             return foodItem.getDiscountDetails();
@@ -200,14 +232,37 @@ public class DiscountService {
         if (foodItem != null) {
             foodItem.setDiscountStatus(0);
             foodItemRepository.save(foodItem);
+
+            String user = SecurityContextHolder.getContext().getAuthentication().getName();
+            LocalDateTime now = LocalDateTime.now();
+
+            String message = now + " " + user + " " + "Deleted discount (id - " + menuItemId + ")" ;
+            systemLogService.writeToFile(message);
+            log.info(message);
+
             return "Discount successfully deleted";
         }
         else if (foodCombo != null) {
             foodCombo.setDiscountStatus(0);
             foodComboRepository.save(foodCombo);
+
+            String user = SecurityContextHolder.getContext().getAuthentication().getName();
+            LocalDateTime now = LocalDateTime.now();
+
+            String message = now + " " + user + " " + "Deleted discount (id - " + menuItemId + ")" ;
+            systemLogService.writeToFile(message);
+            log.info(message);
+
             return "Discount successfully deleted";
         }
         else {
+            String user = SecurityContextHolder.getContext().getAuthentication().getName();
+            LocalDateTime now = LocalDateTime.now();
+
+            String message = now + " " + user + " " + "Falid to deleted discount (id - " + menuItemId +")";
+            systemLogService.writeToFile(message);
+            log.info(message);
+
             return "Discount not found";
         }
     }
@@ -270,6 +325,12 @@ public class DiscountService {
             }
 
             foodComboRepository.save(existingFoodCombo);
+
+            String user = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            String message = now + " " + user + " " + "Updated discount (id - " + menuItemId ;
+            systemLogService.writeToFile(message);
+            log.info(message);
         }
     }
 }
