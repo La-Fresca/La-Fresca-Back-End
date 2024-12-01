@@ -63,15 +63,26 @@ public class CartService {
                     int count = 0;
                     double totalAdditionalPrice = 0;
 
+//                    for (CustomFeature feature : FeatureList){
+//                        List<Double> priceList = feature.getAdditionalPrices();
+//                        if (additionalFeatures.get(count).getLevel() != -1) {
+//                            totalAdditionalPrice += priceList.get(count);
+//                        }
+//                        count ++;
+//                    }
+
                     for (CustomFeature feature : FeatureList){
                         List<Double> priceList = feature.getAdditionalPrices();
                         if (additionalFeatures.get(count).getLevel() != -1) {
-                            totalAdditionalPrice += priceList.get(count);
+                            totalAdditionalPrice += priceList.get(additionalFeatures.get(count).getLevel());
                         }
                         count ++;
                     }
 
+                    System.out.println("food price - "+ foodItem.getPrice() + "tot add price - " + totalAdditionalPrice +"qyt - "+ cart.getQuantity());
+
                     double totalPrice = (foodItem.getPrice() + totalAdditionalPrice) * cart.getQuantity();
+                    System.out.println("Total fee - " + totalPrice);
                     cart.setItemTotalPrice(totalPrice);
                 }
             }
