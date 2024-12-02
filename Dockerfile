@@ -2,7 +2,11 @@ FROM bellsoft/liberica-openjdk-alpine:21 AS builder
 
 WORKDIR /home/app
 ADD ./ /home/app/la-fresca
-RUN chmod +x /home/app/la-fresca/mvnw
+
+# Install dos2unix to handle Windows line endings
+RUN apk add --no-cache dos2unix && \
+    dos2unix /home/app/la-fresca/mvnw && \
+    chmod +x /home/app/la-fresca/mvnw
 RUN cd la-fresca && ./mvnw -Dmaven.test.skip=true clean package
 
 
