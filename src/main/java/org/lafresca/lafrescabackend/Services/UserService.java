@@ -308,4 +308,24 @@ public class UserService {
         return userDTOS;
 
     }
+
+    public List<UserDTO> getUsersByRoleAndCafeId(String role, String cafeId) {
+        List<User> users =  userRepository.findUserByCafeIdAndRole(cafeId,role);
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for (User user : users){
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setRole(user.getRole());
+            userDTO.setCafeId(user.getCafeId());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setAddress(user.getAddress());
+            userDTO.setFirstName(user.getFirstName());
+            userDTO.setLastName(user.getLastName());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+            userDTO.setStatus(user.getStatus());
+
+            userDTOList.add(userDTO);
+        }
+        return userDTOList;
+    }
 }

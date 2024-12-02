@@ -453,12 +453,18 @@ public class OrderService {
                         if(order.getDeliveryPersonId().equals("No delivery person available")) {
                             throw new IllegalStateException("No delivery person available");
                         }
+                        Optional<User> deliveryPerson = userRepository.findById(order.getDeliveryPersonId());
+                        deliveryPerson.get().setStatus(OrderStatus.DELIVERING.toString());
+                        userRepository.save(deliveryPerson.get());
                     }
                     else if(order.getOrderType().equals("OFFLINE")) {
                         order.setWaiterId(findWaiter(order.getCafeId()));
                         if(order.getWaiterId().equals("No waiter available")) {
                             throw new IllegalStateException("No waiter available");
                         }
+                        Optional<User> waiter = userRepository.findById(order.getWaiterId());
+                        waiter.get().setStatus(OrderStatus.DELIVERING.toString());
+                        userRepository.save(waiter.get());
                     }
                 }
                 orderRepository.save(order);
@@ -556,12 +562,18 @@ public class OrderService {
                 if(orderToUpdate.getDeliveryPersonId().equals("No delivery person available")) {
                     throw new IllegalStateException("No delivery person available");
                 }
+                Optional<User> deliveryPerson = userRepository.findById(orderToUpdate.getDeliveryPersonId());
+                deliveryPerson.get().setStatus("ON DELIVERY");
+                userRepository.save(deliveryPerson.get());
             }
             else {
                 orderToUpdate.setWaiterId(findWaiter(orderToUpdate.getCafeId()));
                 if(orderToUpdate.getWaiterId().equals("No waiter available")) {
                     throw new IllegalStateException("No waiter available");
                 }
+                Optional<User> waiter = userRepository.findById(orderToUpdate.getWaiterId());
+                waiter.get().setStatus("ON DELIVERY");
+                userRepository.save(waiter.get());
             }
         }
         else if(readyItems == 0 && processingItems == 0 && queueItems == 0 && deliveringItems != 0 && deliveredItems != 0){
@@ -635,6 +647,18 @@ public class OrderService {
         });
 
         orderToUpdate.setOrderStatus(itemStatusChangeDTO.getStatus());
+
+        if(itemStatusChangeDTO.getStatus().equals("COMPLETED")){
+            if(orderToUpdate.getOrderType().equals("OFFLINE")) {
+                Optional<User> waiter = userRepository.findById(orderToUpdate.getWaiterId());
+                waiter.get().setStatus("AVAILABLE");
+            }
+            if(orderToUpdate.getOrderType().equals("ONLINE")) {
+                Optional<User> deliveryPerson = userRepository.findById(orderToUpdate.getDeliveryPersonId());
+                deliveryPerson.get().setStatus("AVAILABLE");
+            }
+
+        }
 
         orderRepository.save(orderToUpdate);
 
