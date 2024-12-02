@@ -54,7 +54,7 @@ public class DiscountController {
                     )
             })
 
-    public List<List<DiscountDTO>> getDiscounts() { return discountService.getDiscounts(); }
+    public List<DiscountDTO> getDiscounts() { return discountService.getDiscounts(); }
 
     // Retrieve all discounts by CafeId
     @GetMapping(path = "{cafeId}")
