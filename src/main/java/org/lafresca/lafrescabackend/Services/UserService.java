@@ -210,7 +210,7 @@ public class UserService {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         LocalDateTime now = LocalDateTime.now();
 
-        String logmessage = now + " " + user + " " + "Retrieve user by email (email: " + email + ")";
+        String logmessage = now + " " + username + " " + "Retrieve user by email (email: " + email + ")";
         systemLogService.writeToFile(logmessage);
         log.info(logmessage);
 

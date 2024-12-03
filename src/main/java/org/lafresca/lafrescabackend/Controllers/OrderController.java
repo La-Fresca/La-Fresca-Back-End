@@ -135,4 +135,14 @@ public class OrderController {
     public List<Order> getSalesInThisWeek(@PathVariable("cafeId") String cafeId) {
         return orderService.getSalesInThisWeek(cafeId);
     }
+
+    @GetMapping(value = "/getAssignedToWaiterOrders/{cafeId}")
+    public List<Order> getAssignedToWaiterOrders(@PathVariable("cafeId") String cafeId) {
+        return orderService.getAssignedToWaiterOrders(cafeId);
+    }
+
+    @GetMapping(value = "/getServedToWaiterOrders/{cafeId}")
+    public List<Order> getServedToWaiterOrders(@PathVariable("cafeId") String cafeId) {
+        return orderService.getServedToWaiterOrders(cafeId);
+    }
 }
