@@ -1,6 +1,7 @@
 package org.lafresca.lafrescabackend.Controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.lafresca.lafrescabackend.DTO.DeliveryPersonDashbordDTO;
 import org.lafresca.lafrescabackend.DTO.ItemStatusChangeDTO;
 import org.lafresca.lafrescabackend.DTO.OrderRequestDTO;
 import org.lafresca.lafrescabackend.DTO.OrderStatusChangeRequest;
@@ -145,5 +146,15 @@ public class OrderController {
     @GetMapping(value = "/getServedToWaiterOrders/{cafeId}")
     public List<Order> getServedToWaiterOrders(@PathVariable("cafeId") String cafeId) {
         return orderService.getServedToWaiterOrders(cafeId);
+    }
+
+    @GetMapping(value = "/deliveryPersonDashboard/{userId}")
+    public DeliveryPersonDashbordDTO deliveryPersonDashboard(@PathVariable("userId") String userId){
+        System.out.println("Check1111");
+        DeliveryPersonDashbordDTO deliveryPersonDashbordDTO = new DeliveryPersonDashbordDTO();
+        deliveryPersonDashbordDTO.setHistory(orderService.getCompletedOrdersByDeliveryPersonId(userId).size());
+        deliveryPersonDashbordDTO.setQueue(orderService.getPendingOrdersbydeliveryPersonId(userId).size());
+        System.out.println("check22" + deliveryPersonDashbordDTO.getHistory() + deliveryPersonDashbordDTO.getQueue());
+        return deliveryPersonDashbordDTO;
     }
 }
