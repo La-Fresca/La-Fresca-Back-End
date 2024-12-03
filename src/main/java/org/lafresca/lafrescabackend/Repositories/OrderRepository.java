@@ -2,6 +2,7 @@ package org.lafresca.lafrescabackend.Repositories;
 
 import org.lafresca.lafrescabackend.Models.Order;
 import org.lafresca.lafrescabackend.Models.OrderStatus;
+import org.lafresca.lafrescabackend.Models.OrderType;
 import org.lafresca.lafrescabackend.Models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -42,4 +43,6 @@ public interface OrderRepository extends MongoRepository<Order, String> {
     @Query("{ 'CreatedAt' : { $gte: ?0, $lt: ?1 } }")
     List<Order> findOrdersByDateRange(LocalDateTime start, LocalDateTime end);
 
+    @Query("{'CafeId' : ?0, 'OrderStatus' : ?1, 'OrderType': ?2 }")
+    List<Order> findByCafeIdAndOrderStatusAndType(String cafeId, OrderStatus orderStatus, OrderType orderType);
 }
