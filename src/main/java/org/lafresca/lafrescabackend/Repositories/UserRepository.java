@@ -1,5 +1,6 @@
 package org.lafresca.lafrescabackend.Repositories;
 
+import org.lafresca.lafrescabackend.DTO.UserDTO;
 import org.lafresca.lafrescabackend.Models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -31,4 +32,5 @@ public interface UserRepository extends MongoRepository<User,String> {
 
     @Query("{ 'email': ?0 }")
     Optional<User> findTopByEmailOrderByIdDesc(String email);
+
 }

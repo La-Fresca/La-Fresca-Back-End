@@ -29,7 +29,7 @@ public class User implements UserDetails {
     private String CafeId;
     private Integer Deleted = 0;
     private String username = Email;
-    private String status ;
+    private String status ; // AVAILABLE, ON DELIVERY, ABSENT
     private long statusUpdatedAt;
 
     public String getUserId() {
