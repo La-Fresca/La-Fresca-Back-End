@@ -948,7 +948,7 @@ public class OrderService {
 
 
     public List<Order> getAssignedToWaiterOrders(String cafeId) {
-        return orderRepository.findByCafeIdAndOrderStatusAndType(cafeId,OrderStatus.DELIVERING, OrderType.OFFLINE);
+        return orderRepository.findByCafeIdAndOrderStatusAndType(cafeId,OrderStatus.READY, OrderType.OFFLINE);
     }
 
     public List<Order> getServedToWaiterOrders(String cafeId) {
