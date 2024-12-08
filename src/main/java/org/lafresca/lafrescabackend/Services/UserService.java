@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.lafresca.lafrescabackend.Validations.UserValidation.isValidEmail;
@@ -83,30 +84,31 @@ public class UserService {
         if(user.getRole() == null || user.getRole().isEmpty()) {
             throw new IllegalStateException("User role cannot be null or empty");
         }
-        if(!(user.getRole()!="ADMIN" || user.getRole()!="CUSTOMER" || user.getRole()!="TOP_LEVEL_MANAGER" || user.getRole()!="CAFE_MANAGER" || user.getRole()!="CASHIER" || user.getRole()!="KITCHEN_MANAGER" || user.getRole()!="WAITER" || user.getRole()!="DELIVERY_PERSON" || user.getRole()!="STOCKKEEPER")) {
+        if(!(user.getRole()!="ADMIN" || user.getRole()!="CUSTOMER" || user.getRole()!="TOP_LEVEL_MANAGER" || user.getRole()!="CAFE_MANAGER" || user.getRole()!="CASHIER" || user.getRole()!="KITCHEN_MANAGER" || user.getRole()!="WAITER" || user.getRole()!="DELIVERY_PERSON" || user.getRole()!="STOCKKEEPER" || user.getRole()!="BRANCH_MANAGER")) {
             throw new IllegalStateException("User role not valid");
         }
         if(user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new IllegalStateException("User password cannot be null or empty");
         }
-        if(user.getPassword().length()<8) {
-            throw new IllegalStateException("User password length should be greater than or equal to 8");
+        if(user.getPassword().length() < 6) {
+            throw new IllegalStateException("User password length should be greater than or equal to 6");
         }
         if(user.getAddress()==null || user.getAddress().isEmpty()) {
             throw new IllegalStateException("User address cannot be null or empty");
-        }
-        if(user.getCafeId()==null || user.getCafeId().equals(0)) {
-            throw new IllegalStateException("User cafe id cannot be null or empty");
         }
         if(user.getRole() ==  "WAITER" || user.getRole() == "DELIVERY_PERSON") {
             user.setStatus("AVAILABLE");
             user.setStatusUpdatedAt(System.currentTimeMillis());
         }
-        //need to add
+//        need to add
 //        Optional<Cafe> cafe = cafeRepository.findById(user.getCafeId());
 //        if(!cafe.isPresent()) {
 //            throw new IllegalStateException("Cafe with id " + user.getCafeId() + " does not exist");
 //        }
+
+        if (Objects.equals(user.getRole(), "BRANCH_MANAGER")){
+            user.setCafeId("");
+        }
         User saveduser = userRepository.save(user);
 
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
