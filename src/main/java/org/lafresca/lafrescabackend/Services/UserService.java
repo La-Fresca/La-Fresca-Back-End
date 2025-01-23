@@ -66,6 +66,7 @@ public class UserService {
     public ResponseEntity<UserDTO> addNewUser(User user) {
         UserDTO newUserDTO = new UserDTO(user.getId(),user.getFirstName(),user.getLastName(),user.getEmail(),user.getPhoneNumber(),user.getAddress(),user.getRole(),user.getCafeId(),user.getStatus());
         Optional<User> userByEmail = userRepository.findUserByEmail(user.getEmail());
+        System.out.println("jere");
         if (userByEmail.isPresent()) {
             return ResponseEntity.status(401).body(null);
         }
