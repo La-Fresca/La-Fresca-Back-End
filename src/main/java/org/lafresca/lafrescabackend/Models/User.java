@@ -39,12 +39,11 @@ public class User implements UserDetails {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String Password;
 
-    @Pattern(regexp = "^\\+?[0-9]*$", message = "Phone number must contain only digits and an optional leading '+'")
-    @Size(max = 15, message = "Phone number cannot exceed 15 digits")
+    @Pattern(regexp = "^\\+?[0-9]*$", message = "Invalid phone number format")
+    @Size(max = 10, message = "Phone number cannot exceed 10 digits")
     private String PhoneNumber;
 
     @NotBlank(message = "Address is required")
-    @Size(max = 255, message = "Address cannot exceed 255 characters")
     private String Address;
 
     @NotBlank(message = "Role is required")

@@ -25,8 +25,8 @@ public class UserDTO {
     @Email(message = "Invalid email format")
     private String Email;
 
-    @Pattern(regexp = "^\\+?[0-9]*$", message = "Phone number must contain only digits and an optional leading '+'")
-    @Size(max = 15, message = "Phone number cannot exceed 15 digits")
+    @Pattern(regexp = "^\\+?[0-9]*$", message = "Invalid phone number format")
+    @Size(max = 10, message = "Phone number cannot exceed 10 digits")
     private String PhoneNumber;
 
     @NotBlank(message = "Address is required")
