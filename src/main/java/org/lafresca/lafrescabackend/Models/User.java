@@ -1,5 +1,8 @@
 package org.lafresca.lafrescabackend.Models;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,17 +22,43 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     private String id;
+
+    @NotBlank(message = "First name is required")
+    @Size(max = 50, message = "First name cannot exceed 50 characters")
     private String FirstName;
+
+    @NotBlank(message = "Last name is required")
+    @Size(max = 50, message = "Last name cannot exceed 50 characters")
     private String LastName;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     private String Email;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String Password;
+
+    @Pattern(regexp = "^\\+?[0-9]*$", message = "Invalid phone number format")
+    @Size(max = 10, message = "Phone number cannot exceed 10 digits")
     private String PhoneNumber;
+
+    @NotBlank(message = "Address is required")
     private String Address;
+
+    @NotBlank(message = "Role is required")
     private String Role;
+
     private String CafeId;
+
     private Integer Deleted = 0;
+
     private String username = Email;
-    private String status ; // AVAILABLE, ON DELIVERY, ABSENT
+
+    @NotBlank(message = "Status is required")
+    @Pattern(regexp = "AVAILABLE|ON DELIVERY|ABSENT", message = "Status must be one of the following: AVAILABLE, ON DELIVERY, ABSENT")
+    private String status; // AVAILABLE, ON DELIVERY, ABSENT
+
     private long statusUpdatedAt;
 
     public String getUserId() {
@@ -39,7 +68,6 @@ public class User implements UserDetails {
     public void setUserId(String userId) {
         id = userId;
     }
-
 
     @Override
     public String toString() {
@@ -80,6 +108,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }
-
