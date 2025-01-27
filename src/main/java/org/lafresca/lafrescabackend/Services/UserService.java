@@ -11,6 +11,7 @@ import org.lafresca.lafrescabackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -30,6 +31,7 @@ import static org.lafresca.lafrescabackend.Validations.UserValidation.isValidEma
 public class UserService {
     private final UserRepository userRepository;
     private final SystemLogService systemLogService;
+    private final PasswordEncoder passwordEncoder;
 
 //    @Autowired
 //    public UserService(UserRepository userRepository) {
@@ -113,6 +115,7 @@ public class UserService {
         if (Objects.equals(user.getRole(), "BRANCH_MANAGER")){
             user.setCafeId("");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User saveduser = userRepository.save(user);
 
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
