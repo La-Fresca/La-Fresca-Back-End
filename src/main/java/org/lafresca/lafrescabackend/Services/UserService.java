@@ -106,15 +106,18 @@ public class UserService {
             user.setStatus("AVAILABLE");
             user.setStatusUpdatedAt(System.currentTimeMillis());
         }
+        if(user.getRole().equals("BRANCH_MANAGER")) {
+            user.setCafeId("");
+        }
 //        need to add
 //        Optional<Cafe> cafe = cafeRepository.findById(user.getCafeId());
 //        if(!cafe.isPresent()) {
 //            throw new IllegalStateException("Cafe with id " + user.getCafeId() + " does not exist");
 //        }
 
-        if (Objects.equals(user.getRole(), "BRANCH_MANAGER")){
-            user.setCafeId("");
-        }
+//        if (Objects.equals(user.getRole(), "BRANCH_MANAGER")){
+//            user.setCafeId("");
+//        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User saveduser = userRepository.save(user);
 
