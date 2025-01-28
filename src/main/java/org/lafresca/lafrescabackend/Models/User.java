@@ -56,8 +56,8 @@ public class User implements UserDetails {
 
     private String username = Email;
 
-    @NotBlank(message = "Status is required")
-    @Pattern(regexp = "AVAILABLE|ON DELIVERY|ABSENT", message = "Status must be one of the following: AVAILABLE, ON DELIVERY, ABSENT")
+//    @NotBlank(message = "Status is required")
+//    @Pattern(regexp = "AVAILABLE|ON DELIVERY|ABSENT", message = "Status must be one of the following: AVAILABLE, ON DELIVERY, ABSENT")
     private String status; // AVAILABLE, ON DELIVERY, ABSENT
 
     private long statusUpdatedAt;
