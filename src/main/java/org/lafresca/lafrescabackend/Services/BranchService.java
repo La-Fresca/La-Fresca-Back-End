@@ -43,7 +43,7 @@ public class BranchService {
         newBranch.setLongitude(branch.getLongitude());
         newBranch.setBranchManager(branch.getBranchManager());
         newBranch.setName(branch.getName());
-        newBranch.setStatus(BranchStatus.CLOSED);
+        newBranch.setStatus(BranchStatus.OPEN);
 
         newBranch.setLatitude(1.221);
         newBranch.setLongitude(1.221);
