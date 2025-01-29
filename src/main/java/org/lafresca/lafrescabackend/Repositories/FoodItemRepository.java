@@ -12,7 +12,7 @@ public interface FoodItemRepository extends MongoRepository<FoodItem, String> {
     @Query("{ 'Status' : { $in: [0, 2] } }")
     List<FoodItem> findByStatus();
 
-    @Query("{ 'CafeId' : ?0, 'status' : 0 }")
+    @Query("{ 'CafeId' : ?0, 'Status' : 0 }")
     List<FoodItem> findByCafeId(String CafeId);
 
     @Query("{ 'id' :  ?0 }")
