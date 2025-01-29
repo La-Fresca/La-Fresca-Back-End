@@ -45,6 +45,9 @@ public class BranchService {
         newBranch.setName(branch.getName());
         newBranch.setStatus(BranchStatus.CLOSED);
 
+        newBranch.setLatitude(1.221);
+        newBranch.setLongitude(1.221);
+
         User branchManager =  userRepository.findById(branch.getBranchManager()).orElseThrow(() -> new ResourceNotFoundException("Branch manager not found with id " + branch.getBranchManager()));
 
         newBranch.setDeleted(0);
