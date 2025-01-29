@@ -20,10 +20,10 @@ public class BranchRequestDTO {
     @NotNull(message = "Contact Number cannot be null")
     private String ContactNo;
 
-    @NotNull(message = "Longitude cannot be null")
+//    @NotNull(message = "Longitude cannot be null")
     private Double Longitude;
 
-    @NotNull(message = "Longitude cannot be null")
+//    @NotNull(message = "Longitude cannot be null")
     private Double Latitude;
 
     @NotEmpty(message = "Branch Manager cannot be empty")
